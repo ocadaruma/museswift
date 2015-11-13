@@ -1,0 +1,17 @@
+X:1
+T:Zocharti Loch
+C:Louis Lewandowski (1821-1894)
+M:C
+Q:1/4=76
+%%score (T1 T2) (B1 B2)
+V:T1           clef=treble
+V:B1           clef=bass
+L:1/4
+K:Gm octave=-1
+%            End of header, start of tune body:
+% 1
+[V:T1]  (B2c2 d2g2)  | f6e2      |
+[V:B1]       z8      | z2f2 g2a2 |
+% 5
+[V:T1]  (B2c2 d2g2)  | f8        |
+[V:B1]  (d2f2 b2e'2) | d'8       |
