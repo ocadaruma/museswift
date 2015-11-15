@@ -30,7 +30,7 @@ class ViewController: UIViewController {
   @IBAction func move(sender: AnyObject) {
     animator = Animator(
       target: scoreView.canvas!,
-      tempo: Tempo(bpm: 120, inLength: NoteLength(numerator: 1, denominator: 1)),
+      tempo: Tempo(bpm: 120, inLength: NoteLength(numerator: 2, denominator: 1)),
       distancePerUnit: scoreView.layout.widthPerUnitNoteLength)
 
     animator?.start()

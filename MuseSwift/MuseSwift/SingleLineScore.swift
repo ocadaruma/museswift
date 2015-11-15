@@ -37,6 +37,12 @@ public class ScoreLayout {
     }
   }
 
+  private var staffInterval: CGFloat {
+    get {
+      return layout.staffHeight / (5 - 1)
+    }
+  }
+
   private var _canvas: UIView? = nil
   public var canvas: UIView? { get {return _canvas} }
 
@@ -78,23 +84,80 @@ public class ScoreLayout {
         }
       case let note as Note:
         var v: UIView
-        let l = note.length.actualLength(tuneHeader.unitNoteLength.denominator)
-        if (l >= 1) {
+        let length = note.length.actualLength(tuneHeader.unitNoteLength.denominator)
+        let ballRect = pitchRect(note.pitch, x: offset)
+
+        if (length >= 1) {
           v = WholeNote()
-        } else if (l >= 0.5) {
+        } else if (length >= 0.5) {
           v = WhiteNote()
+
+
         } else {
           v = BlackNote()
+          if (length >= 0.25) {
+            let b = Block()
+            let lineHeight = staffInterval * 3
+            let lineWidth = layout.staffLineWidth * 2
+            if (shouldInvert(note.pitch)) {
+              b.frame = CGRectMake(offset, ballRect.origin.y + ballRect.size.height * 0.6, lineWidth, lineHeight)
+            } else {
+              b.frame = CGRectMake(offset + ballRect.size.width - lineWidth, ballRect.origin.y - lineHeight + ballRect.size.height * 0.4, lineWidth, lineHeight)
+            }
+            canvas?.addSubview(b)
+          } else if (length >= 0.125) {
+
+          } else if (length >= 0.0625) {
+
+          }
         }
 
-        v.frame = pitchRect(note.pitch, x: offset)
+        v.frame = ballRect
         c.addSubview(v)
+
+//          let b = Block()
+//          let r: CGFloat = 1.5
+//          let w = v.frame.size.width
+//
+//          b.frame = CGRect(
+//            x: v.frame.origin.x + w * (1 - r) / 2,
+//            y: v.frame.origin.y + v.frame.size.height / 2,
+//            width: w * r,
+//            height: layout.staffLineWidth)
+//          c.addSubview(b)
+
 
         offset += noteLengthToWidth(note.length)
       case let chord as Chord:
         offset += noteLengthToWidth(chord.length)
       case let tuplet as Tuplet: () //TODO
       case let rest as Rest:
+        let length = rest.length.actualLength(tuneHeader.unitNoteLength.denominator)
+
+        var v: UIView? = nil
+        if (length >= 1) {
+          v = Block()
+          v?.frame = CGRectMake(offset, staffTop + staffInterval, staffInterval * 1.5, staffInterval * 0.6)
+        } else if (length >= 0.5) {
+          v = Block()
+          let h = staffInterval * 0.6
+          v?.frame = CGRectMake(offset, staffTop + staffInterval * 2 - h, staffInterval * 1.5, h)
+        } else if (length >= 0.25) {
+          v = QuarterRest()
+          let w = staffInterval * 1.1
+          v?.frame = CGRectMake(offset, staffTop + staffInterval / 2, w, staffInterval * 2.5)
+        } else if (length >= 0.125) {
+          v = EighthRest()
+          v?.frame = CGRectMake(offset, staffTop + staffInterval + layout.staffLineWidth, staffInterval * 1.3, staffInterval * 2)
+        } else if (length >= 0.0625) {
+          v = SixteenthRest()
+          v?.frame = CGRectMake(offset, staffTop + staffInterval + layout.staffLineWidth, staffInterval * 1.3, staffInterval * 3)
+        }
+
+        if let b = v {
+          canvas?.addSubview(b)
+        }
+
         offset += noteLengthToWidth(rest.length)
       case let rest as MultiMeasureRest:
         offset += noteLengthToWidth(NoteLength(numerator: rest.num, denominator: 1))
@@ -104,7 +167,6 @@ public class ScoreLayout {
   }
 
   private func pitchToY(pitch: Pitch) -> CGFloat {
-    let staffInterval = layout.staffHeight / (5 - 1)
     let noteInterval = staffInterval / 2
     let c0 = staffTop + noteInterval * 9
 
@@ -112,10 +174,18 @@ public class ScoreLayout {
   }
 
   private func pitchRect(pitch: Pitch, x: CGFloat) -> CGRect {
-    let height = layout.staffHeight / (5 - 1)
-    let width = height * 1.3
-    return CGRect(x: x, y: pitchToY(pitch), width: width, height: height)
+    let width = staffInterval * 1.3
+    return CGRect(x: x, y: pitchToY(pitch), width: width, height: staffInterval)
   }
+
+  private func shouldInvert(pitch: Pitch) -> Bool {
+    return (pitch.offset * 7) + pitch.name.rawValue > 0 * 7 + PitchName.B.rawValue
+  }
+
+//  private func outsideOfStaff(pitch: Pitch) -> Bool {
+//    let p = (pitch.offset * 7) + pitch.name.rawValue
+//    return p >= 1 * 7 + PitchName.A.rawValue || p <= 0 * 7 + PitchName.C.rawValue
+//  }
 
   private func noteLengthToWidth(noteLength: NoteLength) -> CGFloat {
     return layout.widthPerUnitNoteLength * CGFloat(noteLength.numerator) / CGFloat(noteLength.denominator)
@@ -126,8 +196,8 @@ public class ScoreLayout {
     let top = staffTop
     let ctx = UIGraphicsGetCurrentContext()
 
-    let staffInterval = layout.staffHeight / (5 - 1)
     CGContextSetLineWidth(ctx, layout.staffLineWidth)
+    CGContextSetStrokeColorWithColor(ctx, UIColor.grayColor().CGColor)
     for i in 0..<5 {
       let offset = staffInterval * CGFloat(i)
 
