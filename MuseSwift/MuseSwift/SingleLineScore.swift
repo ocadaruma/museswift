@@ -37,19 +37,20 @@ public class ScoreLayout {
     }
   }
 
-  private var canvas: UIView? = nil
+  private var _canvas: UIView? = nil
+  public var canvas: UIView? { get {return _canvas} }
 
   public func loadVoice(
     tuneHeader: TuneHeader,
     voiceHeader: VoiceHeader,
     voice: Voice) -> Void {
 
-      if let c = canvas {
+      if let c = _canvas {
       c.removeFromSuperview()
     }
 
-    canvas = UIView(frame: bounds)
-    let c = canvas!
+    _canvas = UIView(frame: bounds)
+    let c = _canvas!
     addSubview(c)
 
     var elementsInBeam: [MusicalElement] = []

@@ -21,6 +21,7 @@
 		DE1516751BF58E2200871086 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1516731BF58E2200871086 /* StringTests.swift */; };
 		DE1516781BF58E2F00871086 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1516761BF58E2F00871086 /* ParserTests.swift */; };
 		DE1516791BF58E2F00871086 /* song.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE1516771BF58E2F00871086 /* song.txt */; };
+		DE7FE6D91BF8CF03004A4D18 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7FE6D81BF8CF03004A4D18 /* Animator.swift */; };
 		DE9D1D201BF5B54F0039A4C0 /* SingleLineScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9D1D1F1BF5B54F0039A4C0 /* SingleLineScore.swift */; };
 		DE9D1D2A1BF5E3840039A4C0 /* Rest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9D1D231BF5E3840039A4C0 /* Rest.swift */; };
 		DE9D1D2B1BF5E3840039A4C0 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9D1D241BF5E3840039A4C0 /* Note.swift */; };
@@ -59,6 +60,7 @@
 		DE1516731BF58E2200871086 /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
 		DE1516761BF58E2F00871086 /* ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParserTests.swift; sourceTree = "<group>"; };
 		DE1516771BF58E2F00871086 /* song.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = song.txt; sourceTree = "<group>"; };
+		DE7FE6D81BF8CF03004A4D18 /* Animator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 		DE9D1D1F1BF5B54F0039A4C0 /* SingleLineScore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleLineScore.swift; sourceTree = "<group>"; };
 		DE9D1D231BF5E3840039A4C0 /* Rest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rest.swift; sourceTree = "<group>"; };
 		DE9D1D241BF5E3840039A4C0 /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 		DE15161B1BF5823400871086 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				DE7FE6D71BF8CEA3004A4D18 /* Animation */,
 				DE9D1D1E1BF5B5210039A4C0 /* Render */,
 				DE1516541BF5864100871086 /* Core */,
 				DE1516661BF58CB800871086 /* Misc */,
@@ -168,6 +171,14 @@
 				DE1516731BF58E2200871086 /* StringTests.swift */,
 			);
 			name = Misc;
+			sourceTree = "<group>";
+		};
+		DE7FE6D71BF8CEA3004A4D18 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				DE7FE6D81BF8CF03004A4D18 /* Animator.swift */,
+			);
+			name = Animation;
 			sourceTree = "<group>";
 		};
 		DE9D1D1E1BF5B5210039A4C0 /* Render */ = {
@@ -315,6 +326,7 @@
 				DE9D1D201BF5B54F0039A4C0 /* SingleLineScore.swift in Sources */,
 				DE9D1D2B1BF5E3840039A4C0 /* Note.swift in Sources */,
 				DE9D1D2F1BF5E3840039A4C0 /* Symbol.swift in Sources */,
+				DE7FE6D91BF8CF03004A4D18 /* Animator.swift in Sources */,
 				DE9D1D2A1BF5E3840039A4C0 /* Rest.swift in Sources */,
 				DE1516601BF58C5E00871086 /* ABCParser.swift in Sources */,
 				DE1516691BF58CD800871086 /* StringScanner.swift in Sources */,
