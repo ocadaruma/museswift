@@ -5,23 +5,27 @@ public class ScoreLayout {
   public let staffLineWidth: CGFloat
   public let barWidth: CGFloat
   public let widthPerUnitNoteLength: CGFloat
+  public let barMargin: CGFloat
 
   public init(
     staffHeight: CGFloat,
     staffLineWidth: CGFloat,
     barWidth: CGFloat,
-    widthPerUnitNoteLength: CGFloat) {
+    widthPerUnitNoteLength: CGFloat,
+    barMargin: CGFloat) {
       self.staffHeight = staffHeight
       self.staffLineWidth = staffLineWidth
       self.barWidth = barWidth
       self.widthPerUnitNoteLength = widthPerUnitNoteLength
+      self.barMargin = barMargin
   }
 
   public static let defaultLayout = ScoreLayout(
     staffHeight: 50,
     staffLineWidth: 1,
     barWidth: 2,
-    widthPerUnitNoteLength: 30)
+    widthPerUnitNoteLength: 40,
+    barMargin: 10)
 }
 
 @IBDesignable public class SingleLineScore: UIView {
@@ -68,11 +72,11 @@ public class ScoreLayout {
         switch s {
         case .BarLine:
           let v = Block()
-          v.frame = CGRect(x: offset, y: staffTop, width: layout.barWidth, height: layout.staffHeight)
+          v.frame = CGRect(x: offset - layout.barMargin, y: staffTop, width: layout.barWidth, height: layout.staffHeight)
           c.addSubview(v)
         case .DoubleBarLine:
           let v = DoubleBar()
-          v.frame = CGRect(x: offset, y: staffTop, width: layout.barWidth * 3, height: layout.staffHeight)
+          v.frame = CGRect(x: offset - layout.barMargin, y: staffTop, width: layout.barWidth * 3, height: layout.staffHeight)
           c.addSubview(v)
         case .Space: () //TODO
         case .LineBreak: () //TODO
@@ -91,8 +95,15 @@ public class ScoreLayout {
           v = WholeNote()
         } else if (length >= 0.5) {
           v = WhiteNote()
-
-
+          let b = Block()
+          let lineHeight = staffInterval * 3
+          let lineWidth = layout.staffLineWidth * 2
+          if (shouldInvert(note.pitch)) {
+            b.frame = CGRectMake(offset, ballRect.origin.y + ballRect.size.height * 0.6, lineWidth, lineHeight)
+          } else {
+            b.frame = CGRectMake(offset + ballRect.size.width - lineWidth, ballRect.origin.y - lineHeight + ballRect.size.height * 0.4, lineWidth, lineHeight)
+          }
+          canvas?.addSubview(b)
         } else {
           v = BlackNote()
           if (length >= 0.25) {
@@ -197,7 +208,7 @@ public class ScoreLayout {
     let ctx = UIGraphicsGetCurrentContext()
 
     CGContextSetLineWidth(ctx, layout.staffLineWidth)
-    CGContextSetStrokeColorWithColor(ctx, UIColor.grayColor().CGColor)
+    CGContextSetStrokeColorWithColor(ctx, UIColor.lightGrayColor().CGColor)
     for i in 0..<5 {
       let offset = staffInterval * CGFloat(i)
 
