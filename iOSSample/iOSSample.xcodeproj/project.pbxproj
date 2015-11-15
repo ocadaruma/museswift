@@ -13,6 +13,8 @@
 		DE1516471BF585BB00871086 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE1516461BF585BB00871086 /* Assets.xcassets */; };
 		DE15164A1BF585BB00871086 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE1516481BF585BB00871086 /* LaunchScreen.storyboard */; };
 		DE1516521BF585D200871086 /* MuseSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE1516511BF585D200871086 /* MuseSwift.framework */; };
+		DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B31BF8BFF8000E449D /* sample_tune.txt */; };
+		DEA012B61BF8BFF8000E449D /* sample_tune2.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B41BF8BFF8000E449D /* sample_tune2.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		DE1516491BF585BB00871086 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DE15164B1BF585BB00871086 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DE1516511BF585D200871086 /* MuseSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MuseSwift.framework; path = "../MuseSwift/build/Debug-iphoneos/MuseSwift.framework"; sourceTree = "<group>"; };
+		DEA012B31BF8BFF8000E449D /* sample_tune.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune.txt; sourceTree = "<group>"; };
+		DEA012B41BF8BFF8000E449D /* sample_tune2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune2.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,8 @@
 				DE1516461BF585BB00871086 /* Assets.xcassets */,
 				DE1516481BF585BB00871086 /* LaunchScreen.storyboard */,
 				DE15164B1BF585BB00871086 /* Info.plist */,
+				DEA012B31BF8BFF8000E449D /* sample_tune.txt */,
+				DEA012B41BF8BFF8000E449D /* sample_tune2.txt */,
 			);
 			path = iOSSample;
 			sourceTree = "<group>";
@@ -126,8 +132,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEA012B61BF8BFF8000E449D /* sample_tune2.txt in Resources */,
 				DE15164A1BF585BB00871086 /* LaunchScreen.storyboard in Resources */,
 				DE1516471BF585BB00871086 /* Assets.xcassets in Resources */,
+				DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */,
 				DE1516451BF585BB00871086 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,6 +300,7 @@
 				DE1516501BF585BB00871086 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

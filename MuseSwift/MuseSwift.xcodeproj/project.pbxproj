@@ -133,12 +133,12 @@
 		DE1516541BF5864100871086 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				DE15165B1BF58C5E00871086 /* ABCParser.swift */,
 				DE1516551BF5865A00871086 /* Core.swift */,
 				DE1516571BF58C5E00871086 /* Element.swift */,
-				DE1516581BF58C5E00871086 /* Parser.swift */,
 				DE1516591BF58C5E00871086 /* Header.swift */,
+				DE1516581BF58C5E00871086 /* Parser.swift */,
 				DE15165A1BF58C5E00871086 /* Tune.swift */,
-				DE15165B1BF58C5E00871086 /* ABCParser.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -155,8 +155,8 @@
 		DE1516661BF58CB800871086 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				DE1516671BF58CD800871086 /* StringScanner.swift */,
 				DE1516681BF58CD800871086 /* String.swift */,
+				DE1516671BF58CD800871086 /* StringScanner.swift */,
 			);
 			name = Misc;
 			sourceTree = "<group>";

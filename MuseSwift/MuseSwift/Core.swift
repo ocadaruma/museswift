@@ -42,6 +42,10 @@ public struct NoteLength : Equatable {
     self.numerator = numerator
     self.denominator = denominator
   }
+
+  public func actualLength(unit: UnitDenominator) -> Float {
+    return Float(numerator) / Float(denominator) / Float(unit.rawValue)
+  }
 }
 
 public func ==(lhs: NoteLength, rhs: NoteLength) -> Bool {
