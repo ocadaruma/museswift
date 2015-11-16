@@ -21,7 +21,7 @@ public class ScoreLayout {
   }
 
   public static let defaultLayout = ScoreLayout(
-    staffHeight: 50,
+    staffHeight: 60,
     staffLineWidth: 1,
     barWidth: 2,
     widthPerUnitNoteLength: 40,
@@ -50,12 +50,9 @@ public class ScoreLayout {
   private var _canvas: UIView? = nil
   public var canvas: UIView? { get {return _canvas} }
 
-  public func loadVoice(
-    tuneHeader: TuneHeader,
-    voiceHeader: VoiceHeader,
-    voice: Voice) -> Void {
+  public func loadVoice(tuneHeader: TuneHeader, voiceHeader: VoiceHeader, voice: Voice) -> Void {
 
-      if let c = _canvas {
+    if let c = _canvas {
       c.removeFromSuperview()
     }
 
@@ -63,10 +60,13 @@ public class ScoreLayout {
     let c = _canvas!
     addSubview(c)
 
-    var elementsInBeam: [MusicalElement] = []
+    var elementsInBeam: [Note] = []
     var offset: CGFloat = 0
+    var currentPositionIsInBeam: Bool
 
     for e in voice.elements {
+      currentPositionIsInBeam = false
+
       switch e {
       case let s as Simple:
         switch s {
@@ -117,9 +117,9 @@ public class ScoreLayout {
             }
             canvas?.addSubview(b)
           } else if (length >= 0.125) {
-
+            currentPositionIsInBeam = true
           } else if (length >= 0.0625) {
-
+            currentPositionIsInBeam = true
           }
         }
 
@@ -174,6 +174,12 @@ public class ScoreLayout {
         offset += noteLengthToWidth(NoteLength(numerator: rest.num, denominator: 1))
       default: ()
       }
+
+      if !currentPositionIsInBeam {
+        for elems in elementsInBeam.grouped(4) {
+          elems.groupBy({$0.length})
+        }
+      }
     }
   }
 
@@ -185,7 +191,7 @@ public class ScoreLayout {
   }
 
   private func pitchRect(pitch: Pitch, x: CGFloat) -> CGRect {
-    let width = staffInterval * 1.3
+    let width = staffInterval * 1.2
     return CGRect(x: x, y: pitchToY(pitch), width: width, height: staffInterval)
   }
 

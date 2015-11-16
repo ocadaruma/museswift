@@ -35,12 +35,16 @@ public enum UnitDenominator: Int {
   case SixtyFourth = 64
 }
 
-public struct NoteLength : Equatable {
+public struct NoteLength : Hashable {
   public let numerator: Int
   public let denominator: Int
   public init(numerator: Int, denominator: Int) {
     self.numerator = numerator
     self.denominator = denominator
+  }
+
+  public var hashValue: Int {
+    get { return numerator.hashValue ^ denominator.hashValue }
   }
 
   public func actualLength(unit: UnitDenominator) -> Float {

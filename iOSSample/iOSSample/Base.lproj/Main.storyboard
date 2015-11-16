@@ -17,14 +17,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aQz-Hb-4XE" customClass="SingleLineScore" customModule="MuseSwift">
-                                <rect key="frame" x="0.0" y="127" width="600" height="352"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aQz-Hb-4XE" customClass="SingleLineScore" customModule="MuseSwift">
+                                <rect key="frame" x="0.0" y="58" width="600" height="522"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J2U-xx-a09">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J2U-xx-a09">
                                 <rect key="frame" x="20" y="20" width="46" height="30"/>
                                 <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="0yt-Cl-xV7"/>
+                                    <constraint firstAttribute="width" constant="46" id="B3K-2H-ii8"/>
+                                </constraints>
                                 <state key="normal" title="LOAD">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -32,9 +36,13 @@
                                     <action selector="load:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lYR-2w-cvX"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bPM-X6-RF9">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bPM-X6-RF9">
                                 <rect key="frame" x="74" y="20" width="46" height="30"/>
                                 <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="Odj-hv-UH9"/>
+                                    <constraint firstAttribute="height" constant="30" id="cWP-Nl-1nK"/>
+                                </constraints>
                                 <state key="normal" title="MOVE">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -42,9 +50,13 @@
                                     <action selector="move:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MrE-V1-KRg"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LrU-zP-cK7">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LrU-zP-cK7">
                                 <rect key="frame" x="128" y="20" width="46" height="30"/>
                                 <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="AOq-cG-pCo"/>
+                                    <constraint firstAttribute="height" constant="30" id="V8m-g7-hTk"/>
+                                </constraints>
                                 <state key="normal" title="STOP">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -55,6 +67,18 @@
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="J2U-xx-a09" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="CeA-Ay-lIq"/>
+                            <constraint firstAttribute="trailing" secondItem="aQz-Hb-4XE" secondAttribute="trailing" id="CiZ-gm-9E1"/>
+                            <constraint firstItem="LrU-zP-cK7" firstAttribute="leading" secondItem="bPM-X6-RF9" secondAttribute="trailing" constant="8" id="KBR-GY-fiR"/>
+                            <constraint firstItem="bPM-X6-RF9" firstAttribute="leading" secondItem="J2U-xx-a09" secondAttribute="trailing" constant="8" id="aKH-zm-PIO"/>
+                            <constraint firstItem="aQz-Hb-4XE" firstAttribute="top" secondItem="LrU-zP-cK7" secondAttribute="bottom" constant="8" id="b1J-Wb-t0y"/>
+                            <constraint firstItem="aQz-Hb-4XE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="kUF-qc-LcT"/>
+                            <constraint firstItem="LrU-zP-cK7" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="qo3-BE-oyL"/>
+                            <constraint firstItem="bPM-X6-RF9" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="rA9-K5-Vbb"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="aQz-Hb-4XE" secondAttribute="bottom" constant="20" id="rwF-tx-tZ5"/>
+                            <constraint firstItem="J2U-xx-a09" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="w5E-Fh-zuJ"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="scoreView" destination="aQz-Hb-4XE" id="0Gk-Ez-tws"/>
