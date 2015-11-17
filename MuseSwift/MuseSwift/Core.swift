@@ -4,11 +4,11 @@ public enum PitchName: Int {
   case C = 0, D, E, F, G, A, B
 }
 
-public enum Accidental {
-  case Natural, Flat, Sharp, DoubleFlat, DoubleSharp
+public enum Accidental: Int {
+  case DoubleFlat = -2, Flat, Natural, Sharp, DoubleSharp
 }
 
-public struct Pitch : Equatable {
+public struct Pitch : Equatable, Comparable {
   public let name: PitchName
   public let accidental: Accidental?
   public let offset: Int
@@ -23,6 +23,20 @@ public func ==(lhs: Pitch, rhs: Pitch) -> Bool {
   return lhs.offset == rhs.offset &&
     lhs.accidental == rhs.accidental &&
     lhs.name == rhs.name
+}
+
+public func <(lhs: Pitch, rhs: Pitch) -> Bool {
+  let left = lhs.offset * 7 + lhs.name.rawValue + (lhs.accidental?.rawValue ?? 0)
+  let right = rhs.offset * 7 + rhs.name.rawValue + (rhs.accidental?.rawValue ?? 0)
+  return left < right
+}
+
+public func <=(lhs: Pitch, rhs: Pitch) -> Bool {
+  return lhs < rhs || lhs == rhs
+}
+
+public func >=(lhs: Pitch, rhs: Pitch) -> Bool {
+  return !(lhs < rhs)
 }
 
 public enum UnitDenominator: Int {

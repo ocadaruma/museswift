@@ -6,18 +6,21 @@ public class ScoreLayout {
   public let barWidth: CGFloat
   public let widthPerUnitNoteLength: CGFloat
   public let barMargin: CGFloat
+  public let minimumNoteLineLength: CGFloat
 
   public init(
     staffHeight: CGFloat,
     staffLineWidth: CGFloat,
     barWidth: CGFloat,
     widthPerUnitNoteLength: CGFloat,
-    barMargin: CGFloat) {
+    barMargin: CGFloat,
+    minimumNoteLineLength: CGFloat) {
       self.staffHeight = staffHeight
       self.staffLineWidth = staffLineWidth
       self.barWidth = barWidth
       self.widthPerUnitNoteLength = widthPerUnitNoteLength
       self.barMargin = barMargin
+      self.minimumNoteLineLength = minimumNoteLineLength
   }
 
   public static let defaultLayout = ScoreLayout(
@@ -25,7 +28,8 @@ public class ScoreLayout {
     staffLineWidth: 1,
     barWidth: 2,
     widthPerUnitNoteLength: 40,
-    barMargin: 10)
+    barMargin: 10,
+    minimumNoteLineLength: 24)
 }
 
 @IBDesignable public class SingleLineScore: UIView {
@@ -60,7 +64,7 @@ public class ScoreLayout {
     let c = _canvas!
     addSubview(c)
 
-    var elementsInBeam: [Note] = []
+    var notesInBeam: [(CGRect, Note)] = []
     var offset: CGFloat = 0
     var currentPositionIsInBeam: Bool
 
@@ -103,7 +107,7 @@ public class ScoreLayout {
           } else {
             b.frame = CGRectMake(offset + ballRect.size.width - lineWidth, ballRect.origin.y - lineHeight + ballRect.size.height * 0.4, lineWidth, lineHeight)
           }
-          canvas?.addSubview(b)
+          c.addSubview(b)
         } else {
           v = BlackNote()
           if (length >= 0.25) {
@@ -118,8 +122,10 @@ public class ScoreLayout {
             canvas?.addSubview(b)
           } else if (length >= 0.125) {
             currentPositionIsInBeam = true
+            notesInBeam.append((pitchRect(note.pitch, x: offset), note))
           } else if (length >= 0.0625) {
             currentPositionIsInBeam = true
+            notesInBeam.append((pitchRect(note.pitch, x: offset), note))
           }
         }
 
@@ -176,9 +182,45 @@ public class ScoreLayout {
       }
 
       if !currentPositionIsInBeam {
-        for elems in elementsInBeam.grouped(4) {
-          elems.groupBy({$0.length})
+        for notes in notesInBeam.grouped(4) {
+          for group in notes.spanBy({$0.1.length}) {
+            if group.count == 1 {
+              let (rect, note) = group.first!
+              let v = BlackNote(frame: rect)
+              let b = Block()
+              let lineHeight = staffInterval * 3
+              let lineWidth = layout.staffLineWidth * 2
+
+              var flagFrame: CGRect
+              let invert = shouldInvert(note.pitch)
+
+              if (invert) {
+                b.frame = CGRectMake(rect.origin.x, rect.origin.y + rect.size.height * 0.6, lineWidth, lineHeight)
+                let y = rect.origin.y + rect.size.height
+                flagFrame = CGRectMake(rect.origin.x, y, rect.size.width, b.frame.size.height - y + b.frame.origin.y)
+              } else {
+                b.frame = CGRectMake(rect.origin.x + rect.size.width - lineWidth, rect.origin.y - lineHeight + rect.size.height * 0.4, lineWidth, lineHeight)
+                flagFrame = CGRectMake(rect.origin.x + rect.size.width, b.frame.origin.y, rect.size.width, rect.origin.y - b.frame.origin.y)
+              }
+
+              let length = note.length.actualLength(tuneHeader.unitNoteLength.denominator)
+              if length >= 0.125 {
+                let flag = FlagEighth(frame: flagFrame)
+                flag.invert = invert
+                c.addSubview(flag)
+              } else {
+                let flag = FlagSixteenth(frame: flagFrame)
+                flag.invert = invert
+                c.addSubview(flag)
+              }
+
+              c.addSubview(b)
+              c.addSubview(v)
+            } else {
+            }
+          }
         }
+        notesInBeam = []
       }
     }
   }
@@ -196,7 +238,7 @@ public class ScoreLayout {
   }
 
   private func shouldInvert(pitch: Pitch) -> Bool {
-    return (pitch.offset * 7) + pitch.name.rawValue > 0 * 7 + PitchName.B.rawValue
+    return (pitch.offset * 7) + pitch.name.rawValue >= 0 * 7 + PitchName.B.rawValue
   }
 
 //  private func outsideOfStaff(pitch: Pitch) -> Bool {

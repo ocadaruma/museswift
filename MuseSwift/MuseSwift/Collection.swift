@@ -47,6 +47,38 @@ public extension CollectionType {
     return result
   }
 
+  public func spanBy<T: Equatable>(f: (Z) -> T) -> [[Z]] {
+    var result = [[Z]]()
+
+    var acc = [Z]()
+    for e in self {
+      if let a = acc.first {
+        if f(e) == f(a) {
+          acc.append(e)
+        } else {
+          result.append(acc)
+          acc = [e]
+        }
+      } else {
+        acc.append(e)
+      }
+    }
+
+    if acc.nonEmpty {
+      result.append(acc)
+    }
+
+    return result
+  }
+
+  public func minBy<T: Comparable>(f: (Z) -> T) -> Z? {
+    return self.minElement { f($0) < f($1) }
+  }
+
+  public func maxBy<T: Comparable>(f: (Z) -> T) -> Z? {
+    return self.maxElement { f($0) < f($1) }
+  }
+
   public var nonEmpty: Bool {
     get {
       return !isEmpty
