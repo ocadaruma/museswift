@@ -151,13 +151,17 @@ public class ScoreLayout {
           c.addSubview(accidental)
         }
 
+        for stave in outsideStaff(offset, pitch: note.pitch) {
+          c.addSubview(stave)
+        }
+
         v.frame = ballRect
         c.addSubview(v)
 
         offset += noteLengthToWidth(note.length)
       case let chord as Chord:
         offset += noteLengthToWidth(chord.length)
-      case let tuplet as Tuplet: () //TODO
+      case let tuplet as Tuplet: break //TODO
       case let rest as Rest:
         let length = rest.length.actualLength(tuneHeader.unitNoteLength.denominator)
 
@@ -239,8 +243,8 @@ public class ScoreLayout {
               c.addSubview(b)
               c.addSubview(v)
             } else if group.nonEmpty {
-              let lowest = group.minBy({$0.1.pitch})!
-              let highest = group.maxBy({$0.1.pitch})!
+              let lowest = group.maxBy({$0.0.origin.y})! // maxBy is correct.
+              let highest = group.minBy({$0.0.origin.y})! // minBy is correct.
 
               let first = group.first!
               let last = group.last!
@@ -398,10 +402,28 @@ public class ScoreLayout {
     return (pitch.offset * 7) + pitch.name.rawValue >= 0 * 7 + PitchName.B.rawValue
   }
 
-//  private func outsideOfStaff(pitch: Pitch) -> Bool {
-//    let p = (pitch.offset * 7) + pitch.name.rawValue
-//    return p >= 1 * 7 + PitchName.A.rawValue || p <= 0 * 7 + PitchName.C.rawValue
-//  }
+  private func outsideStaff(offset: CGFloat, pitch: Pitch) -> [Block] {
+    let p = (pitch.offset * 7) + pitch.name.rawValue
+    let upperBound = 1 * 7 + PitchName.A.rawValue
+    let lowerBound = 0 * 7 + PitchName.C.rawValue
+    let pRect = pitchRect(pitch, x: offset)
+    var staff = [Block]()
+
+    let x = pRect.origin.x - pRect.size.width * 0.3
+    if p >= upperBound {
+      for i in 1...(1 + (p - upperBound).abs / 2) {
+        let y = staffTop - (CGFloat(i) * staffInterval)
+        staff.append(Block(frame: CGRectMake(x, y, pRect.size.width * 1.6, layout.staffLineWidth * 2)))
+      }
+    } else if p <= lowerBound {
+      for i in 1...(1 + (p - lowerBound).abs / 2) {
+        let y = staffTop + layout.staffHeight - layout.staffLineWidth + (CGFloat(i) * staffInterval)
+        staff.append(Block(frame: CGRectMake(x, y, pRect.size.width * 1.6, layout.staffLineWidth * 2)))
+      }
+    }
+
+    return staff
+  }
 
   private func noteLengthToWidth(noteLength: NoteLength) -> CGFloat {
     return layout.widthPerUnitNoteLength * CGFloat(noteLength.numerator) / CGFloat(noteLength.denominator)
