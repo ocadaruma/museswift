@@ -164,16 +164,28 @@ public class ScoreLayout {
           v = Block()
           let h = staffInterval * 0.6
           v?.frame = CGRectMake(offset, staffTop + staffInterval * 2 - h, staffInterval * 1.5, h)
+          for dot in dotsForRest(offset, length: length, denominator: 0.5) {
+            c.addSubview(dot)
+          }
         } else if (length >= 0.25) {
           v = QuarterRest()
           let w = staffInterval * 1.1
           v?.frame = CGRectMake(offset, staffTop + staffInterval / 2, w, staffInterval * 2.5)
+          for dot in dotsForRest(offset, length: length, denominator: 0.25) {
+            c.addSubview(dot)
+          }
         } else if (length >= 0.125) {
           v = EighthRest()
           v?.frame = CGRectMake(offset, staffTop + staffInterval + layout.staffLineWidth, staffInterval * 1.3, staffInterval * 2)
+          for dot in dotsForRest(offset, length: length, denominator: 0.125) {
+            c.addSubview(dot)
+          }
         } else if (length >= 0.0625) {
           v = SixteenthRest()
           v?.frame = CGRectMake(offset, staffTop + staffInterval + layout.staffLineWidth, staffInterval * 1.3, staffInterval * 3)
+          for dot in dotsForRest(offset, length: length, denominator: 0.0625) {
+            c.addSubview(dot)
+          }
         }
 
         if let b = v {
@@ -340,6 +352,10 @@ public class ScoreLayout {
     }
 
     return result
+  }
+
+  private func dotsForRest(offset: CGFloat, length: Float, denominator: Float) -> [Oval] {
+    return dots(Pitch(name: .C, accidental: nil, offset: 1), offset: offset, length: length, denominator: denominator)
   }
 
   private func shouldInvert(pitch: Pitch) -> Bool {
