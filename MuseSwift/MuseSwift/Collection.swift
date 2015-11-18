@@ -1,6 +1,6 @@
 import Foundation
 
-public extension CollectionType {
+extension CollectionType {
   private typealias Z = Generator.Element
 
   public func grouped(n: Int) -> [[Generator.Element]] {
@@ -82,6 +82,20 @@ public extension CollectionType {
   public var nonEmpty: Bool {
     get {
       return !isEmpty
+    }
+  }
+}
+
+extension CollectionType where Generator.Element: Numeric {
+  public var sum: Generator.Element {
+    get {
+      return self.reduce(Generator.Element.Zero, combine: { $0 + $1 })
+    }
+  }
+
+  public var product: Generator.Element {
+    get {
+      return self.reduce(Generator.Element.One, combine: { $0 * $1 })
     }
   }
 }

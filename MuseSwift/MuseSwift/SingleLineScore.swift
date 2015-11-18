@@ -7,6 +7,7 @@ public class ScoreLayout {
   public let widthPerUnitNoteLength: CGFloat
   public let barMargin: CGFloat
   public let minimumNoteLineLength: CGFloat
+  public let maxBeamGradient: CGFloat
 
   public init(
     staffHeight: CGFloat,
@@ -14,13 +15,15 @@ public class ScoreLayout {
     barWidth: CGFloat,
     widthPerUnitNoteLength: CGFloat,
     barMargin: CGFloat,
-    minimumNoteLineLength: CGFloat) {
+    minimumNoteLineLength: CGFloat,
+    maxBeamGradient: CGFloat) {
       self.staffHeight = staffHeight
       self.staffLineWidth = staffLineWidth
       self.barWidth = barWidth
       self.widthPerUnitNoteLength = widthPerUnitNoteLength
       self.barMargin = barMargin
       self.minimumNoteLineLength = minimumNoteLineLength
+      self.maxBeamGradient = maxBeamGradient
   }
 
   public static let defaultLayout = ScoreLayout(
@@ -29,7 +32,8 @@ public class ScoreLayout {
     barWidth: 2,
     widthPerUnitNoteLength: 40,
     barMargin: 10,
-    minimumNoteLineLength: 24)
+    minimumNoteLineLength: 30,
+    maxBeamGradient: 1.0 / 5)
 }
 
 @IBDesignable public class SingleLineScore: UIView {
@@ -216,7 +220,76 @@ public class ScoreLayout {
 
               c.addSubview(b)
               c.addSubview(v)
-            } else {
+            } else if group.nonEmpty {
+              let lowest = group.minBy({$0.1.pitch})!
+              let highest = group.maxBy({$0.1.pitch})!
+
+              let first = group.first!
+              let last = group.last!
+
+              let a = (last.0.origin.y - first.0.origin.y) / (last.0.origin.x - first.0.origin.x)
+              let slope = a.abs < layout.maxBeamGradient ? a : layout.maxBeamGradient * a.sign
+
+              let upperF = linearFunction(slope,
+                point: Point2D(x: highest.0.origin.x + highest.0.size.width, y: highest.0.origin.y - layout.minimumNoteLineLength))
+              let lowerF = linearFunction(slope,
+                point: Point2D(x: lowest.0.origin.x, y: lowest.0.origin.y + lowest.0.size.height + layout.minimumNoteLineLength))
+
+              let staffYCenter = staffTop + staffInterval * 2
+              let upperDiff = group.map({ abs(staffYCenter - upperF($0.0.origin.x + $0.0.size.width)) }).sum
+              let lowerDiff = group.map({ abs(staffYCenter - lowerF($0.0.origin.x)) }).sum
+              let rightDown = first.1.pitch > last.1.pitch
+
+              let beam = Beam()
+              beam.lineWidth = layout.staffLineWidth * 5
+
+              if (upperDiff < lowerDiff) {
+                for (r, _) in group {
+                  let b = Block()
+                  let x = r.origin.x + r.size.width - layout.staffLineWidth * 2
+                  let y = upperF(x)
+                  b.frame = CGRectMake(x, y, layout.staffLineWidth * 2, r.origin.y - y + r.size.height * 0.4)
+                  c.addSubview(b)
+                }
+
+                let x1 = first.0.origin.x + first.0.size.width - layout.staffLineWidth * 2
+                let y1 = upperF(x1)
+                let x2 = last.0.origin.x + last.0.size.width
+                let y2 = upperF(x2)
+                beam.rightDown = rightDown
+                beam.frame = CGRectMake(x1, min(y1, y2), x2 - x1, max(abs(y1 - y2), layout.staffLineWidth * 5))
+
+                if first.1.length.actualLength(tuneHeader.unitNoteLength.denominator) <= 0.0625 {
+                  let beam2 = Beam(frame: CGRectMake(beam.frame.origin.x, beam.frame.origin.y + beam.lineWidth * 1.5 , beam.frame.size.width, beam.frame.size.height))
+                  beam2.lineWidth = beam.lineWidth
+                  beam2.rightDown = rightDown
+                  c.addSubview(beam2)
+                }
+              } else {
+                for (r, _) in group {
+                  let b = Block()
+                  let x = r.origin.x
+                  let y = lowerF(x)
+                  b.frame = CGRectMake(x, r.origin.y + r.size.height * 0.6, layout.staffLineWidth * 2, y - r.origin.y - r.size.height * 0.6)
+                  c.addSubview(b)
+                }
+
+                let x1 = first.0.origin.x
+                let y1 = lowerF(x1)
+                let x2 = last.0.origin.x + layout.staffLineWidth * 2
+                let y2 = lowerF(x2)
+                beam.rightDown = rightDown
+                beam.frame = CGRectMake(x1, min(y1, y2), x2 - x1, max(abs(y1 - y2), layout.staffLineWidth * 5))
+
+                if first.1.length.actualLength(tuneHeader.unitNoteLength.denominator) <= 0.0625 {
+                  let beam2 = Beam(frame: CGRectMake(beam.frame.origin.x, beam.frame.origin.y - beam.lineWidth * 1.5 , beam.frame.size.width, beam.frame.size.height))
+                  beam2.lineWidth = beam.lineWidth
+                  beam2.rightDown = rightDown
+                  c.addSubview(beam2)
+                }
+              }
+
+              c.addSubview(beam)
             }
           }
         }

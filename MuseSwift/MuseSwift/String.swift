@@ -5,7 +5,7 @@ public struct MatchResult {
   public let range: Range<String.Index>
 }
 
-public extension String {
+extension String {
   public var range: NSRange {
     get {
       return NSMakeRange(0, self.characters.count)

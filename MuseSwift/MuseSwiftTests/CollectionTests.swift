@@ -31,11 +31,20 @@ class CollectionTests: XCTestCase {
 
   func testMinBy() {
     XCTAssertEqual(["zero", "two", "three", "four"].minBy { $0.characters.count }, "two")
-    XCTAssertEqual(["zero", "two", "three", "four"].maxBy { $0.characters.count }, "three")
     XCTAssertEqual([String]().minBy(identity), nil)
   }
 
   func testMaxBy() {
+    XCTAssertEqual(["zero", "two", "three", "four"].maxBy { $0.characters.count }, "three")
+    XCTAssertEqual([String]().maxBy(identity), nil)
+  }
 
+  func testSum() {
+    let sum = [1, 2, 3, 4].sum
+    XCTAssertEqual(sum, 10)
+  }
+
+  func testProduct() {
+    XCTAssertEqual([Int]().sum, 0)
   }
 }

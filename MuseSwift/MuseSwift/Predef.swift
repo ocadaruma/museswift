@@ -1,5 +1,5 @@
 import Foundation
 
-func identity<T>(x: T) -> T {
+public func identity<T>(x: T) -> T {
   return x
 }
