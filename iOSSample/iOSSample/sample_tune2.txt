@@ -5,4 +5,4 @@ L: 1/8
 Q: 1/1=120
 K: Bb octave=-1
 % A(3B/d/f/ | abagf=eeg | ^cde=efde^c | dzdedc=BG | BGAcef_g_a | f2
-bgecfde^c|d
+bge^^c__f_d=e^c|d

@@ -146,6 +146,10 @@ public class ScoreLayout {
           }
         }
 
+        if let accidental = accidentalView(note.pitch, x: offset) {
+          c.addSubview(accidental)
+        }
+
         v.frame = ballRect
         c.addSubview(v)
 
@@ -321,6 +325,37 @@ public class ScoreLayout {
   private func pitchRect(pitch: Pitch, x: CGFloat) -> CGRect {
     let width = staffInterval * 1.2
     return CGRect(x: x, y: pitchToY(pitch), width: width, height: staffInterval)
+  }
+
+  private func accidentalView(pitch: Pitch, x: CGFloat) -> ScoreElement? {
+    let pRect = pitchRect(pitch, x: x)
+    var v: ScoreElement? = nil
+
+    switch pitch.accidental {
+    case .Some(.DoubleFlat):
+      let rect = CGRectMake(
+      pRect.origin.x - staffInterval * 1.5, pRect.origin.y - staffInterval * 1.2, staffInterval * 1.2, staffInterval * 1.2 + pRect.size.height)
+      v = DoubleFlat(frame: rect)
+    case .Some(.Flat):
+      let rect = CGRectMake(
+      pRect.origin.x - staffInterval, pRect.origin.y - staffInterval * 1.2, staffInterval * 0.8, staffInterval * 1.2 + pRect.size.height)
+      v = Flat(frame: rect)
+    case .Some(.Natural):
+      let rect = CGRectMake(
+      pRect.origin.x - staffInterval, pRect.origin.y - staffInterval * 0.5, staffInterval * 0.6, staffInterval * 2)
+      v = Natural(frame: rect)
+    case .Some(.Sharp):
+      let rect = CGRectMake(
+      pRect.origin.x - staffInterval, pRect.origin.y - staffInterval * 0.5, staffInterval * 0.8, staffInterval * 2)
+      v = Sharp(frame: rect)
+    case .Some(.DoubleSharp):
+      let rect = CGRectMake(
+      pRect.origin.x - staffInterval * 1.2, pRect.origin.y, staffInterval, staffInterval)
+      v = DoubleSharp(frame: rect)
+    default: break
+    }
+
+    return v
   }
 
   private func dotRect(pitch: Pitch, x: CGFloat) -> CGRect {
