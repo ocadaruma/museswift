@@ -16,6 +16,7 @@ public enum Simple : MusicalElement {
   case Tie
   case Space
   case LineBreak
+  case End
 }
 
 public struct Note : TupletMember, Equatable {

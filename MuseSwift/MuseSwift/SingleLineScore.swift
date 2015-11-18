@@ -86,13 +86,14 @@ public class ScoreLayout {
           let v = DoubleBar()
           v.frame = CGRect(x: offset - layout.barMargin, y: staffTop, width: layout.barWidth * 3, height: layout.staffHeight)
           c.addSubview(v)
-        case .Space: () //TODO
-        case .LineBreak: () //TODO
-        case .RepeatEnd: () //TODO
-        case .RepeatStart: () //TODO
-        case .Tie: () //TODO
-        case .SlurEnd: () //TODO
-        case .SlurStart: () //TODO
+        case .Space: break //TODO
+        case .LineBreak: break //TODO
+        case .RepeatEnd: break //TODO
+        case .RepeatStart: break //TODO
+        case .Tie: break //TODO
+        case .SlurEnd: break //TODO
+        case .SlurStart: break //TODO
+        case .End: break
         }
       case let note as Note:
         var v: UIView
@@ -199,7 +200,7 @@ public class ScoreLayout {
         offset += noteLengthToWidth(rest.length)
       case let rest as MultiMeasureRest:
         offset += noteLengthToWidth(NoteLength(numerator: rest.num, denominator: 1))
-      default: ()
+      default: break
       }
 
       if !currentPositionIsInBeam {
@@ -255,7 +256,7 @@ public class ScoreLayout {
               let staffYCenter = staffTop + staffInterval * 2
               let upperDiff = group.map({ abs(staffYCenter - upperF($0.0.origin.x + $0.0.size.width)) }).sum()
               let lowerDiff = group.map({ abs(staffYCenter - lowerF($0.0.origin.x)) }).sum()
-              let rightDown = first.1.pitch > last.1.pitch
+              let rightDown = first.0.origin.y < last.0.origin.y
 
               let beam = Beam()
               beam.lineWidth = layout.staffLineWidth * 5
