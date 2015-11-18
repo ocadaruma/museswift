@@ -112,6 +112,10 @@ public class ScoreLayout {
             b.frame = CGRectMake(offset + ballRect.size.width - lineWidth, ballRect.origin.y - lineHeight + ballRect.size.height * 0.4, lineWidth, lineHeight)
           }
           c.addSubview(b)
+
+          for dot in dots(note.pitch, offset: offset, length: length, denominator: 0.5) {
+            c.addSubview(dot)
+          }
         } else {
           v = BlackNote()
           if (length >= 0.25) {
@@ -123,30 +127,27 @@ public class ScoreLayout {
             } else {
               b.frame = CGRectMake(offset + ballRect.size.width - lineWidth, ballRect.origin.y - lineHeight + ballRect.size.height * 0.4, lineWidth, lineHeight)
             }
-            canvas?.addSubview(b)
+            c.addSubview(b)
+            for dot in dots(note.pitch, offset: offset, length: length, denominator: 0.25) {
+              c.addSubview(dot)
+            }
           } else if (length >= 0.125) {
             currentPositionIsInBeam = true
             notesInBeam.append((pitchRect(note.pitch, x: offset), note))
+            for dot in dots(note.pitch, offset: offset, length: length, denominator: 0.125) {
+              c.addSubview(dot)
+            }
           } else if (length >= 0.0625) {
             currentPositionIsInBeam = true
             notesInBeam.append((pitchRect(note.pitch, x: offset), note))
+            for dot in dots(note.pitch, offset: offset, length: length, denominator: 0.0625) {
+              c.addSubview(dot)
+            }
           }
         }
 
         v.frame = ballRect
         c.addSubview(v)
-
-//          let b = Block()
-//          let r: CGFloat = 1.5
-//          let w = v.frame.size.width
-//
-//          b.frame = CGRect(
-//            x: v.frame.origin.x + w * (1 - r) / 2,
-//            y: v.frame.origin.y + v.frame.size.height / 2,
-//            width: w * r,
-//            height: layout.staffLineWidth)
-//          c.addSubview(b)
-
 
         offset += noteLengthToWidth(note.length)
       case let chord as Chord:
@@ -236,8 +237,8 @@ public class ScoreLayout {
                 point: Point2D(x: lowest.0.origin.x, y: lowest.0.origin.y + lowest.0.size.height + layout.minimumNoteLineLength))
 
               let staffYCenter = staffTop + staffInterval * 2
-              let upperDiff = group.map({ abs(staffYCenter - upperF($0.0.origin.x + $0.0.size.width)) }).sum
-              let lowerDiff = group.map({ abs(staffYCenter - lowerF($0.0.origin.x)) }).sum
+              let upperDiff = group.map({ abs(staffYCenter - upperF($0.0.origin.x + $0.0.size.width)) }).sum()
+              let lowerDiff = group.map({ abs(staffYCenter - lowerF($0.0.origin.x)) }).sum()
               let rightDown = first.1.pitch > last.1.pitch
 
               let beam = Beam()
@@ -308,6 +309,37 @@ public class ScoreLayout {
   private func pitchRect(pitch: Pitch, x: CGFloat) -> CGRect {
     let width = staffInterval * 1.2
     return CGRect(x: x, y: pitchToY(pitch), width: width, height: staffInterval)
+  }
+
+  private func dotRect(pitch: Pitch, x: CGFloat) -> CGRect {
+    let step = 7 * pitch.offset + pitch.name.rawValue
+    let noteInterval = staffInterval / 2
+    let y = staffTop + noteInterval * 9 - CGFloat(step + (step + 1) % 2) * noteInterval
+
+    let l = layout.staffLineWidth * 5
+    return CGRectMake(x + staffInterval * 1.5, y + noteInterval - l / 2, l, l)
+  }
+
+  private func dots(pitch: Pitch, offset: CGFloat, length: Float, denominator: Float) -> [Oval] {
+    var result = [Oval]()
+    let length1 = length - denominator
+    let denom1 = denominator / 2
+    if length1 >= denom1 {
+      let dot1 = Oval(frame: dotRect(pitch, x: offset))
+      result.append(dot1)
+
+      let length2 = length1 - denom1
+      let denom2 = denom1 / 2
+      if length2 >= denom2 {
+        result.append(Oval(frame: CGRectMake(
+          dot1.frame.origin.x + dot1.frame.size.width + layout.staffLineWidth,
+          dot1.frame.origin.y,
+          dot1.frame.size.width,
+          dot1.frame.size.height)))
+      }
+    }
+
+    return result
   }
 
   private func shouldInvert(pitch: Pitch) -> Bool {

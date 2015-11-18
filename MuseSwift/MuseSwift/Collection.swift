@@ -87,15 +87,11 @@ extension CollectionType {
 }
 
 extension CollectionType where Generator.Element: Numeric {
-  public var sum: Generator.Element {
-    get {
-      return self.reduce(Generator.Element.Zero, combine: { $0 + $1 })
-    }
+  public func sum() -> Generator.Element {
+    return self.reduce(Generator.Element.Zero, combine: { $0 + $1 })
   }
 
-  public var product: Generator.Element {
-    get {
-      return self.reduce(Generator.Element.One, combine: { $0 * $1 })
-    }
+  public func product() -> Generator.Element {
+    return self.reduce(Generator.Element.One, combine: { $0 * $1 })
   }
 }

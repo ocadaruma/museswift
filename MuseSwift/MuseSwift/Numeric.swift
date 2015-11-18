@@ -37,8 +37,10 @@ extension Numeric {
     get {
       if self < Self.Zero {
         return -Self.One
-      } else {
+      } else if self > Self.Zero {
         return Self.One
+      } else {
+        return Self.Zero
       }
     }
   }

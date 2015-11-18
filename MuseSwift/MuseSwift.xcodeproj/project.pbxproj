@@ -34,6 +34,7 @@
 		DE9D1D321BF5E3BB0039A4C0 /* ScoreElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9D1D311BF5E3BA0039A4C0 /* ScoreElement.swift */; };
 		DEB91E6E1BFAFCCE00CCF00E /* Numeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB91E6D1BFAFCCE00CCF00E /* Numeric.swift */; };
 		DEB91E701BFB83A800CCF00E /* Predef.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB91E6F1BFB83A800CCF00E /* Predef.swift */; };
+		DEB91E721BFCC05100CCF00E /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB91E711BFCC05100CCF00E /* Shape.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		DE9D1D311BF5E3BA0039A4C0 /* ScoreElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreElement.swift; sourceTree = "<group>"; };
 		DEB91E6D1BFAFCCE00CCF00E /* Numeric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Numeric.swift; sourceTree = "<group>"; };
 		DEB91E6F1BFB83A800CCF00E /* Predef.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Predef.swift; sourceTree = "<group>"; };
+		DEB91E711BFCC05100CCF00E /* Shape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +214,7 @@
 				DE9D1D311BF5E3BA0039A4C0 /* ScoreElement.swift */,
 				DE9D1D281BF5E3840039A4C0 /* Symbol.swift */,
 				DE9D1D261BF5E3840039A4C0 /* UIView.swift */,
+				DEB91E711BFCC05100CCF00E /* Shape.swift */,
 			);
 			name = Element;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				DE15166A1BF58CD800871086 /* String.swift in Sources */,
 				DE1516561BF5865A00871086 /* Core.swift in Sources */,
 				DEB91E6E1BFAFCCE00CCF00E /* Numeric.swift in Sources */,
+				DEB91E721BFCC05100CCF00E /* Shape.swift in Sources */,
 				DE97BCD21BF964CC000D367D /* Collection.swift in Sources */,
 				DE15165D1BF58C5E00871086 /* Parser.swift in Sources */,
 				DE9D1D201BF5B54F0039A4C0 /* SingleLineScore.swift in Sources */,
