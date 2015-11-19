@@ -6,11 +6,11 @@ public class Animator {
   var previousTime: CFTimeInterval = 0
   var velocity: CGFloat = 0
 
-  public init(target: UIView, tempo: Tempo, distancePerUnit: CGFloat) {
+  public init(target: UIView, tempo: Tempo, widthPerUnitNoteLength: CGFloat) {
     self.target = target
     let bpmInUnit = tempo.bpm * tempo.inLength.numerator / tempo.inLength.denominator
     let bps = CGFloat(bpmInUnit) / 60
-    velocity = distancePerUnit * bps
+    velocity = widthPerUnitNoteLength * bps
   }
 
   public func start() {

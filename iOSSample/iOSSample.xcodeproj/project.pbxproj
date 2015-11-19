@@ -15,6 +15,7 @@
 		DE1516521BF585D200871086 /* MuseSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE1516511BF585D200871086 /* MuseSwift.framework */; };
 		DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B31BF8BFF8000E449D /* sample_tune.txt */; };
 		DEA012B61BF8BFF8000E449D /* sample_tune2.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B41BF8BFF8000E449D /* sample_tune2.txt */; };
+		DEB91E741BFCEA1800CCF00E /* sample_tune3.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEB91E731BFCEA1700CCF00E /* sample_tune3.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		DE1516511BF585D200871086 /* MuseSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MuseSwift.framework; path = "../MuseSwift/build/Debug-iphoneos/MuseSwift.framework"; sourceTree = "<group>"; };
 		DEA012B31BF8BFF8000E449D /* sample_tune.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune.txt; sourceTree = "<group>"; };
 		DEA012B41BF8BFF8000E449D /* sample_tune2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune2.txt; sourceTree = "<group>"; };
+		DEB91E731BFCEA1700CCF00E /* sample_tune3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune3.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				DE15164B1BF585BB00871086 /* Info.plist */,
 				DEA012B31BF8BFF8000E449D /* sample_tune.txt */,
 				DEA012B41BF8BFF8000E449D /* sample_tune2.txt */,
+				DEB91E731BFCEA1700CCF00E /* sample_tune3.txt */,
 			);
 			path = iOSSample;
 			sourceTree = "<group>";
@@ -136,6 +139,7 @@
 				DE15164A1BF585BB00871086 /* LaunchScreen.storyboard in Resources */,
 				DE1516471BF585BB00871086 /* Assets.xcassets in Resources */,
 				DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */,
+				DEB91E741BFCEA1800CCF00E /* sample_tune3.txt in Resources */,
 				DE1516451BF585BB00871086 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

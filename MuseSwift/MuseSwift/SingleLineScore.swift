@@ -1,39 +1,51 @@
 import Foundation
 
+private let staffNum: Int = 5
+
+private let Whole: Float = 1
+private let Half: Float = Whole / 2
+private let Quarter: Float = Half / 2
+private let Eighth: Float = Quarter / 2
+private let Sixteenth: Float = Eighth / 2
+
 public class ScoreLayout {
   public let staffHeight: CGFloat
   public let staffLineWidth: CGFloat
-  public let barWidth: CGFloat
+  public let stemWidth: CGFloat
   public let widthPerUnitNoteLength: CGFloat
-  public let barMargin: CGFloat
-  public let minimumNoteLineLength: CGFloat
-  public let maxBeamGradient: CGFloat
+  public let barMarginRight: CGFloat
+  public let minStemHeight: CGFloat
+  public let maxBeamSlope: CGFloat
+  public let dotMarginLeft: CGFloat
 
   public init(
     staffHeight: CGFloat,
     staffLineWidth: CGFloat,
-    barWidth: CGFloat,
+    stemWidth: CGFloat,
     widthPerUnitNoteLength: CGFloat,
-    barMargin: CGFloat,
-    minimumNoteLineLength: CGFloat,
-    maxBeamGradient: CGFloat) {
+    barMarginRight: CGFloat,
+    minStemHeight: CGFloat,
+    maxBeamSlope: CGFloat,
+    dotMarginLeft: CGFloat) {
       self.staffHeight = staffHeight
       self.staffLineWidth = staffLineWidth
-      self.barWidth = barWidth
+      self.stemWidth = stemWidth
       self.widthPerUnitNoteLength = widthPerUnitNoteLength
-      self.barMargin = barMargin
-      self.minimumNoteLineLength = minimumNoteLineLength
-      self.maxBeamGradient = maxBeamGradient
+      self.barMarginRight = barMarginRight
+      self.minStemHeight = minStemHeight
+      self.maxBeamSlope = maxBeamSlope
+      self.dotMarginLeft = dotMarginLeft
   }
 
   public static let defaultLayout = ScoreLayout(
     staffHeight: 60,
     staffLineWidth: 1,
-    barWidth: 2,
+    stemWidth: 2,
     widthPerUnitNoteLength: 40,
-    barMargin: 10,
-    minimumNoteLineLength: 30,
-    maxBeamGradient: 1.0 / 5)
+    barMarginRight: 10,
+    minStemHeight: 30,
+    maxBeamSlope: 0.2,
+    dotMarginLeft: 3)
 }
 
 @IBDesignable public class SingleLineScore: UIView {
@@ -51,43 +63,47 @@ public class ScoreLayout {
 
   private var staffInterval: CGFloat {
     get {
-      return layout.staffHeight / (5 - 1)
+      return layout.staffHeight / CGFloat(staffNum - 1)
     }
   }
 
-  private var _canvas: UIView? = nil
-  public var canvas: UIView? { get {return _canvas} }
+  /// score elemeents will be added to this view.
+  private var _canvas: UIView! = nil
+  public var canvas: UIView { get {return _canvas} }
 
   public func loadVoice(tuneHeader: TuneHeader, voiceHeader: VoiceHeader, voice: Voice) -> Void {
-
-    if let c = _canvas {
-      c.removeFromSuperview()
-    }
-
+    if let c = _canvas { c.removeFromSuperview() }
     _canvas = UIView(frame: bounds)
-    let c = _canvas!
-    addSubview(c)
+    addSubview(canvas)
 
     var notesInBeam: [(CGRect, Note)] = []
-    var offset: CGFloat = 0
+    var xOffset: CGFloat = 0
     var currentPositionIsInBeam: Bool
 
-    for e in voice.elements {
+    for element in voice.elements {
       currentPositionIsInBeam = false
 
-      switch e {
-      case let s as Simple:
-        switch s {
+      switch element {
+      case let simple as Simple:
+        switch simple {
         case .BarLine:
-          let v = Block()
-          v.frame = CGRect(x: offset - layout.barMargin, y: staffTop, width: layout.barWidth, height: layout.staffHeight)
-          c.addSubview(v)
+          canvas.addSubview(
+            Block(frame:
+              CGRect(
+                x: xOffset - layout.barMarginRight,
+                y: staffTop,
+                width: layout.stemWidth,
+                height: layout.staffHeight)))
         case .DoubleBarLine:
-          let v = DoubleBar()
-          v.frame = CGRect(x: offset - layout.barMargin, y: staffTop, width: layout.barWidth * 3, height: layout.staffHeight)
-          c.addSubview(v)
-        case .Space: break //TODO
-        case .LineBreak: break //TODO
+          canvas.addSubview(
+            DoubleBar(frame:
+              CGRect(
+                x: xOffset - layout.barMarginRight,
+                y: staffTop,
+                width: layout.stemWidth * 3,
+                height: layout.staffHeight)))
+        case .Space: break
+        case .LineBreak: break
         case .RepeatEnd: break //TODO
         case .RepeatStart: break //TODO
         case .Tie: break //TODO
@@ -96,114 +112,108 @@ public class ScoreLayout {
         case .End: break
         }
       case let note as Note:
-        var v: UIView
+        var noteHead: ScoreElement
         let length = note.length.actualLength(tuneHeader.unitNoteLength.denominator)
-        let ballRect = pitchRect(note.pitch, x: offset)
+        let noteHeadFrame = noteHeadFrameFor(note.pitch, xOffset: xOffset)
 
-        if (length >= 1) {
-          v = WholeNote()
-        } else if (length >= 0.5) {
-          v = WhiteNote()
-          let b = Block()
-          let lineHeight = staffInterval * 3
-          let lineWidth = layout.staffLineWidth * 2
-          if (shouldInvert(note.pitch)) {
-            b.frame = CGRectMake(offset, ballRect.origin.y + ballRect.size.height * 0.6, lineWidth, lineHeight)
-          } else {
-            b.frame = CGRectMake(offset + ballRect.size.width - lineWidth, ballRect.origin.y - lineHeight + ballRect.size.height * 0.4, lineWidth, lineHeight)
-          }
-          c.addSubview(b)
+        if (length >= Whole) { // whole note
+          noteHead = WholeNote()
+        } else if (length >= Half) { // half note
+          noteHead = WhiteNote()
+          canvas.addSubview(stemForNote(noteHeadFrame, pitch: note.pitch))
 
-          for dot in dots(note.pitch, offset: offset, length: length, denominator: 0.5) {
-            c.addSubview(dot)
+          for dot in dots(note.pitch, x: noteHeadFrame.rightTop.x, length: length, denominator: Half) {
+            canvas.addSubview(dot)
           }
         } else {
-          v = BlackNote()
-          if (length >= 0.25) {
-            let b = Block()
-            let lineHeight = staffInterval * 3
-            let lineWidth = layout.staffLineWidth * 2
-            if (shouldInvert(note.pitch)) {
-              b.frame = CGRectMake(offset, ballRect.origin.y + ballRect.size.height * 0.6, lineWidth, lineHeight)
-            } else {
-              b.frame = CGRectMake(offset + ballRect.size.width - lineWidth, ballRect.origin.y - lineHeight + ballRect.size.height * 0.4, lineWidth, lineHeight)
+          noteHead = BlackNote()
+          if (length >= Quarter) { // quarter note
+            canvas.addSubview(stemForNote(noteHeadFrame, pitch: note.pitch))
+            for dot in dots(note.pitch, x: noteHeadFrame.rightTop.x, length: length, denominator: Quarter) {
+              canvas.addSubview(dot)
             }
-            c.addSubview(b)
-            for dot in dots(note.pitch, offset: offset, length: length, denominator: 0.25) {
-              c.addSubview(dot)
-            }
-          } else if (length >= 0.125) {
+          } else if (length >= Eighth) { // eighth note
             currentPositionIsInBeam = true
-            notesInBeam.append((pitchRect(note.pitch, x: offset), note))
-            for dot in dots(note.pitch, offset: offset, length: length, denominator: 0.125) {
-              c.addSubview(dot)
+            notesInBeam.append((noteHeadFrameFor(note.pitch, xOffset: xOffset), note))
+            for dot in dots(note.pitch, x: noteHeadFrame.rightTop.x, length: length, denominator: Eighth) {
+              canvas.addSubview(dot)
             }
-          } else if (length >= 0.0625) {
+          } else if (length >= Sixteenth) { // sixteenth note
             currentPositionIsInBeam = true
-            notesInBeam.append((pitchRect(note.pitch, x: offset), note))
-            for dot in dots(note.pitch, offset: offset, length: length, denominator: 0.0625) {
-              c.addSubview(dot)
+            notesInBeam.append((noteHeadFrameFor(note.pitch, xOffset: xOffset), note))
+            for dot in dots(note.pitch, x: noteHeadFrame.rightTop.x, length: length, denominator: Sixteenth) {
+              canvas.addSubview(dot)
             }
           }
         }
 
-        if let accidental = accidentalView(note.pitch, x: offset) {
-          c.addSubview(accidental)
-        }
+        // render accidental
+        accidentalView(note.pitch, x: xOffset).foreach({self.canvas.addSubview($0)})
 
-        for stave in outsideStaff(offset, pitch: note.pitch) {
-          c.addSubview(stave)
-        }
+        // render staff (if pitch is high or low.)
+        for stave in outsideStaff(xOffset, pitch: note.pitch) { canvas.addSubview(stave) }
 
-        v.frame = ballRect
-        c.addSubview(v)
+        noteHead.frame = noteHeadFrame
+        canvas.addSubview(noteHead)
 
-        offset += noteLengthToWidth(note.length)
+        xOffset += noteLengthToWidth(note.length)
       case let chord as Chord:
-        offset += noteLengthToWidth(chord.length)
+        xOffset += noteLengthToWidth(chord.length)
       case let tuplet as Tuplet: break //TODO
       case let rest as Rest:
         let length = rest.length.actualLength(tuneHeader.unitNoteLength.denominator)
 
-        var v: UIView? = nil
-        if (length >= 1) {
-          v = Block()
-          v?.frame = CGRectMake(offset, staffTop + staffInterval, staffInterval * 1.5, staffInterval * 0.6)
-        } else if (length >= 0.5) {
-          v = Block()
-          let h = staffInterval * 0.6
-          v?.frame = CGRectMake(offset, staffTop + staffInterval * 2 - h, staffInterval * 1.5, h)
-          for dot in dotsForRest(offset, length: length, denominator: 0.5) {
-            c.addSubview(dot)
-          }
-        } else if (length >= 0.25) {
-          v = QuarterRest()
-          let w = staffInterval * 1.1
-          v?.frame = CGRectMake(offset, staffTop + staffInterval / 2, w, staffInterval * 2.5)
-          for dot in dotsForRest(offset, length: length, denominator: 0.25) {
-            c.addSubview(dot)
-          }
-        } else if (length >= 0.125) {
-          v = EighthRest()
-          v?.frame = CGRectMake(offset, staffTop + staffInterval + layout.staffLineWidth, staffInterval * 1.3, staffInterval * 2)
-          for dot in dotsForRest(offset, length: length, denominator: 0.125) {
-            c.addSubview(dot)
-          }
-        } else if (length >= 0.0625) {
-          v = SixteenthRest()
-          v?.frame = CGRectMake(offset, staffTop + staffInterval + layout.staffLineWidth, staffInterval * 1.3, staffInterval * 3)
-          for dot in dotsForRest(offset, length: length, denominator: 0.0625) {
-            c.addSubview(dot)
-          }
+        var restOpt: ScoreElement! = nil
+
+        if (length >= Whole) {
+          restOpt = Block()
+          let width = staffInterval * 1.5
+          restOpt.frame = CGRect(
+            x: xOffset + noteLengthToWidth(rest.length) / 2 - (width / 2),
+            y: staffTop + staffInterval,
+            width: width,
+            height: staffInterval * 0.6)
+        } else if (length >= Half) {
+          restOpt = Block()
+          let width = staffInterval * 1.5
+          let height = staffInterval * 0.6
+          restOpt.frame = CGRect(
+            x: xOffset + noteLengthToWidth(rest.length) / 2 - (width / 2),
+            y: staffTop + staffInterval * 2 - height,
+            width: width,
+            height: height)
+          for dot in dotsForRest(restOpt.frame.rightTop.x, length: length, denominator: Half) { canvas.addSubview(dot) }
+        } else if (length >= Quarter) {
+          restOpt = QuarterRest()
+          restOpt.frame = CGRect(
+            x: xOffset,
+            y: staffTop + staffInterval / 2,
+            width: staffInterval * 1.1,
+            height: staffInterval * 2.5)
+          for dot in dotsForRest(restOpt.frame.rightTop.x, length: length, denominator: Quarter) { canvas.addSubview(dot) }
+        } else if (length >= Eighth) {
+          restOpt = EighthRest()
+          restOpt.frame = CGRect(
+            x: xOffset,
+            y: staffTop + staffInterval + layout.staffLineWidth,
+            width: staffInterval * 1.3,
+            height: staffInterval * 2)
+          for dot in dotsForRest(restOpt.frame.rightTop.x, length: length, denominator: Eighth) { canvas.addSubview(dot) }
+        } else if (length >= Sixteenth) {
+          restOpt = SixteenthRest()
+          restOpt.frame = CGRect(
+            x: xOffset,
+            y: staffTop + staffInterval + layout.staffLineWidth,
+            width: staffInterval * 1.3,
+            height: staffInterval * 3)
+          for dot in dotsForRest(restOpt.frame.rightTop.x, length: length, denominator: Sixteenth) { canvas.addSubview(dot) }
         }
 
-        if let b = v {
-          canvas?.addSubview(b)
-        }
+        if let r = restOpt { canvas.addSubview(r) }
 
-        offset += noteLengthToWidth(rest.length)
+        xOffset += noteLengthToWidth(rest.length)
       case let rest as MultiMeasureRest:
-        offset += noteLengthToWidth(NoteLength(numerator: rest.num, denominator: 1))
+        xOffset += noteLengthToWidth(NoteLength(numerator: rest.num, denominator: 1))
       default: break
       }
 
@@ -233,15 +243,15 @@ public class ScoreLayout {
               if length >= 0.125 {
                 let flag = FlagEighth(frame: flagFrame)
                 flag.invert = invert
-                c.addSubview(flag)
+                canvas.addSubview(flag)
               } else {
                 let flag = FlagSixteenth(frame: flagFrame)
                 flag.invert = invert
-                c.addSubview(flag)
+                canvas.addSubview(flag)
               }
 
-              c.addSubview(b)
-              c.addSubview(v)
+              canvas.addSubview(b)
+              canvas.addSubview(v)
             } else if group.nonEmpty {
               let lowest = group.maxBy({$0.0.origin.y})! // maxBy is correct.
               let highest = group.minBy({$0.0.origin.y})! // minBy is correct.
@@ -250,12 +260,12 @@ public class ScoreLayout {
               let last = group.last!
 
               let a = (last.0.origin.y - first.0.origin.y) / (last.0.origin.x - first.0.origin.x)
-              let slope = a.abs < layout.maxBeamGradient ? a : layout.maxBeamGradient * a.sign
+              let slope = a.abs < layout.maxBeamSlope ? a : layout.maxBeamSlope * a.sign
 
               let upperF = linearFunction(slope,
-                point: Point2D(x: highest.0.origin.x + highest.0.size.width, y: highest.0.origin.y - layout.minimumNoteLineLength))
+                point: Point2D(x: highest.0.origin.x + highest.0.size.width, y: highest.0.origin.y - layout.minStemHeight))
               let lowerF = linearFunction(slope,
-                point: Point2D(x: lowest.0.origin.x, y: lowest.0.origin.y + lowest.0.size.height + layout.minimumNoteLineLength))
+                point: Point2D(x: lowest.0.origin.x, y: lowest.0.origin.y + lowest.0.size.height + layout.minStemHeight))
 
               let staffYCenter = staffTop + staffInterval * 2
               let upperDiff = group.map({ abs(staffYCenter - upperF($0.0.origin.x + $0.0.size.width)) }).sum()
@@ -271,7 +281,7 @@ public class ScoreLayout {
                   let x = r.origin.x + r.size.width - layout.staffLineWidth * 2
                   let y = upperF(x)
                   b.frame = CGRectMake(x, y, layout.staffLineWidth * 2, r.origin.y - y + r.size.height * 0.4)
-                  c.addSubview(b)
+                  canvas.addSubview(b)
                 }
 
                 let x1 = first.0.origin.x + first.0.size.width - layout.staffLineWidth * 2
@@ -285,7 +295,7 @@ public class ScoreLayout {
                   let beam2 = Beam(frame: CGRectMake(beam.frame.origin.x, beam.frame.origin.y + beam.lineWidth * 1.5 , beam.frame.size.width, beam.frame.size.height))
                   beam2.lineWidth = beam.lineWidth
                   beam2.rightDown = rightDown
-                  c.addSubview(beam2)
+                  canvas.addSubview(beam2)
                 }
               } else {
                 for (r, _) in group {
@@ -293,7 +303,7 @@ public class ScoreLayout {
                   let x = r.origin.x
                   let y = lowerF(x)
                   b.frame = CGRectMake(x, r.origin.y + r.size.height * 0.6, layout.staffLineWidth * 2, y - r.origin.y - r.size.height * 0.6)
-                  c.addSubview(b)
+                  canvas.addSubview(b)
                 }
 
                 let x1 = first.0.origin.x
@@ -307,11 +317,11 @@ public class ScoreLayout {
                   let beam2 = Beam(frame: CGRectMake(beam.frame.origin.x, beam.frame.origin.y - beam.lineWidth * 1.5 , beam.frame.size.width, beam.frame.size.height))
                   beam2.lineWidth = beam.lineWidth
                   beam2.rightDown = rightDown
-                  c.addSubview(beam2)
+                  canvas.addSubview(beam2)
                 }
               }
 
-              c.addSubview(beam)
+              canvas.addSubview(beam)
             }
           }
         }
@@ -320,47 +330,62 @@ public class ScoreLayout {
     }
   }
 
-  private func pitchToY(pitch: Pitch) -> CGFloat {
+  private func noteHeadTop(pitch: Pitch) -> CGFloat {
     let noteInterval = staffInterval / 2
     let c0 = staffTop + noteInterval * 9
 
     return c0 - CGFloat(7 * pitch.offset + pitch.name.rawValue) * noteInterval
   }
 
-  private func pitchRect(pitch: Pitch, x: CGFloat) -> CGRect {
+  private func noteHeadFrameFor(pitch: Pitch, xOffset: CGFloat) -> CGRect {
     let width = staffInterval * 1.2
-    return CGRect(x: x, y: pitchToY(pitch), width: width, height: staffInterval)
+    return CGRect(x: xOffset, y: noteHeadTop(pitch), width: width, height: staffInterval)
   }
 
   private func accidentalView(pitch: Pitch, x: CGFloat) -> ScoreElement? {
-    let pRect = pitchRect(pitch, x: x)
-    var v: ScoreElement? = nil
+    let pRect = noteHeadFrameFor(pitch, xOffset: x)
+    var view: ScoreElement? = nil
 
     switch pitch.accidental {
     case .Some(.DoubleFlat):
-      let rect = CGRectMake(
-      pRect.origin.x - staffInterval * 1.5, pRect.origin.y - staffInterval * 1.2, staffInterval * 1.2, staffInterval * 1.2 + pRect.size.height)
-      v = DoubleFlat(frame: rect)
+      view = DoubleFlat(frame:
+        CGRect(
+          x: pRect.origin.x - staffInterval * 1.5,
+          y: pRect.origin.y - staffInterval * 1.2,
+          width: staffInterval * 1.2,
+          height: staffInterval * 1.2 + pRect.size.height))
     case .Some(.Flat):
-      let rect = CGRectMake(
-      pRect.origin.x - staffInterval, pRect.origin.y - staffInterval * 1.2, staffInterval * 0.8, staffInterval * 1.2 + pRect.size.height)
-      v = Flat(frame: rect)
+      view = Flat(frame:
+        CGRect(
+          x: pRect.origin.x - staffInterval,
+          y: pRect.origin.y - staffInterval * 1.2,
+          width: staffInterval * 0.8,
+          height: staffInterval * 1.2 + pRect.size.height))
     case .Some(.Natural):
-      let rect = CGRectMake(
-      pRect.origin.x - staffInterval, pRect.origin.y - staffInterval * 0.5, staffInterval * 0.6, staffInterval * 2)
-      v = Natural(frame: rect)
+      view = Natural(frame:
+        CGRect(
+          x: pRect.origin.x - staffInterval,
+          y: pRect.origin.y - staffInterval * 0.5,
+          width: staffInterval * 0.6,
+          height: staffInterval * 2))
     case .Some(.Sharp):
-      let rect = CGRectMake(
-      pRect.origin.x - staffInterval, pRect.origin.y - staffInterval * 0.5, staffInterval * 0.8, staffInterval * 2)
-      v = Sharp(frame: rect)
+      view = Sharp(frame:
+        CGRect(
+          x: pRect.origin.x - staffInterval,
+          y: pRect.origin.y - staffInterval * 0.5,
+          width: staffInterval * 0.8,
+          height: staffInterval * 2))
     case .Some(.DoubleSharp):
-      let rect = CGRectMake(
-      pRect.origin.x - staffInterval * 1.2, pRect.origin.y, staffInterval, staffInterval)
-      v = DoubleSharp(frame: rect)
+      view = DoubleSharp(frame:
+        CGRect(
+          x: pRect.origin.x - staffInterval * 1.2,
+          y: pRect.origin.y,
+          width: staffInterval,
+          height: staffInterval))
     default: break
     }
 
-    return v
+    return view
   }
 
   private func dotRect(pitch: Pitch, x: CGFloat) -> CGRect {
@@ -368,34 +393,43 @@ public class ScoreLayout {
     let noteInterval = staffInterval / 2
     let y = staffTop + noteInterval * 9 - CGFloat(step + (step + 1) % 2) * noteInterval
 
-    let l = layout.staffLineWidth * 5
-    return CGRectMake(x + staffInterval * 1.5, y + noteInterval - l / 2, l, l)
+    let d = layout.staffLineWidth * 5
+    return CGRect(x: x + layout.dotMarginLeft, y: y + noteInterval - d / 2, width: d, height: d)
   }
 
-  private func dots(pitch: Pitch, offset: CGFloat, length: Float, denominator: Float) -> [Oval] {
+  private func dots(pitch: Pitch, x: CGFloat, length: Float, denominator: Float) -> [Oval] {
     var result = [Oval]()
     let length1 = length - denominator
     let denom1 = denominator / 2
     if length1 >= denom1 {
-      let dot1 = Oval(frame: dotRect(pitch, x: offset))
+      let dot1 = Oval(frame: dotRect(pitch, x: x))
       result.append(dot1)
 
       let length2 = length1 - denom1
       let denom2 = denom1 / 2
       if length2 >= denom2 {
-        result.append(Oval(frame: CGRectMake(
-          dot1.frame.origin.x + dot1.frame.size.width + layout.staffLineWidth,
-          dot1.frame.origin.y,
-          dot1.frame.size.width,
-          dot1.frame.size.height)))
+        result.append(
+          Oval(frame: dot1.frame.withX(dot1.frame.x + dot1.frame.width + layout.staffLineWidth)))
       }
     }
 
     return result
   }
 
-  private func dotsForRest(offset: CGFloat, length: Float, denominator: Float) -> [Oval] {
-    return dots(Pitch(name: .C, accidental: nil, offset: 1), offset: offset, length: length, denominator: denominator)
+  private func dotsForRest(x: CGFloat, length: Float, denominator: Float) -> [Oval] {
+    return dots(Pitch(name: .C, accidental: nil, offset: 1), x: x, length: length, denominator: denominator)
+  }
+
+  private func stemForNote(noteHeadFrame: CGRect, pitch: Pitch) -> Block {
+    let stem = Block()
+    let stemHeight = staffInterval * 3
+    if (shouldInvert(pitch)) {
+      stem.frame = CGRectMake(noteHeadFrame.x, noteHeadFrame.y + noteHeadFrame.height * 0.6, layout.stemWidth, stemHeight)
+    } else {
+      stem.frame = CGRectMake(noteHeadFrame.rightTop.x - layout.stemWidth, noteHeadFrame.y - stemHeight + noteHeadFrame.height * 0.4, layout.stemWidth, stemHeight)
+    }
+
+    return stem
   }
 
   private func shouldInvert(pitch: Pitch) -> Bool {
@@ -406,7 +440,7 @@ public class ScoreLayout {
     let p = (pitch.offset * 7) + pitch.name.rawValue
     let upperBound = 1 * 7 + PitchName.A.rawValue
     let lowerBound = 0 * 7 + PitchName.C.rawValue
-    let pRect = pitchRect(pitch, x: offset)
+    let pRect = noteHeadFrameFor(pitch, xOffset: offset)
     var staff = [Block]()
 
     let x = pRect.origin.x - pRect.size.width * 0.3
