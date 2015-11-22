@@ -5,6 +5,7 @@ public protocol HasLength {
   var length: NoteLength { get }
 }
 public protocol TupletMember : MusicalElement, HasLength {}
+public protocol BeamMember: MusicalElement, HasLength {}
 
 public enum Simple : MusicalElement {
   case BarLine
@@ -19,7 +20,7 @@ public enum Simple : MusicalElement {
   case End
 }
 
-public struct Note : TupletMember, Equatable {
+public struct Note : TupletMember, BeamMember, Equatable {
   public let length: NoteLength
   public let pitch: Pitch
   public init(length: NoteLength, pitch: Pitch) {
@@ -52,7 +53,7 @@ public func ==(lhs: MultiMeasureRest, rhs: MultiMeasureRest) -> Bool {
   return lhs.num == rhs.num
 }
 
-public struct Chord : TupletMember, Equatable {
+public struct Chord : TupletMember, BeamMember, Equatable {
   public let length: NoteLength
   public let pitches: [Pitch]
   public init(length: NoteLength, pitches: [Pitch]) {
