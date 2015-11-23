@@ -21,6 +21,8 @@
 		DE1516751BF58E2200871086 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1516731BF58E2200871086 /* StringTests.swift */; };
 		DE1516781BF58E2F00871086 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1516761BF58E2F00871086 /* ParserTests.swift */; };
 		DE1516791BF58E2F00871086 /* song.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE1516771BF58E2F00871086 /* song.txt */; };
+		DE7B68111C0236D600CC356E /* SingleLineScoreRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7B68101C0236D600CC356E /* SingleLineScoreRenderer.swift */; };
+		DE7B68141C02381400CC356E /* ScoreLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7B68131C02381400CC356E /* ScoreLayout.swift */; };
 		DE7FE6D91BF8CF03004A4D18 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7FE6D81BF8CF03004A4D18 /* Animator.swift */; };
 		DE8EB3DA1BFD4ABC005C0A6E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8EB3D91BFD4ABC005C0A6E /* Extension.swift */; };
 		DE8EB3DC1BFDB141005C0A6E /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8EB3DB1BFDB141005C0A6E /* Option.swift */; };
@@ -67,6 +69,8 @@
 		DE1516731BF58E2200871086 /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
 		DE1516761BF58E2F00871086 /* ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParserTests.swift; sourceTree = "<group>"; };
 		DE1516771BF58E2F00871086 /* song.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = song.txt; sourceTree = "<group>"; };
+		DE7B68101C0236D600CC356E /* SingleLineScoreRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleLineScoreRenderer.swift; sourceTree = "<group>"; };
+		DE7B68131C02381400CC356E /* ScoreLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreLayout.swift; sourceTree = "<group>"; };
 		DE7FE6D81BF8CF03004A4D18 /* Animator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 		DE8EB3D91BFD4ABC005C0A6E /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		DE8EB3DB1BFDB141005C0A6E /* Option.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
@@ -192,6 +196,16 @@
 			name = Misc;
 			sourceTree = "<group>";
 		};
+		DE7B68121C02380100CC356E /* SingleLineScore */ = {
+			isa = PBXGroup;
+			children = (
+				DE9D1D1F1BF5B54F0039A4C0 /* SingleLineScore.swift */,
+				DE7B68101C0236D600CC356E /* SingleLineScoreRenderer.swift */,
+				DE7B68131C02381400CC356E /* ScoreLayout.swift */,
+			);
+			name = SingleLineScore;
+			sourceTree = "<group>";
+		};
 		DE7FE6D71BF8CEA3004A4D18 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,8 +217,8 @@
 		DE9D1D1E1BF5B5210039A4C0 /* Render */ = {
 			isa = PBXGroup;
 			children = (
+				DE7B68121C02380100CC356E /* SingleLineScore */,
 				DE9D1D221BF5E3790039A4C0 /* Element */,
-				DE9D1D1F1BF5B54F0039A4C0 /* SingleLineScore.swift */,
 				DE8EB3D91BFD4ABC005C0A6E /* Extension.swift */,
 			);
 			name = Render;
@@ -339,6 +353,7 @@
 				DE9D1D2E1BF5E3840039A4C0 /* Flag.swift in Sources */,
 				DE15165F1BF58C5E00871086 /* Tune.swift in Sources */,
 				DE9D1D301BF5E3840039A4C0 /* Accidental.swift in Sources */,
+				DE7B68111C0236D600CC356E /* SingleLineScoreRenderer.swift in Sources */,
 				DE15165E1BF58C5E00871086 /* Header.swift in Sources */,
 				DE15165C1BF58C5E00871086 /* Element.swift in Sources */,
 				DE15166A1BF58CD800871086 /* String.swift in Sources */,
@@ -357,6 +372,7 @@
 				DEB91E701BFB83A800CCF00E /* Predef.swift in Sources */,
 				DE1516601BF58C5E00871086 /* ABCParser.swift in Sources */,
 				DE1516691BF58CD800871086 /* StringScanner.swift in Sources */,
+				DE7B68141C02381400CC356E /* ScoreLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

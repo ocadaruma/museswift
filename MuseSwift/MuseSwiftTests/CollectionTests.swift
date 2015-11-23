@@ -39,12 +39,19 @@ class CollectionTests: XCTestCase {
     XCTAssertEqual([String]().maxBy(identity), nil)
   }
 
+  func testSortBy() {
+    XCTAssertEqual(["abc", "de", "f"].sortBy({$0.characters.count}), ["f", "de", "abc"])
+  }
+
   func testSum() {
-    let sum = [1, 2, 3, 4].sum
-    XCTAssertEqual(sum, 10)
+    let xs = [1, 2, 3, 4]
+    XCTAssertEqual(xs.sum(), 10)
+    XCTAssertEqual([Int]().sum(), 0)
   }
 
   func testProduct() {
-    XCTAssertEqual([Int]().sum, 0)
+    let xs = [1, 2, 3, 4]
+    XCTAssertEqual(xs.product(), 24)
+    XCTAssertEqual([Int]().product(), 1)
   }
 }

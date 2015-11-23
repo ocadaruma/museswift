@@ -72,11 +72,15 @@ extension CollectionType {
   }
 
   public func minBy<T: Comparable>(f: (Z) -> T) -> Z? {
-    return self.minElement { f($0) < f($1) }
+    return self.minElement({ f($0) < f($1) })
   }
 
   public func maxBy<T: Comparable>(f: (Z) -> T) -> Z? {
-    return self.maxElement { f($0) < f($1) }
+    return self.maxElement({ f($0) < f($1) })
+  }
+
+  public func sortBy<T: Comparable>(f: (Z) -> T) -> [Z] {
+    return self.sort({ f($0) < f($1) })
   }
 
   public var nonEmpty: Bool {

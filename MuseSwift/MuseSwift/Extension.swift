@@ -22,7 +22,6 @@ public prefix func -(point: CGPoint) -> CGPoint {
   return CGPoint(x: -point.x, y: -point.y)
 }
 
-
 extension CGRect {
   public var x: CGFloat {
     get { return self.origin.x }
@@ -38,22 +37,6 @@ extension CGRect {
 
   public var height: CGFloat {
     get { return self.size.height }
-  }
-
-  public var leftTop: CGPoint {
-    get { return self.origin }
-  }
-
-  public var rightTop: CGPoint {
-    get { return CGPoint(x: self.x + self.width, y: self.y) }
-  }
-
-  public var rightBottom: CGPoint {
-    get { return CGPoint(x: self.x + self.width, y: self.y + self.height) }
-  }
-
-  public var leftBottom: CGPoint {
-    get { return CGPoint(x: self.x, y: self.y + self.height) }
   }
 
   public func withOrigin(origin: CGPoint) -> CGRect {
