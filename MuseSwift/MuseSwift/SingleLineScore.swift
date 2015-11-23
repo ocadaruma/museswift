@@ -66,6 +66,7 @@ import Foundation
         case .SlurStart: break //TODO
         case .End: break
         }
+
       case let note as Note:
         let length = note.length.actualLength(renderer.unitDenominator)
         let invert = renderer.shouldInvert(note)
@@ -83,6 +84,7 @@ import Foundation
         }
 
         xOffset += renderer.noteLengthToWidth(note.length)
+
       case let chord as Chord:
         let length = chord.length.actualLength(renderer.unitDenominator)
         let invert = renderer.shouldInvert(chord)
@@ -100,32 +102,19 @@ import Foundation
         }
 
         xOffset += renderer.noteLengthToWidth(chord.length)
-      case let tuplet as Tuplet:
-        var notes = [(rect: CGRect, note: Note)]()
-        let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
-        var offset: CGFloat = xOffset
-        for element in tuplet.elements {
-          switch element {
-          case let note as Note:
-//            let noteHeadFrame = noteHeadFrameFor(note.pitch, xOffset: offset)
-//            notes.append((noteHeadFrame, note: note))
-//            canvas.addSubview(BlackNote(frame: noteHeadFrame))
-            offset += renderer.noteLengthToWidth(note.length) * ratio
-          case let chord as Chord:
-            offset += renderer.noteLengthToWidth(chord.length) * ratio
-          case let rest as Rest:
-            offset += renderer.noteLengthToWidth(rest.length) * ratio
-          default: break
-          }
-        }
-//        renderElementsInBeam(notes, unitDenominator: tuneHeader.unitNoteLength.denominator, groupedBy: tuplet.notes)
 
-        xOffset = offset
+      case let tuplet as Tuplet:
+        let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
+        for v in renderer.createViewsFromTuplet(tuplet, xOffset: xOffset) { canvas.addSubview(v) }
+        xOffset += tuplet.elements.map({renderer.noteLengthToWidth($0.length) * ratio}).sum()
+
       case let rest as Rest:
         renderer.createRestUnit(xOffset, rest: rest).renderToView(canvas)
         xOffset += renderer.noteLengthToWidth(rest.length)
+
       case let rest as MultiMeasureRest:
         xOffset += renderer.noteLengthToWidth(NoteLength(numerator: rest.num, denominator: 1))
+
       default: break
       }
 

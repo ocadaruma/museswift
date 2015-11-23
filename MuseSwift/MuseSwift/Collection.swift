@@ -83,6 +83,21 @@ extension CollectionType {
     return self.sort({ f($0) < f($1) })
   }
 
+  public func partitionBy(f: (Z) -> Bool) -> ([Z], [Z]) {
+    var trues = [Z]()
+    var falses = [Z]()
+
+    for e in self {
+      if f(e) {
+        trues.append(e)
+      } else {
+        falses.append(e)
+      }
+    }
+
+    return (trues, falses)
+  }
+
   public var nonEmpty: Bool {
     get {
       return !isEmpty

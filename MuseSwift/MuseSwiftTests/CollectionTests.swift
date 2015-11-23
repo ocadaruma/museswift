@@ -54,4 +54,15 @@ class CollectionTests: XCTestCase {
     XCTAssertEqual(xs.product(), 24)
     XCTAssertEqual([Int]().product(), 1)
   }
+
+  func testPartition() {
+    let xs = [1, 2, 3, 4]
+    let (trues, falses) = xs.partitionBy({$0 % 2 == 0})
+    XCTAssertEqual(trues, [2, 4])
+    XCTAssertEqual(falses, [1, 3])
+
+    let (trues2, falses2) = [Bool]().partitionBy(identity)
+    XCTAssertEqual(trues2, [])
+    XCTAssertEqual(falses2, [])
+  }
 }
