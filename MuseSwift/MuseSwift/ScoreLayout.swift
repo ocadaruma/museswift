@@ -8,7 +8,7 @@ let Quarter: Float = Half / 2
 let Eighth: Float = Quarter / 2
 let Sixteenth: Float = Eighth / 2
 
-public class ScoreLayout {
+public class SingleLineScoreLayout {
   public let staffHeight: CGFloat
   public let staffLineWidth: CGFloat
   public let stemWidth: CGFloat
@@ -49,7 +49,7 @@ public class ScoreLayout {
       self.beamLineWidth = beamLineWidth
   }
 
-  public static let defaultLayout = ScoreLayout()
+  public static let defaultLayout = SingleLineScoreLayout()
 
   public var staffInterval: CGFloat {
     get {

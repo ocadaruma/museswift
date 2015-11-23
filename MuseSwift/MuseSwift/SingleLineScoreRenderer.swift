@@ -42,12 +42,12 @@ private extension BeamMember {
 
 class SingleLineScoreRenderer {
   let unitDenominator: UnitDenominator
-  let layout: ScoreLayout
+  let layout: SingleLineScoreLayout
   let bounds: CGRect
 
   init(
     unitDenominator: UnitDenominator,
-    layout: ScoreLayout,
+    layout: SingleLineScoreLayout,
     bounds: CGRect) {
       self.unitDenominator = unitDenominator
       self.layout = layout
@@ -399,8 +399,16 @@ class SingleLineScoreRenderer {
       xOffset: xOffset)
   }
 
-  func createViewsFromBeamElements(elementsInBeam: [(xOffset: CGFloat, element: BeamMember)], groupedBy: Int = 4) -> [ScoreElement] {
-    var result = [ScoreElement]()
+//  func createViewsFromTuplet(tuplet: Tuplet, xOffset: CGFloat) -> [ScoreElement] {
+//    var result = [ScoreElement]()
+//
+//
+//
+//    return result
+//  }
+
+  func createViewsFromBeamElements(elementsInBeam: [(xOffset: CGFloat, element: BeamMember)], groupedBy: Int = 4) -> [BeamUnit] {
+    var result = [BeamUnit]()
 
     for pairs in elementsInBeam.grouped(groupedBy) {
       for group in pairs.spanBy({$0.element.length}) {
@@ -424,12 +432,11 @@ class SingleLineScoreRenderer {
 
           noteUnit.foreach({
             let stem = self.createStem($0)
-            result += $0.allElements
-            result.append(stem)
-            result.append(self.createFlag(noteLength, stemFrame: stem.frame, invert: $0.invert))
+            let flag = self.createFlag(noteLength, stemFrame: stem.frame, invert: $0.invert)
+            result.append(BeamUnit(noteUnits: [$0], stems: [stem], flagOrBeams: .Left(left: flag), invert: $0.invert))
           })
 
-        } else if group.nonEmpty {
+        } else {
           let (offsetAtHighest, highestElement) = group.maxBy({$0.element.maxPitch.step})!
           let (offsetAtLowest, lowestElement) = group.minBy({$0.element.minPitch.step})!
 
@@ -466,6 +473,10 @@ class SingleLineScoreRenderer {
 
           if (upperDiff < lowerDiff) {
             let invert = false
+            var noteUnits = [NoteUnit]()
+            var stems = [Block]()
+            var beams = [Beam]()
+
             for (xOffset, element) in group {
               let noteUnit: NoteUnit!
               switch element {
@@ -473,7 +484,8 @@ class SingleLineScoreRenderer {
               case let chord as Chord: noteUnit = createNoteUnit(xOffset, chord: chord, invert: invert)
               default: noteUnit = nil
               }
-              result += noteUnit.allElements
+
+              noteUnits.append(noteUnit)
               let noteHeadFrames = noteUnit.noteHeads.map({$0.frame})
               let bottomFrame = noteHeadFrames.maxBy({$0.y})!
 
@@ -487,7 +499,7 @@ class SingleLineScoreRenderer {
                 width: layout.stemWidth,
                 height: bottomFrame.y - y + layout.noteHeadSize.height * 0.4
               )
-              result.append(stem)
+              stems.append(stem)
             }
 
             // add beam
@@ -497,16 +509,21 @@ class SingleLineScoreRenderer {
             let y2 = upperF(x2)
             beam.rightDown = y1 < y2
             beam.frame = CGRectMake(x1, min(y1, y2), x2 - x1, max(abs(y1 - y2), layout.beamLineWidth))
-            result.append(beam)
+            beams.append(beam)
 
             if first.element.length.actualLength(unitDenominator) <= Sixteenth {
               let beam2 = Beam(frame: beam.frame.withY(beam.frame.y + beam.lineWidth * 1.5))
               beam2.lineWidth = beam.lineWidth
               beam2.rightDown = beam.rightDown
-              result.append(beam2)
+              beams.append(beam2)
             }
+            result.append(BeamUnit(noteUnits: noteUnits, stems: stems, flagOrBeams: .Right(right: beams), invert: invert))
           } else {
             let invert = true
+            var noteUnits = [NoteUnit]()
+            var stems = [Block]()
+            var beams = [Beam]()
+
             for (xOffset, element) in group {
               let noteUnit: NoteUnit!
               switch element {
@@ -514,13 +531,13 @@ class SingleLineScoreRenderer {
               case let chord as Chord: noteUnit = createNoteUnit(xOffset, chord: chord, invert: invert)
               default: noteUnit = nil
               }
-              result += noteUnit.allElements
+              noteUnits.append(noteUnit)
               let noteHeadFrames = noteUnit.noteHeads.map({$0.frame})
               let topFrame = noteHeadFrames.minBy({$0.y})!
 
               // add stem
               let stem = Block()
-              let x = noteUnit.singleColumn ? xOffset : xOffset + layout.noteHeadSize.width - layout.stemWidth
+              let x = noteUnit.singleColumn ? xOffset : xOffset + layout.noteHeadSize.width
               let bottomY = lowerF(x)
               let y = topFrame.y + layout.noteHeadSize.height * 0.6
               stem.frame = CGRect(
@@ -529,25 +546,26 @@ class SingleLineScoreRenderer {
                 width: layout.stemWidth,
                 height: bottomY - y
               )
-              result.append(stem)
+              stems.append(stem)
             }
 
             // add beam
-            let x1 = first.xOffset + (canRenderInSingleColumn(first.element.sortedPitches) ? 0 : layout.noteHeadSize.width) - layout.stemWidth
+            let x1 = first.xOffset + (canRenderInSingleColumn(first.element.sortedPitches) ? 0 : layout.noteHeadSize.width)
             let y1 = lowerF(x1)
-            let x2 = last.xOffset + (canRenderInSingleColumn(last.element.sortedPitches) ? 0 : layout.noteHeadSize.width)
+            let x2 = last.xOffset + (canRenderInSingleColumn(last.element.sortedPitches) ? 0 : layout.noteHeadSize.width) + layout.stemWidth
             let y2 = lowerF(x2)
 
             beam.rightDown = y1 < y2
             beam.frame = CGRectMake(x1, min(y1, y2), x2 - x1, max(abs(y1 - y2), layout.beamLineWidth))
-            result.append(beam)
+            beams.append(beam)
 
             if first.element.length.actualLength(unitDenominator) <= Sixteenth {
               let beam2 = Beam(frame: beam.frame.withY(beam.frame.y - beam.lineWidth * 1.5))
               beam2.lineWidth = beam.lineWidth
               beam2.rightDown = beam.rightDown
-              result.append(beam2)
+              beams.append(beam2)
             }
+            result.append(BeamUnit(noteUnits: noteUnits, stems: stems, flagOrBeams: .Right(right: beams), invert: invert))
           }
         }
       }
@@ -612,5 +630,36 @@ class RestUnit {
   func renderToView(view: UIView) {
     dots.forEach({view.addSubview($0)})
     view.addSubview(restView)
+  }
+}
+
+class BeamUnit {
+  let noteUnits: [NoteUnit]
+  let stems: [Block]
+  let flagOrBeams: Either<ScoreElement, [Beam]>
+  let invert: Bool
+
+  let allElements: [ScoreElement]
+
+  init(
+    noteUnits: [NoteUnit],
+    stems: [Block],
+    flagOrBeams: Either<ScoreElement, [Beam]>,
+    invert: Bool
+    ) {
+      self.noteUnits = noteUnits
+      self.stems = stems
+      self.flagOrBeams = flagOrBeams
+      self.invert = invert
+
+      var elements = [ScoreElement]()
+      elements += self.noteUnits.flatMap({$0.allElements})
+      for stem in stems { elements.append(stem) }
+      switch flagOrBeams {
+      case .Left(let flag): elements.append(flag)
+      case .Right(let beams): for beam in beams { elements.append(beam) }
+      }
+
+      self.allElements = elements
   }
 }

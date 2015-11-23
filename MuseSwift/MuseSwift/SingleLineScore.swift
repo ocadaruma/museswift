@@ -1,7 +1,7 @@
 import Foundation
 
 @IBDesignable public class SingleLineScore: UIView {
-  public var layout: ScoreLayout = ScoreLayout.defaultLayout {
+  public var layout: SingleLineScoreLayout = SingleLineScoreLayout.defaultLayout {
     didSet {
       setNeedsDisplay()
     }
@@ -130,12 +130,14 @@ import Foundation
       }
 
       if !currentPositionIsInBeam {
-        for e in renderer.createViewsFromBeamElements(elementsInBeam) { canvas.addSubview(e) }
+        for e in renderer.createViewsFromBeamElements(elementsInBeam).flatMap({$0.allElements}) { canvas.addSubview(e) }
         elementsInBeam = []
       }
     }
 
-    if elementsInBeam.nonEmpty { for e in renderer.createViewsFromBeamElements(elementsInBeam) { canvas.addSubview(e) } }
+    if elementsInBeam.nonEmpty {
+      for e in renderer.createViewsFromBeamElements(elementsInBeam).flatMap({$0.allElements}) { canvas.addSubview(e) }
+    }
   }
 
   private func drawStaff() {
