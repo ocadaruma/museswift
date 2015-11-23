@@ -6,6 +6,40 @@ private extension Pitch {
   }
 }
 
+private extension BeamMember {
+  var maxPitch: Pitch {
+    get {
+      let pitch: Pitch!
+      switch self {
+      case let note as Note: pitch = note.pitch
+      case let chord as Chord: pitch = chord.pitches.maxBy({$0.step})
+      default: pitch = nil
+      }
+      return pitch
+    }
+  }
+
+  var minPitch: Pitch {
+    get {
+      let pitch: Pitch!
+      switch self {
+      case let note as Note: pitch = note.pitch
+      case let chord as Chord: pitch = chord.pitches.minBy({$0.step})!
+      default: pitch = nil
+      }
+      return pitch
+    }
+  }
+
+  var sortedPitches: [Pitch] {
+    switch self {
+    case let note as Note: return  [note.pitch]
+    case let chord as Chord: return chord.pitches.sortBy({$0.step})
+    default: return []
+    }
+  }
+}
+
 class SingleLineScoreRenderer {
   let unitDenominator: UnitDenominator
   let layout: ScoreLayout
@@ -172,8 +206,39 @@ class SingleLineScoreRenderer {
     return view
   }
 
+  private func createFlag(noteLength: NoteLength, stemFrame: CGRect, invert: Bool) -> ScoreElement {
+    let flagFrame: CGRect
+    if (invert) {
+      flagFrame = CGRect(x: stemFrame.x, y: stemFrame.maxY - layout.staffInterval * 3, width: layout.noteHeadSize.width, height: layout.staffInterval * 3)
+    } else {
+      flagFrame = CGRect(x: stemFrame.maxX, y: stemFrame.y, width: layout.noteHeadSize.width, height: layout.staffInterval * 3)
+    }
+
+    let length = noteLength.actualLength(unitDenominator)
+    var element: ScoreElement! = nil
+    if length >= Eighth {
+      let flag = FlagEighth(frame: flagFrame)
+      flag.invert = invert
+      element = flag
+    } else if length >= Sixteenth {
+      let flag = FlagSixteenth(frame: flagFrame)
+      flag.invert = invert
+      element = flag
+    }
+
+    return element
+  }
+
   func noteLengthToWidth(noteLength: NoteLength) -> CGFloat {
     return layout.widthPerUnitNoteLength * CGFloat(noteLength.numerator) / CGFloat(noteLength.denominator)
+  }
+
+  func shouldInvert(chord: Chord) -> Bool {
+    return chord.pitches.map({$0.step}).sum() / chord.pitches.count >= BOn3rdStave.step
+  }
+
+  func shouldInvert(note: Note) -> Bool {
+    return note.pitch.step >= BOn3rdStave.step
   }
 
   func createRestUnit(xOffset: CGFloat, rest: Rest) -> RestUnit {
@@ -229,15 +294,16 @@ class SingleLineScoreRenderer {
     return RestUnit(dots: dots, restView: restView, xOffset: xOffset)
   }
 
-  private func createStem(noteHeadFrames: [CGRect], invert: Bool, singleColumn: Bool) -> Block {
+  func createStem(noteUnit: NoteUnit) -> Block {
+    let noteHeadFrames = noteUnit.noteHeads.map({$0.frame})
     let bottomFrame = noteHeadFrames.maxBy({$0.y})!
     let topFrame = noteHeadFrames.minBy({$0.y})!
 
     let stem = Block()
     let stemHeight = layout.staffInterval * 3
-    let x = singleColumn && invert ? topFrame.x : noteHeadFrames.map({$0.maxX}).minElement()!
+    let x = noteUnit.singleColumn && noteUnit.invert ? topFrame.x : noteHeadFrames.map({$0.maxX}).minElement()!
 
-    if invert {
+    if noteUnit.invert {
       stem.frame = CGRect(
         x: x,
         y: topFrame.y + topFrame.height * 0.6,
@@ -254,12 +320,11 @@ class SingleLineScoreRenderer {
     return stem
   }
 
-  func createNoteUnit(xOffset: CGFloat, note: Note) -> NoteUnit {
-    return createNoteUnit(xOffset, chord: Chord(length: note.length, pitches: [note.pitch]))
+  func createNoteUnit(xOffset: CGFloat, note: Note, invert: Bool) -> NoteUnit {
+    return createNoteUnit(xOffset, chord: Chord(length: note.length, pitches: [note.pitch]), invert: invert)
   }
 
-  func createNoteUnit(xOffset: CGFloat, chord: Chord) -> NoteUnit {
-    let invert = chord.pitches.map({$0.step}).sum() / chord.pitches.count >= BOn3rdStave.step
+  func createNoteUnit(xOffset: CGFloat, chord: Chord, invert: Bool) -> NoteUnit {
     let sortedPitches = invert ? chord.pitches.sortBy({$0.step}).reverse() : chord.pitches.sortBy({$0.step})
     let singleColumn = canRenderInSingleColumn(sortedPitches)
 
@@ -287,7 +352,6 @@ class SingleLineScoreRenderer {
       }
     }
 
-    var stem: Block? = nil
     var dots = [Oval]()
     var noteHeads = [ScoreElement]()
     var accidentals = [ScoreElement]()
@@ -325,47 +389,205 @@ class SingleLineScoreRenderer {
       dots += d
     }
 
-    stem = createStem(noteHeadFrames.map({$0.frame}), invert: invert, singleColumn: singleColumn)
-
     return NoteUnit(
-      stem: stem,
       dots: dots,
       noteHeads: noteHeads,
       accidentals: accidentals,
       outsideStaff: outsideStaff,
       singleColumn: singleColumn,
+      invert: invert,
       xOffset: xOffset)
+  }
+
+  func createViewsFromBeamElements(elementsInBeam: [(xOffset: CGFloat, element: BeamMember)], groupedBy: Int = 4) -> [ScoreElement] {
+    var result = [ScoreElement]()
+
+    for pairs in elementsInBeam.grouped(groupedBy) {
+      for group in pairs.spanBy({$0.element.length}) {
+        if group.count == 1 {
+          let (xOffset, element) = group.first!
+
+          let noteUnit: NoteUnit?
+          let noteLength: NoteLength!
+
+          switch element {
+          case let note as Note:
+            noteUnit = createNoteUnit(xOffset, note: note, invert: shouldInvert(note))
+            noteLength = note.length
+          case let chord as Chord:
+            noteUnit = createNoteUnit(xOffset, chord: chord, invert: shouldInvert(chord))
+            noteLength = chord.length
+          default:
+            noteUnit = nil
+            noteLength = nil
+          }
+
+          noteUnit.foreach({
+            let stem = self.createStem($0)
+            result += $0.allElements
+            result.append(stem)
+            result.append(self.createFlag(noteLength, stemFrame: stem.frame, invert: $0.invert))
+          })
+
+        } else if group.nonEmpty {
+          let (offsetAtHighest, highestElement) = group.maxBy({$0.element.maxPitch.step})!
+          let (offsetAtLowest, lowestElement) = group.minBy({$0.element.minPitch.step})!
+
+          let highestFrame = createNoteHeadFrame(highestElement.maxPitch, xOffset: offsetAtHighest)
+          let lowestFrame = createNoteHeadFrame(lowestElement.minPitch, xOffset: offsetAtLowest)
+
+          let (first, last) = (group.first!, group.last!)
+          let lowestFrameInFirst = createNoteHeadFrame(first.element.minPitch, xOffset: first.xOffset)
+          let highestFrameInFirst = createNoteHeadFrame(first.element.maxPitch, xOffset: first.xOffset)
+          let lowestFrameInLast = createNoteHeadFrame(last.element.minPitch, xOffset: last.xOffset)
+          let highestFrameInLast = createNoteHeadFrame(last.element.maxPitch, xOffset: last.xOffset)
+
+          let upperA = (highestFrameInLast.y - highestFrameInFirst.y) / (highestFrameInLast.x - highestFrameInFirst.x)
+          let lowerA = (lowestFrameInLast.y - lowestFrameInFirst.y) / (lowestFrameInLast.x - lowestFrameInFirst.x)
+
+          let upperSlope = upperA.abs < layout.maxBeamSlope ? upperA : layout.maxBeamSlope * upperA.sign
+          let lowerSlope = lowerA.abs < layout.maxBeamSlope ? lowerA : layout.maxBeamSlope * lowerA.sign
+
+          let upperF = linearFunction(upperSlope,
+            point: Point2D(
+              x: highestFrame.maxX,
+              y: highestFrame.y - layout.minStemHeight))
+          let lowerF = linearFunction(lowerSlope,
+            point: Point2D(
+              x: canRenderInSingleColumn(lowestElement.sortedPitches) ? lowestFrame.x : lowestFrame.maxX,
+              y: lowestFrame.maxY + layout.minStemHeight))
+
+          let staffYCenter = staffTop + layout.staffInterval * 2
+          let upperDiff = group.map({ abs(staffYCenter - upperF($0.xOffset + layout.noteHeadSize.width)) }).sum()
+          let lowerDiff = group.map({ abs(staffYCenter - lowerF(canRenderInSingleColumn($0.element.sortedPitches) ? $0.xOffset : $0.xOffset + layout.noteHeadSize.width)) }).sum()
+
+          let beam = Beam()
+          beam.lineWidth = layout.beamLineWidth
+
+          if (upperDiff < lowerDiff) {
+            let invert = false
+            for (xOffset, element) in group {
+              let noteUnit: NoteUnit!
+              switch element {
+              case let note as Note: noteUnit = createNoteUnit(xOffset, note: note, invert: invert)
+              case let chord as Chord: noteUnit = createNoteUnit(xOffset, chord: chord, invert: invert)
+              default: noteUnit = nil
+              }
+              result += noteUnit.allElements
+              let noteHeadFrames = noteUnit.noteHeads.map({$0.frame})
+              let bottomFrame = noteHeadFrames.maxBy({$0.y})!
+
+              // add stem
+              let stem = Block()
+              let x = xOffset + layout.noteHeadSize.width - layout.stemWidth
+              let y = upperF(x)
+              stem.frame = CGRect(
+                x: x,
+                y: y,
+                width: layout.stemWidth,
+                height: bottomFrame.y - y + layout.noteHeadSize.height * 0.4
+              )
+              result.append(stem)
+            }
+
+            // add beam
+            let x1 = first.xOffset + layout.noteHeadSize.width - layout.stemWidth
+            let y1 = upperF(x1)
+            let x2 = last.xOffset + layout.noteHeadSize.width
+            let y2 = upperF(x2)
+            beam.rightDown = y1 < y2
+            beam.frame = CGRectMake(x1, min(y1, y2), x2 - x1, max(abs(y1 - y2), layout.beamLineWidth))
+            result.append(beam)
+
+            if first.element.length.actualLength(unitDenominator) <= Sixteenth {
+              let beam2 = Beam(frame: beam.frame.withY(beam.frame.y + beam.lineWidth * 1.5))
+              beam2.lineWidth = beam.lineWidth
+              beam2.rightDown = beam.rightDown
+              result.append(beam2)
+            }
+          } else {
+            let invert = true
+            for (xOffset, element) in group {
+              let noteUnit: NoteUnit!
+              switch element {
+              case let note as Note: noteUnit = createNoteUnit(xOffset, note: note, invert: invert)
+              case let chord as Chord: noteUnit = createNoteUnit(xOffset, chord: chord, invert: invert)
+              default: noteUnit = nil
+              }
+              result += noteUnit.allElements
+              let noteHeadFrames = noteUnit.noteHeads.map({$0.frame})
+              let topFrame = noteHeadFrames.minBy({$0.y})!
+
+              // add stem
+              let stem = Block()
+              let x = noteUnit.singleColumn ? xOffset : xOffset + layout.noteHeadSize.width - layout.stemWidth
+              let bottomY = lowerF(x)
+              let y = topFrame.y + layout.noteHeadSize.height * 0.6
+              stem.frame = CGRect(
+                x: x,
+                y: y,
+                width: layout.stemWidth,
+                height: bottomY - y
+              )
+              result.append(stem)
+            }
+
+            // add beam
+            let x1 = first.xOffset + (canRenderInSingleColumn(first.element.sortedPitches) ? 0 : layout.noteHeadSize.width) - layout.stemWidth
+            let y1 = lowerF(x1)
+            let x2 = last.xOffset + (canRenderInSingleColumn(last.element.sortedPitches) ? 0 : layout.noteHeadSize.width)
+            let y2 = lowerF(x2)
+
+            beam.rightDown = y1 < y2
+            beam.frame = CGRectMake(x1, min(y1, y2), x2 - x1, max(abs(y1 - y2), layout.beamLineWidth))
+            result.append(beam)
+
+            if first.element.length.actualLength(unitDenominator) <= Sixteenth {
+              let beam2 = Beam(frame: beam.frame.withY(beam.frame.y - beam.lineWidth * 1.5))
+              beam2.lineWidth = beam.lineWidth
+              beam2.rightDown = beam.rightDown
+              result.append(beam2)
+            }
+          }
+        }
+      }
+    }
+
+    return result
   }
 }
 
 class NoteUnit {
-  let stem: Block?
   let dots: [Oval]
   let noteHeads: [ScoreElement]
   let accidentals: [ScoreElement]
   let outsideStaff: [ScoreElement]
   let singleColumn: Bool
+  let invert: Bool
   let xOffset: CGFloat
 
+  let allElements: [ScoreElement]
+
   init(
-    stem: Block? = nil,
     dots: [Oval] = [],
     noteHeads: [ScoreElement] = [],
     accidentals: [ScoreElement] = [],
     outsideStaff: [ScoreElement] = [],
     singleColumn: Bool = true,
+    invert: Bool,
     xOffset: CGFloat) {
-      self.stem = stem
       self.dots = dots
       self.noteHeads = noteHeads
       self.accidentals = accidentals
       self.outsideStaff = outsideStaff
       self.singleColumn = singleColumn
+      self.invert = invert
       self.xOffset = xOffset
+
+      self.allElements = noteHeads + accidentals + outsideStaff + dots
   }
 
   func renderToView(view: UIView) {
-    stem.foreach({view.addSubview($0)})
     dots.forEach({view.addSubview($0)})
     noteHeads.forEach({view.addSubview($0)})
     accidentals.forEach({view.addSubview($0)})

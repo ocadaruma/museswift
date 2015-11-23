@@ -34,7 +34,7 @@ public func ==(lhs: Note, rhs: Note) -> Bool {
     lhs.pitch == rhs.pitch
 }
 
-public struct Rest: TupletMember, Equatable {
+public struct Rest: TupletMember, BeamMember, Equatable {
   public let length: NoteLength
   public init(length: NoteLength) {
     self.length = length
