@@ -399,15 +399,44 @@ class SingleLineScoreRenderer {
       xOffset: xOffset)
   }
 
-//  func createViewsFromTuplet(tuplet: Tuplet, xOffset: CGFloat) -> [ScoreElement] {
-//    var result = [ScoreElement]()
-//
-//
-//
-//    return result
-//  }
+  func createViewsFromTuplet(tuplet: Tuplet, xOffset: CGFloat) -> [ScoreElement] {
+    let length = tuplet.elements.first!.length.actualLength(unitDenominator)
+    let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
+    
+    var result = [ScoreElement]()
 
-  func createViewsFromBeamElements(elementsInBeam: [(xOffset: CGFloat, element: BeamMember)], groupedBy: Int = 4) -> [BeamUnit] {
+    if length >= Whole {
+      // unsupported
+    } else if length >= Quarter {
+      var offset = xOffset
+      for e in tuplet.elements {
+        switch e {
+        case let note as Note:
+          let noteUnit = createNoteUnit(offset, note: note, invert: shouldInvert(note))
+          result += noteUnit.allElements
+          result.append(createStem(noteUnit))
+          offset += noteLengthToWidth(note.length) * ratio
+        case let chord as Chord:
+          let noteUnit = createNoteUnit(offset, chord: chord, invert: shouldInvert(chord))
+          result += noteUnit.allElements
+          result.append(createStem(noteUnit))
+          offset += noteLengthToWidth(chord.length) * ratio
+        case let rest as Rest:
+          let restUnit = createRestUnit(offset, rest: rest)
+          for dot in restUnit.dots { result.append(dot) }
+          result.append(restUnit.restView)
+          offset += noteLengthToWidth(rest.length) * ratio
+        default: break
+        }
+      }
+    } else {
+
+    }
+
+    return result
+  }
+
+  func createBeamUnit(elementsInBeam: [(xOffset: CGFloat, element: BeamMember)], groupedBy: Int = 4) -> [BeamUnit] {
     var result = [BeamUnit]()
 
     for pairs in elementsInBeam.grouped(groupedBy) {

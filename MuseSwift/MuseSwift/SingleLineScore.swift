@@ -130,13 +130,13 @@ import Foundation
       }
 
       if !currentPositionIsInBeam {
-        for e in renderer.createViewsFromBeamElements(elementsInBeam).flatMap({$0.allElements}) { canvas.addSubview(e) }
+        for e in renderer.createBeamUnit(elementsInBeam).flatMap({$0.allElements}) { canvas.addSubview(e) }
         elementsInBeam = []
       }
     }
 
     if elementsInBeam.nonEmpty {
-      for e in renderer.createViewsFromBeamElements(elementsInBeam).flatMap({$0.allElements}) { canvas.addSubview(e) }
+      for e in renderer.createBeamUnit(elementsInBeam).flatMap({$0.allElements}) { canvas.addSubview(e) }
     }
   }
 
