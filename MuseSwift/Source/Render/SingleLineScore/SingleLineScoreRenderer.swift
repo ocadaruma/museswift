@@ -1,84 +1,5 @@
 import Foundation
 
-private extension Pitch {
-  var step: Int {
-    return offset * 7 + name.rawValue
-  }
-}
-
-private extension BeamMember {
-  var maxPitch: Pitch {
-    let pitch: Pitch!
-    switch self {
-    case let note as Note: pitch = note.pitch
-    case let chord as Chord: pitch = chord.pitches.maxBy({$0.step})
-    default: pitch = nil
-    }
-    return pitch
-  }
-
-  var minPitch: Pitch {
-    let pitch: Pitch!
-    switch self {
-    case let note as Note: pitch = note.pitch
-    case let chord as Chord: pitch = chord.pitches.minBy({$0.step})!
-    default: pitch = nil
-    }
-    return pitch
-  }
-
-  var sortedPitches: [Pitch] {
-    switch self {
-    case let note as Note: return  [note.pitch]
-    case let chord as Chord: return chord.pitches.sortBy({$0.step})
-    default: return []
-    }
-  }
-}
-
-private extension CollectionType where Generator.Element == Pitch {
-  var sparse: Bool {
-    let sortedPitches = self.sortBy({$0.step})
-    var sparse = true
-    var previousPitch: Pitch? = nil
-    for pitch in sortedPitches {
-      if let p = previousPitch {
-        if (pitch.step - p.step).abs < 2 {
-          sparse = false
-          break
-        }
-      }
-      previousPitch = pitch
-    }
-
-    return sparse
-  }
-}
-
-private extension CollectionType where Generator.Element == CGRect {
-  var maxX: CGFloat? {
-    return self.map({$0.maxX}).maxElement()
-  }
-
-  var maxY: CGFloat? {
-    return self.map({$0.maxY}).maxElement()
-  }
-
-  var minX: CGFloat? {
-    return self.map({$0.minX}).minElement()
-  }
-
-  var minY: CGFloat? {
-    return self.map({$0.minY}).minElement()
-  }
-
-  var midX: CGFloat? {
-    return maxX.flatMap({ x in
-      return minX.map({(x + $0) / 2})
-    })
-  }
-}
-
 class SingleLineScoreRenderer {
   let unitDenominator: UnitDenominator
   let layout: SingleLineScoreLayout
@@ -294,7 +215,7 @@ class SingleLineScoreRenderer {
     return units
   }
 
-  private func createTupletBeamFrame(envelope: [CGPoint], point: CGPoint, invert: Bool) -> CGRect {
+  private func createTupletBeam(notes: Int, envelope: [CGPoint], point: CGPoint, invert: Bool) -> TupletBeam {
     let firstPoint = envelope.first!
     let lastPoint = envelope.last!
 
@@ -309,12 +230,19 @@ class SingleLineScoreRenderer {
     let (x2, y2) = (lastPoint.x, f(lastPoint.x))
 
     let height = max(y2 - y1, layout.tupletFontSize)
-    return CGRect(
+    let tupletBeam = TupletBeam(frame: CGRect(
       x: x1,
       y: invert ? y1 : y1 - height,
       width: x2 - x1,
-      height: height
+      height: height)
     )
+
+    tupletBeam.invert = invert
+    tupletBeam.notes = notes
+    tupletBeam.fontSize = layout.tupletFontSize
+    tupletBeam.rightDown = y2 > y1
+
+    return tupletBeam
   }
 
   func rendereredWidthForNoteLength(noteLength: NoteLength) -> CGFloat {
@@ -492,11 +420,6 @@ class SingleLineScoreRenderer {
     let length = tuplet.elements.first!.length.actualLength(unitDenominator)
     var result = [ScoreElement]()
 
-    let tupletBeam = TupletBeam()
-    tupletBeam.notes = tuplet.notes
-    tupletBeam.fontSize = layout.tupletFontSize
-    result.append(tupletBeam)
-
     if length >= Whole {
       // unsupported
     } else if length >= Quarter {
@@ -510,7 +433,6 @@ class SingleLineScoreRenderer {
 
       let (inverted, notInverted) = units.flatMap({$0.unit.left.toArray()}).partitionBy({$0.noteUnit.invert})
       let invert = inverted.count > notInverted.count
-      tupletBeam.invert = invert
 
       if (invert) {
         let upperBound = staffTop + layout.staffHeight
@@ -526,7 +448,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtLowest = envelope.maxBy({$0.y})!
-        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtLowest, invert: invert)
+        result.append(createTupletBeam(tuplet.notes, envelope: envelope, point: pointAtLowest, invert: invert))
       } else {
         let lowerBound = staffTop
         let envelope = units.map({ pair -> CGPoint in
@@ -541,7 +463,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtHighest = envelope.minBy({$0.y})!
-        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtHighest, invert: invert)
+        result.append(createTupletBeam(tuplet.notes, envelope: envelope, point: pointAtHighest, invert: invert))
       }
     } else {
       let ratio = CGFloat(tuplet.ratio)
@@ -583,7 +505,6 @@ class SingleLineScoreRenderer {
 
       let (inverted, notInverted) = units.flatMap({$0.unit.left.toArray()}).partitionBy({$0.invert})
       let invert = inverted.count > notInverted.count
-      tupletBeam.invert = invert
 
       if (invert) {
         let upperBound = staffTop + layout.staffHeight
@@ -600,7 +521,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtLowest = envelope.maxBy({$0.y})!
-        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtLowest, invert: invert)
+        result.append(createTupletBeam(tuplet.notes, envelope: envelope, point: pointAtLowest, invert: invert))
       } else {
         let lowerBound = staffTop
         let envelope = units.flatMap({ (pair) -> [CGPoint] in
@@ -616,7 +537,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtHighest = envelope.minBy({$0.y})!
-        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtHighest, invert: invert)
+        result.append(createTupletBeam(tuplet.notes, envelope: envelope, point: pointAtHighest, invert: invert))
       }
     }
 
