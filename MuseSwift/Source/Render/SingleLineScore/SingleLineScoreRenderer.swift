@@ -294,7 +294,7 @@ class SingleLineScoreRenderer {
     return units
   }
 
-  private func createTupletBeamFrame(envelope: [CGPoint], point: CGPoint) -> CGRect {
+  private func createTupletBeamFrame(envelope: [CGPoint], point: CGPoint, invert: Bool) -> CGRect {
     let firstPoint = envelope.first!
     let lastPoint = envelope.last!
 
@@ -311,7 +311,7 @@ class SingleLineScoreRenderer {
     let height = max(y2 - y1, layout.tupletFontSize)
     return CGRect(
       x: x1,
-      y: y1 - height,
+      y: invert ? y1 : y1 - height,
       width: x2 - x1,
       height: height
     )
@@ -490,8 +490,12 @@ class SingleLineScoreRenderer {
   func createElementsForTuplet(tuplet: Tuplet, xOffset: CGFloat) -> [ScoreElement] {
     // assume that all elements in tuplet are same length
     let length = tuplet.elements.first!.length.actualLength(unitDenominator)
-
     var result = [ScoreElement]()
+
+    let tupletBeam = TupletBeam()
+    tupletBeam.notes = tuplet.notes
+    tupletBeam.fontSize = layout.tupletFontSize
+    result.append(tupletBeam)
 
     if length >= Whole {
       // unsupported
@@ -506,12 +510,7 @@ class SingleLineScoreRenderer {
 
       let (inverted, notInverted) = units.flatMap({$0.unit.left.toArray()}).partitionBy({$0.noteUnit.invert})
       let invert = inverted.count > notInverted.count
-
-      let tupletBeam = TupletBeam()
       tupletBeam.invert = invert
-      tupletBeam.notes = tuplet.notes
-      tupletBeam.fontSize = layout.tupletFontSize
-      result.append(tupletBeam)
 
       if (invert) {
         let upperBound = staffTop + layout.staffHeight
@@ -527,7 +526,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtLowest = envelope.maxBy({$0.y})!
-        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtLowest)
+        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtLowest, invert: invert)
       } else {
         let lowerBound = staffTop
         let envelope = units.map({ pair -> CGPoint in
@@ -542,7 +541,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtHighest = envelope.minBy({$0.y})!
-        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtHighest)
+        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtHighest, invert: invert)
       }
     } else {
       let ratio = CGFloat(tuplet.ratio)
@@ -584,77 +583,40 @@ class SingleLineScoreRenderer {
 
       let (inverted, notInverted) = units.flatMap({$0.unit.left.toArray()}).partitionBy({$0.invert})
       let invert = inverted.count > notInverted.count
-
-      let tupletBeam = TupletBeam()
       tupletBeam.invert = invert
-      tupletBeam.notes = tuplet.notes
-      result.append(tupletBeam)
 
       if (invert) {
         let upperBound = staffTop + layout.staffHeight
-        let bottoms = units.map({ (pair) -> (x: CGFloat, y: CGFloat) in
+        let envelope = units.flatMap({ (pair) -> [CGPoint] in
           switch pair.unit {
-          case .Left(let b): return (
-            x: pair.offset,
-            y: max(b.stems.map({$0.frame.maxY}).maxElement()!, b.noteUnits.flatMap({$0.noteHeads}).map({$0.frame.maxY}).maxElement()!, upperBound))
-          case .Right(_): return (x: pair.offset, y: upperBound)
+          case .Left(let b):
+            return zip(b.noteUnits, b.stems).map({ z -> CGPoint in
+              let (noteUnit, stem) = z
+              let frames = (noteUnit.noteHeads + [stem]).map({$0.frame})
+              return CGPoint(x: frames.midX!, y: max(frames.maxY!, upperBound))
+            })
+          case .Right(let r): return [CGPoint(x: r.restView.frame.midX, y: upperBound)]
           }
         })
 
-        let (x: offsetAtLowest, y: lowestBottomY) = bottoms.maxBy({$0.y})!
-
-        let (firstX, firstY) = bottoms.first!
-        let (lastX, lastY) = bottoms.last!
-
-        let a = (lastY - firstY) / (lastX - firstX)
-        let slope = a.abs < layout.maxBeamSlope ? a : layout.maxBeamSlope * a.sign
-        let f = linearFunction(slope,
-          point: Point2D(
-            x: offsetAtLowest,
-            y: lowestBottomY))
-
-        let (x1, y1) = (firstX, f(firstX))
-        let (x2, y2) = (lastX, f(lastX))
-
-        let height = max(y2 - y1, tupletBeam.fontSize)
-        tupletBeam.frame = CGRect(
-          x: x1,
-          y: y1 - height,
-          width: x2 - x1,
-          height: height
-        )
+        let pointAtLowest = envelope.maxBy({$0.y})!
+        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtLowest, invert: invert)
       } else {
         let lowerBound = staffTop
-        let tops = units.map({ (pair) -> (x: CGFloat, y: CGFloat) in
+        let envelope = units.flatMap({ (pair) -> [CGPoint] in
           switch pair.unit {
-          case .Left(let b): return (x: pair.offset,
-            y: min(b.stems.map({$0.frame.minY}).minElement()!, b.noteUnits.flatMap({$0.noteHeads}).map({$0.frame.minY}).minElement()!, lowerBound))
-          case .Right(_): return (x: pair.offset, y: lowerBound)
+          case .Left(let b):
+            return zip(b.noteUnits, b.stems).map({ z -> CGPoint in
+              let (noteUnit, stem) = z
+              let frames = (noteUnit.noteHeads + [stem]).map({$0.frame})
+              return CGPoint(x: frames.midX!, y: min(frames.minY!, lowerBound))
+            })
+          case .Right(let r): return [CGPoint(x: r.restView.frame.midX, y: lowerBound)]
           }
         })
 
-        let (x: offsetAtHighest, y: highestTopY) = tops.minBy({$0.y})!
-
-        let (firstX, firstY) = tops.first!
-        let (lastX, lastY) = tops.last!
-
-        let a = (lastY - firstY) / (lastX - firstX)
-        let slope = a.abs < layout.maxBeamSlope ? a : layout.maxBeamSlope * a.sign
-        let f = linearFunction(slope,
-          point: Point2D(
-            x: offsetAtHighest,
-            y: highestTopY))
-
-        let (x1, y1) = (firstX, f(firstX))
-        let (x2, y2) = (lastX, f(lastX))
-
-        let height = max(y2 - y1, tupletBeam.fontSize)
-        tupletBeam.frame = CGRect(
-          x: x1,
-          y: y1 - height,
-          width: x2 - x1,
-          height: height
-        )
+        let pointAtHighest = envelope.minBy({$0.y})!
+        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtHighest, invert: invert)
       }
     }
 
