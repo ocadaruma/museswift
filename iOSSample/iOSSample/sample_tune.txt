@@ -4,7 +4,7 @@ M: 3/4
 L: 1/8
 K: D
 % z2 deed DE ED|
-C[DEF]EF A [=C_E^G] [cde] (3C2z2D2 [fg]e[df]c|
+C[DEF]EF A[=C_E^G] [cde] (3CzE [fg]e[df]c|
 z7/4z7/2z6|
 b z8 | b/|z4z2|zz/z/2|A2|d2 A2 F2|D3E F2|G2 B2 e2|c2 A2 c2|
 d2 A2 F2|G3A B2|A2 d2 c2|d4:|

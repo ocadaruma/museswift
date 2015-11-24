@@ -31,7 +31,7 @@ public class SingleLineScoreLayout {
     minStemHeight: CGFloat = 30,
     maxBeamSlope: CGFloat = 0.2,
     dotMarginLeft: CGFloat = 3,
-    outsideStaffLineWidth: CGFloat = 2,
+    outsideStaffLineWidth: CGFloat = 1,
     outsideStaffLineXLength: CGFloat = 28.8,
     noteHeadSize: CGSize = CGSize(width: 18, height: 15),
     beamLineWidth: CGFloat = 5) {

@@ -229,6 +229,40 @@ class SingleLineScoreRenderer {
     return element
   }
 
+  private func createUnits(xOffset: CGFloat, tuplet: Tuplet) -> [(offset: CGFloat, unit: Either<(noteUnit: NoteUnit, stem: Block), RestUnit>)] {
+    let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
+
+    var offset = xOffset
+    var units = [(offset: CGFloat, unit: Either<(noteUnit: NoteUnit, stem: Block), RestUnit>)]()
+    for e in tuplet.elements {
+      switch e {
+      case let note as Note:
+        let noteUnit = createNoteUnit(offset, note: note, invert: shouldInvert(note))
+        let stem = createStem(noteUnit)
+        units.append(
+          (offset: offset, unit: .Left(left: (noteUnit: noteUnit, stem: stem)))
+        )
+        offset += noteLengthToWidth(note.length) * ratio
+      case let chord as Chord:
+        let noteUnit = createNoteUnit(offset, chord: chord, invert: shouldInvert(chord))
+        let stem = createStem(noteUnit)
+        units.append(
+          (offset: offset, unit: .Left(left: (noteUnit: noteUnit, stem: stem)))
+        )
+        offset += noteLengthToWidth(chord.length) * ratio
+      case let rest as Rest:
+        let restUnit = createRestUnit(offset, rest: rest)
+        units.append(
+          (offset: offset, unit: .Right(right: restUnit))
+        )
+        offset += noteLengthToWidth(rest.length) * ratio
+      default: break
+      }
+    }
+
+    return units
+  }
+
   func noteLengthToWidth(noteLength: NoteLength) -> CGFloat {
     return layout.widthPerUnitNoteLength * CGFloat(noteLength.numerator) / CGFloat(noteLength.denominator)
   }
@@ -401,43 +435,20 @@ class SingleLineScoreRenderer {
 
   func createViewsFromTuplet(tuplet: Tuplet, xOffset: CGFloat) -> [ScoreElement] {
     let length = tuplet.elements.first!.length.actualLength(unitDenominator)
-    let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
-    
+
     var result = [ScoreElement]()
 
     if length >= Whole {
       // unsupported
     } else if length >= Quarter {
-      var offset = xOffset
-      var units = [(offset: CGFloat, unit: Either<(noteUnit: NoteUnit, stem: Block), RestUnit>)]()
-      for e in tuplet.elements {
-        switch e {
-        case let note as Note:
-          let noteUnit = createNoteUnit(offset, note: note, invert: shouldInvert(note))
-          let stem = createStem(noteUnit)
-          units.append(
-            (offset: offset, unit: .Left(left: (noteUnit: noteUnit, stem: stem)))
-          )
-          result += noteUnit.allElements
-          result.append(stem)
-          offset += noteLengthToWidth(note.length) * ratio
-        case let chord as Chord:
-          let noteUnit = createNoteUnit(offset, chord: chord, invert: shouldInvert(chord))
-          let stem = createStem(noteUnit)
-          units.append(
-            (offset: offset, unit: .Left(left: (noteUnit: noteUnit, stem: stem)))
-          )
-          result += noteUnit.allElements
-          result.append(stem)
-          offset += noteLengthToWidth(chord.length) * ratio
-        case let rest as Rest:
-          let restUnit = createRestUnit(offset, rest: rest)
-          units.append(
-            (offset: offset, unit: .Right(right: restUnit))
-          )
-          result += restUnit.allElements
-          offset += noteLengthToWidth(rest.length) * ratio
-        default: break
+      let units = createUnits(xOffset, tuplet: tuplet)
+      for u in units {
+        switch u.unit {
+        case .Left(let n):
+          result += n.noteUnit.allElements
+          result.append(n.stem)
+        case .Right(let r):
+          result += r.allElements
         }
       }
 
@@ -451,11 +462,18 @@ class SingleLineScoreRenderer {
       let (inverted, notInverted) = noteUnits.partitionBy({$0.invert})
       let invert = inverted.count > notInverted.count
 
+      let tupletBeam = TupletBeam()
+      tupletBeam.invert = invert
+      tupletBeam.notes = tuplet.notes
+      result.append(tupletBeam)
+
       if (invert) {
         let upperBound = staffTop + layout.staffHeight
         let bottoms = units.map({ (pair) -> (x: CGFloat, y: CGFloat) in
           switch pair.unit {
-          case .Left(let n): return (x: pair.offset, y: max(n.stem.frame.maxY, upperBound))
+          case .Left(let n): return (
+            x: pair.offset,
+            y: max(n.noteUnit.noteHeads.map({$0.frame.maxY}).maxElement()!, n.stem.frame.maxY, upperBound))
           case .Right(_): return (x: pair.offset, y: upperBound)
           }
         })
@@ -472,26 +490,22 @@ class SingleLineScoreRenderer {
             x: offsetAtLowest,
             y: lowestBottomY))
 
-
-        let tupletBeam = TupletBeam()
-        tupletBeam.invert = invert
-        tupletBeam.notes = tuplet.notes
-
         let (x1, y1) = (firstX, f(firstX))
         let (x2, y2) = (lastX, f(lastX))
 
+        let height = max(y2 - y1, tupletBeam.fontSize)
         tupletBeam.frame = CGRect(
           x: x1,
-          y: y1,
+          y: y1 - height,
           width: x2 - x1,
-          height: max(y2 - y1, tupletBeam.fontSize)
+          height: height
         )
-        result.append(tupletBeam)
       } else {
         let lowerBound = staffTop
         let tops = units.map({ (pair) -> (x: CGFloat, y: CGFloat) in
           switch pair.unit {
-          case .Left(let n): return (x: pair.offset, y: min(n.stem.frame.minY, lowerBound))
+          case .Left(let n): return (x: pair.offset,
+            y: min(n.noteUnit.noteHeads.map({$0.frame.minY}).minElement()!, n.stem.frame.minY, lowerBound))
           case .Right(_): return (x: pair.offset, y: lowerBound)
           }
         })
@@ -508,10 +522,92 @@ class SingleLineScoreRenderer {
             x: offsetAtHighest,
             y: highestTopY))
 
+        let (x1, y1) = (firstX, f(firstX))
+        let (x2, y2) = (lastX, f(lastX))
 
-        let tupletBeam = TupletBeam()
-        tupletBeam.invert = invert
-        tupletBeam.notes = tuplet.notes
+        let height = max(y2 - y1, tupletBeam.fontSize)
+        tupletBeam.frame = CGRect(
+          x: x1,
+          y: y1 - height,
+          width: x2 - x1,
+          height: height
+        )
+      }
+    } else {
+      let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
+      var offset = xOffset
+      var units = [(offset: CGFloat, unit: Either<BeamUnit, RestUnit>)]()
+      var elements = [(xOffset: CGFloat, element: BeamMember)]()
+
+      for e in tuplet.elements {
+        var beamContinue = false
+        switch e {
+        case let note as Note:
+          elements.append((xOffset: offset, element: note))
+          beamContinue = true
+        case let chord as Chord:
+          elements.append((xOffset: offset, element: chord))
+          beamContinue = true
+        case let rest as Rest:
+          units.append((offset: offset, unit: .Right(right: createRestUnit(offset, rest: rest))))
+          beamContinue = false
+        default: break
+        }
+        offset += noteLengthToWidth(e.length) * ratio
+        if !beamContinue {
+          for b in createBeamUnit(elements, groupedBy: tuplet.notes) { units.append((offset: elements.first!.xOffset, unit: .Left(left: b))) }
+          elements = []
+        }
+      }
+      if elements.nonEmpty {
+        for b in createBeamUnit(elements, groupedBy: tuplet.notes) { units.append((offset: elements.first!.xOffset, unit: .Left(left: b))) }
+      }
+      units = units.sortBy({$0.offset})
+
+      for (_, unit) in units {
+        switch unit {
+        case .Left(let b): result += b.allElements
+        case .Right(let r): result += r.allElements
+        }
+      }
+
+      var beamUnits = [BeamUnit]()
+      for (_, unit) in units {
+        switch unit {
+        case .Left(let unit): beamUnits.append(unit)
+        case .Right(_): break
+        }
+      }
+      let (inverted, notInverted) = beamUnits.partitionBy({$0.invert})
+      let invert = inverted.count > notInverted.count
+
+      let tupletBeam = TupletBeam()
+      tupletBeam.invert = invert
+      tupletBeam.notes = tuplet.notes
+      result.append(tupletBeam)
+
+      if (invert) {
+        let upperBound = staffTop + layout.staffHeight
+        let bottoms = units.map({ (pair) -> (x: CGFloat, y: CGFloat) in
+          switch pair.unit {
+          case .Left(let b): return (
+            x: pair.offset,
+            y: max(b.stems.map({$0.frame.maxY}).maxElement()!, b.noteUnits.flatMap({$0.noteHeads}).map({$0.frame.maxY}).maxElement()!, upperBound))
+          case .Right(_): return (x: pair.offset, y: upperBound)
+          }
+        })
+
+        let (x: offsetAtLowest, y: lowestBottomY) = bottoms.maxBy({$0.y})!
+
+        let (firstX, firstY) = bottoms.first!
+        let (lastX, lastY) = bottoms.last!
+
+        let a = (lastY - firstY) / (lastX - firstX)
+        let slope = a.abs < layout.maxBeamSlope ? a : layout.maxBeamSlope * a.sign
+        let f = linearFunction(slope,
+          point: Point2D(
+            x: offsetAtLowest,
+            y: lowestBottomY))
 
         let (x1, y1) = (firstX, f(firstX))
         let (x2, y2) = (lastX, f(lastX))
@@ -523,10 +619,39 @@ class SingleLineScoreRenderer {
           width: x2 - x1,
           height: height
         )
-        result.append(tupletBeam)
-      }
-    } else {
+      } else {
+        let lowerBound = staffTop
+        let tops = units.map({ (pair) -> (x: CGFloat, y: CGFloat) in
+          switch pair.unit {
+          case .Left(let b): return (x: pair.offset,
+            y: min(b.stems.map({$0.frame.minY}).minElement()!, b.noteUnits.flatMap({$0.noteHeads}).map({$0.frame.minY}).minElement()!, lowerBound))
+          case .Right(_): return (x: pair.offset, y: lowerBound)
+          }
+        })
 
+        let (x: offsetAtHighest, y: highestTopY) = tops.minBy({$0.y})!
+
+        let (firstX, firstY) = tops.first!
+        let (lastX, lastY) = tops.last!
+
+        let a = (lastY - firstY) / (lastX - firstX)
+        let slope = a.abs < layout.maxBeamSlope ? a : layout.maxBeamSlope * a.sign
+        let f = linearFunction(slope,
+          point: Point2D(
+            x: offsetAtHighest,
+            y: highestTopY))
+
+        let (x1, y1) = (firstX, f(firstX))
+        let (x2, y2) = (lastX, f(lastX))
+
+        let height = max(y2 - y1, tupletBeam.fontSize)
+        tupletBeam.frame = CGRect(
+          x: x1,
+          y: y1 - height,
+          width: x2 - x1,
+          height: height
+        )
+      }
     }
 
     return result
