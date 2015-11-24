@@ -83,7 +83,7 @@ import Foundation
           elementsInBeam.append((xOffset: xOffset, element: note))
         }
 
-        xOffset += renderer.noteLengthToWidth(note.length)
+        xOffset += renderer.rendereredWidthForNoteLength(note.length)
 
       case let chord as Chord:
         let length = chord.length.actualLength(renderer.unitDenominator)
@@ -101,19 +101,19 @@ import Foundation
           elementsInBeam.append((xOffset: xOffset, element: chord))
         }
 
-        xOffset += renderer.noteLengthToWidth(chord.length)
+        xOffset += renderer.rendereredWidthForNoteLength(chord.length)
 
       case let tuplet as Tuplet:
         let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
-        for v in renderer.createViewsFromTuplet(tuplet, xOffset: xOffset) { canvas.addSubview(v) }
-        xOffset += tuplet.elements.map({renderer.noteLengthToWidth($0.length) * ratio}).sum()
+        for v in renderer.createElementsForTuplet(tuplet, xOffset: xOffset) { canvas.addSubview(v) }
+        xOffset += tuplet.elements.map({renderer.rendereredWidthForNoteLength($0.length) * ratio}).sum()
 
       case let rest as Rest:
         renderer.createRestUnit(xOffset, rest: rest).renderToView(canvas)
-        xOffset += renderer.noteLengthToWidth(rest.length)
+        xOffset += renderer.rendereredWidthForNoteLength(rest.length)
 
       case let rest as MultiMeasureRest:
-        xOffset += renderer.noteLengthToWidth(NoteLength(numerator: rest.num, denominator: 1))
+        xOffset += renderer.rendereredWidthForNoteLength(NoteLength(numerator: rest.num, denominator: 1))
 
       default: break
       }

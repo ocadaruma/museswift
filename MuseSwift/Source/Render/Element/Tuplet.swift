@@ -52,7 +52,7 @@ import Foundation
     let paraStyle = NSMutableParagraphStyle()
     paraStyle.alignment = .Center
 
-    let font = UIFont(name: "Helvetica Neue", size: fontSize)
+    let font = UIFont(name: "Baskerville-BoldItalic", size: fontSize)
     let attributes: [String : AnyObject] = [
       NSForegroundColorAttributeName: tintColor,
       NSFontAttributeName: font!,

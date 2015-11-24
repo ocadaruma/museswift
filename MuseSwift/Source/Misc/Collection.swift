@@ -28,11 +28,11 @@ extension CollectionType {
     return result
   }
 
-  public func forall(f: (Generator.Element) -> Bool) -> Bool {
+  public func forall(f: Generator.Element -> Bool) -> Bool {
     return !contains(f)
   }
 
-  public func groupBy<T: Equatable>(f: (Z) -> T) -> [T: [Z]] {
+  public func groupBy<T: Equatable>(f: Z -> T) -> [T: [Z]] {
     var result = [T: [Z]]()
 
     for e in self {
@@ -47,7 +47,7 @@ extension CollectionType {
     return result
   }
 
-  public func spanBy<T: Equatable>(f: (Z) -> T) -> [[Z]] {
+  public func spanBy<T: Equatable>(f: Z -> T) -> [[Z]] {
     var result = [[Z]]()
 
     var acc = [Z]()
@@ -71,19 +71,19 @@ extension CollectionType {
     return result
   }
 
-  public func minBy<T: Comparable>(f: (Z) -> T) -> Z? {
+  public func minBy<T: Comparable>(f: Z -> T) -> Z? {
     return self.minElement({ f($0) < f($1) })
   }
 
-  public func maxBy<T: Comparable>(f: (Z) -> T) -> Z? {
+  public func maxBy<T: Comparable>(f: Z -> T) -> Z? {
     return self.maxElement({ f($0) < f($1) })
   }
 
-  public func sortBy<T: Comparable>(f: (Z) -> T) -> [Z] {
+  public func sortBy<T: Comparable>(f: Z -> T) -> [Z] {
     return self.sort({ f($0) < f($1) })
   }
 
-  public func partitionBy(f: (Z) -> Bool) -> ([Z], [Z]) {
+  public func partitionBy(f: Z -> Bool) -> ([Z], [Z]) {
     var trues = [Z]()
     var falses = [Z]()
 

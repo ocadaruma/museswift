@@ -40,6 +40,61 @@ private extension BeamMember {
   }
 }
 
+private extension CollectionType where Generator.Element == Pitch {
+  var sparse: Bool {
+    get {
+      let sortedPitches = self.sortBy({$0.step})
+      var sparse = true
+      var previousPitch: Pitch? = nil
+      for pitch in sortedPitches {
+        if let p = previousPitch {
+          if (pitch.step - p.step).abs < 2 {
+            sparse = false
+            break
+          }
+        }
+        previousPitch = pitch
+      }
+
+      return sparse
+    }
+  }
+}
+
+private extension CollectionType where Generator.Element == CGRect {
+  var maxX: CGFloat? {
+    get {
+      return self.map({$0.maxX}).maxElement()
+    }
+  }
+
+  var maxY: CGFloat? {
+    get {
+      return self.map({$0.maxY}).maxElement()
+    }
+  }
+
+  var minX: CGFloat? {
+    get {
+      return self.map({$0.minX}).minElement()
+    }
+  }
+
+  var minY: CGFloat? {
+    get {
+      return self.map({$0.minY}).minElement()
+    }
+  }
+
+  var midX: CGFloat? {
+    get {
+      return maxX.flatMap({ x in
+        return minX.map({(x + $0) / 2})
+      })
+    }
+  }
+}
+
 class SingleLineScoreRenderer {
   let unitDenominator: UnitDenominator
   let layout: SingleLineScoreLayout
@@ -84,22 +139,6 @@ class SingleLineScoreRenderer {
     return c0 - CGFloat(7 * pitch.offset + pitch.name.rawValue) * noteInterval
   }
 
-  private func canRenderInSingleColumn(sortedPitches: [Pitch]) -> Bool {
-    var singleColumn = true
-    var previousPitch: Pitch? = nil
-    for pitch in sortedPitches {
-      if let p = previousPitch {
-        if (pitch.step - p.step).abs < 2 {
-          singleColumn = false
-          break
-        }
-      }
-      previousPitch = pitch
-    }
-
-    return singleColumn
-  }
-
   private func createDotFrame(pitch: Pitch, x: CGFloat) -> CGRect {
     let step = 7 * pitch.offset + pitch.name.rawValue
     let noteInterval = layout.staffInterval / 2
@@ -137,7 +176,7 @@ class SingleLineScoreRenderer {
     return CGRect(x: xOffset, y: noteHeadTop(pitch), width: width, height: layout.noteHeadSize.height)
   }
 
-  private func createOutsideStaff(xOffset: CGFloat, pitch: Pitch) -> [Block] {
+  private func createFillingStaff(xOffset: CGFloat, pitch: Pitch) -> [Block] {
     let step = pitch.step
     let upperBound = AAbove1stStave.step
     let lowerBound = MiddleC.step
@@ -209,9 +248,17 @@ class SingleLineScoreRenderer {
   private func createFlag(noteLength: NoteLength, stemFrame: CGRect, invert: Bool) -> ScoreElement {
     let flagFrame: CGRect
     if (invert) {
-      flagFrame = CGRect(x: stemFrame.x, y: stemFrame.maxY - layout.staffInterval * 3, width: layout.noteHeadSize.width, height: layout.staffInterval * 3)
+      flagFrame = CGRect(
+        x: stemFrame.x,
+        y: stemFrame.maxY - layout.staffInterval * 3,
+        width: layout.noteHeadSize.width,
+        height: layout.staffInterval * 3)
     } else {
-      flagFrame = CGRect(x: stemFrame.maxX, y: stemFrame.y, width: layout.noteHeadSize.width, height: layout.staffInterval * 3)
+      flagFrame = CGRect(
+        x: stemFrame.maxX,
+        y: stemFrame.y,
+        width: layout.noteHeadSize.width,
+        height: layout.staffInterval * 3)
     }
 
     let length = noteLength.actualLength(unitDenominator)
@@ -242,20 +289,20 @@ class SingleLineScoreRenderer {
         units.append(
           (offset: offset, unit: .Left(left: (noteUnit: noteUnit, stem: stem)))
         )
-        offset += noteLengthToWidth(note.length) * ratio
+        offset += rendereredWidthForNoteLength(note.length) * ratio
       case let chord as Chord:
         let noteUnit = createNoteUnit(offset, chord: chord, invert: shouldInvert(chord))
         let stem = createStem(noteUnit)
         units.append(
           (offset: offset, unit: .Left(left: (noteUnit: noteUnit, stem: stem)))
         )
-        offset += noteLengthToWidth(chord.length) * ratio
+        offset += rendereredWidthForNoteLength(chord.length) * ratio
       case let rest as Rest:
         let restUnit = createRestUnit(offset, rest: rest)
         units.append(
           (offset: offset, unit: .Right(right: restUnit))
         )
-        offset += noteLengthToWidth(rest.length) * ratio
+        offset += rendereredWidthForNoteLength(rest.length) * ratio
       default: break
       }
     }
@@ -263,7 +310,30 @@ class SingleLineScoreRenderer {
     return units
   }
 
-  func noteLengthToWidth(noteLength: NoteLength) -> CGFloat {
+  private func createTupletBeamFrame(envelope: [CGPoint], point: CGPoint) -> CGRect {
+    let firstPoint = envelope.first!
+    let lastPoint = envelope.last!
+
+    let a = (lastPoint.y - firstPoint.y) / (lastPoint.x - firstPoint.x)
+    let slope = a.abs < layout.maxBeamSlope ? a : layout.maxBeamSlope * a.sign
+    let f = linearFunction(slope,
+      point: Point2D(
+        x: point.x,
+        y: point.y))
+
+    let (x1, y1) = (firstPoint.x, f(firstPoint.x))
+    let (x2, y2) = (lastPoint.x, f(lastPoint.x))
+
+    let height = max(y2 - y1, layout.tupletFontSize)
+    return CGRect(
+      x: x1,
+      y: y1 - height,
+      width: x2 - x1,
+      height: height
+    )
+  }
+
+  func rendereredWidthForNoteLength(noteLength: NoteLength) -> CGFloat {
     return layout.widthPerUnitNoteLength * CGFloat(noteLength.numerator) / CGFloat(noteLength.denominator)
   }
 
@@ -285,7 +355,7 @@ class SingleLineScoreRenderer {
       restView = Block()
       let width = layout.staffInterval * 1.5
       restView.frame = CGRect(
-        x: xOffset + noteLengthToWidth(rest.length) / 2 - (width / 2),
+        x: xOffset + rendereredWidthForNoteLength(rest.length) / 2 - (width / 2),
         y: staffTop + layout.staffInterval,
         width: width,
         height: layout.staffInterval * 0.6)
@@ -294,7 +364,7 @@ class SingleLineScoreRenderer {
       let width = layout.staffInterval * 1.5
       let height = layout.staffInterval * 0.6
       restView.frame = CGRect(
-        x: xOffset + noteLengthToWidth(rest.length) / 2 - (width / 2),
+        x: xOffset + rendereredWidthForNoteLength(rest.length) / 2 - (width / 2),
         y: staffTop + layout.staffInterval * 2 - height,
         width: width,
         height: height)
@@ -360,12 +430,12 @@ class SingleLineScoreRenderer {
 
   func createNoteUnit(xOffset: CGFloat, chord: Chord, invert: Bool) -> NoteUnit {
     let sortedPitches = invert ? chord.pitches.sortBy({$0.step}).reverse() : chord.pitches.sortBy({$0.step})
-    let singleColumn = canRenderInSingleColumn(sortedPitches)
+    let sparce = sortedPitches.sparse
 
     var noteHeadFrames = [(pitch: Pitch, frame: CGRect, column: NoteHeadColumn)]()
     var previousPitch: Pitch? = nil
 
-    if singleColumn {
+    if sparce {
       for pitch in sortedPitches {
         noteHeadFrames.append((pitch: pitch, frame: createNoteHeadFrame(pitch, xOffset: xOffset), column: .Left))
       }
@@ -396,7 +466,7 @@ class SingleLineScoreRenderer {
 
     for (pitch, frame, column) in noteHeadFrames {
       let noteHead: ScoreElement
-      let shouldAddDots = length < Whole && (singleColumn || column == .Right)
+      let shouldAddDots = length < Whole && (sparce || column == .Right)
       var d = [Oval]()
 
       if (length >= Whole) { // whole note
@@ -415,7 +485,7 @@ class SingleLineScoreRenderer {
         }
       }
 
-      outsideStaff += createOutsideStaff(frame.minX, pitch: pitch)
+      outsideStaff += createFillingStaff(frame.minX, pitch: pitch)
       createAccidental(pitch, xOffset: xOffset).foreach({accidentals.append($0)})
 
       noteHead.frame = frame
@@ -428,12 +498,13 @@ class SingleLineScoreRenderer {
       noteHeads: noteHeads,
       accidentals: accidentals,
       outsideStaff: outsideStaff,
-      singleColumn: singleColumn,
+      singleColumn: sparce,
       invert: invert,
       xOffset: xOffset)
   }
 
-  func createViewsFromTuplet(tuplet: Tuplet, xOffset: CGFloat) -> [ScoreElement] {
+  func createElementsForTuplet(tuplet: Tuplet, xOffset: CGFloat) -> [ScoreElement] {
+    // assume that all elements in tuplet are same length
     let length = tuplet.elements.first!.length.actualLength(unitDenominator)
 
     var result = [ScoreElement]()
@@ -442,96 +513,52 @@ class SingleLineScoreRenderer {
       // unsupported
     } else if length >= Quarter {
       let units = createUnits(xOffset, tuplet: tuplet)
-      for u in units {
+      result += units.flatMap({ u -> [ScoreElement] in
         switch u.unit {
-        case .Left(let n):
-          result += n.noteUnit.allElements
-          result.append(n.stem)
-        case .Right(let r):
-          result += r.allElements
+        case .Left(let n): return n.noteUnit.allElements + [n.stem]
+        case .Right(let r): return r.allElements
         }
-      }
+      })
 
-      var noteUnits = [NoteUnit]()
-      for (_, unit) in units {
-        switch unit {
-        case .Left(let p): noteUnits.append(p.noteUnit)
-        case .Right(_): break
-        }
-      }
-      let (inverted, notInverted) = noteUnits.partitionBy({$0.invert})
+      let (inverted, notInverted) = units.flatMap({$0.unit.left.toArray()}).partitionBy({$0.noteUnit.invert})
       let invert = inverted.count > notInverted.count
 
       let tupletBeam = TupletBeam()
       tupletBeam.invert = invert
       tupletBeam.notes = tuplet.notes
+      tupletBeam.fontSize = layout.tupletFontSize
       result.append(tupletBeam)
 
       if (invert) {
         let upperBound = staffTop + layout.staffHeight
-        let bottoms = units.map({ (pair) -> (x: CGFloat, y: CGFloat) in
+        let envelope = units.map({ pair -> CGPoint in
           switch pair.unit {
-          case .Left(let n): return (
-            x: pair.offset,
-            y: max(n.noteUnit.noteHeads.map({$0.frame.maxY}).maxElement()!, n.stem.frame.maxY, upperBound))
-          case .Right(_): return (x: pair.offset, y: upperBound)
+          case .Left(let n):
+            let frames = (n.noteUnit.noteHeads + [n.stem]).map({$0.frame})
+            return CGPoint(
+              x: frames.midX!,
+              y: max(frames.maxY!, upperBound))
+          case .Right(let r): return CGPoint(x: r.restView.frame.midX, y: upperBound)
           }
         })
 
-        let (x: offsetAtLowest, y: lowestBottomY) = bottoms.maxBy({$0.y})!
-
-        let (firstX, firstY) = bottoms.first!
-        let (lastX, lastY) = bottoms.last!
-
-        let a = (lastY - firstY) / (lastX - firstX)
-        let slope = a.abs < layout.maxBeamSlope ? a : layout.maxBeamSlope * a.sign
-        let f = linearFunction(slope,
-          point: Point2D(
-            x: offsetAtLowest,
-            y: lowestBottomY))
-
-        let (x1, y1) = (firstX, f(firstX))
-        let (x2, y2) = (lastX, f(lastX))
-
-        let height = max(y2 - y1, tupletBeam.fontSize)
-        tupletBeam.frame = CGRect(
-          x: x1,
-          y: y1 - height,
-          width: x2 - x1,
-          height: height
-        )
+        let pointAtLowest = envelope.maxBy({$0.y})!
+        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtLowest)
       } else {
         let lowerBound = staffTop
-        let tops = units.map({ (pair) -> (x: CGFloat, y: CGFloat) in
+        let envelope = units.map({ pair -> CGPoint in
           switch pair.unit {
-          case .Left(let n): return (x: pair.offset,
-            y: min(n.noteUnit.noteHeads.map({$0.frame.minY}).minElement()!, n.stem.frame.minY, lowerBound))
-          case .Right(_): return (x: pair.offset, y: lowerBound)
+          case .Left(let n):
+            let frames = (n.noteUnit.noteHeads + [n.stem]).map({$0.frame})
+            return CGPoint(
+              x: frames.midX!,
+              y: min(frames.minY!, lowerBound))
+          case .Right(let r): return CGPoint(x: r.restView.frame.midX, y: lowerBound)
           }
         })
 
-        let (x: offsetAtHighest, y: highestTopY) = tops.minBy({$0.y})!
-
-        let (firstX, firstY) = tops.first!
-        let (lastX, lastY) = tops.last!
-
-        let a = (lastY - firstY) / (lastX - firstX)
-        let slope = a.abs < layout.maxBeamSlope ? a : layout.maxBeamSlope * a.sign
-        let f = linearFunction(slope,
-          point: Point2D(
-            x: offsetAtHighest,
-            y: highestTopY))
-
-        let (x1, y1) = (firstX, f(firstX))
-        let (x2, y2) = (lastX, f(lastX))
-
-        let height = max(y2 - y1, tupletBeam.fontSize)
-        tupletBeam.frame = CGRect(
-          x: x1,
-          y: y1 - height,
-          width: x2 - x1,
-          height: height
-        )
+        let pointAtHighest = envelope.minBy({$0.y})!
+        tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtHighest)
       }
     } else {
       let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
@@ -553,7 +580,7 @@ class SingleLineScoreRenderer {
           beamContinue = false
         default: break
         }
-        offset += noteLengthToWidth(e.length) * ratio
+        offset += rendereredWidthForNoteLength(e.length) * ratio
         if !beamContinue {
           for b in createBeamUnit(elements, groupedBy: tuplet.notes) { units.append((offset: elements.first!.xOffset, unit: .Left(left: b))) }
           elements = []
@@ -571,14 +598,7 @@ class SingleLineScoreRenderer {
         }
       }
 
-      var beamUnits = [BeamUnit]()
-      for (_, unit) in units {
-        switch unit {
-        case .Left(let unit): beamUnits.append(unit)
-        case .Right(_): break
-        }
-      }
-      let (inverted, notInverted) = beamUnits.partitionBy({$0.invert})
+      let (inverted, notInverted) = units.flatMap({$0.unit.left.toArray()}).partitionBy({$0.invert})
       let invert = inverted.count > notInverted.count
 
       let tupletBeam = TupletBeam()
@@ -711,12 +731,12 @@ class SingleLineScoreRenderer {
               y: highestFrame.y - layout.minStemHeight))
           let lowerF = linearFunction(lowerSlope,
             point: Point2D(
-              x: canRenderInSingleColumn(lowestElement.sortedPitches) ? lowestFrame.x : lowestFrame.maxX,
+              x: lowestElement.sortedPitches.sparse ? lowestFrame.x : lowestFrame.maxX,
               y: lowestFrame.maxY + layout.minStemHeight))
 
           let staffYCenter = staffTop + layout.staffInterval * 2
           let upperDiff = group.map({ abs(staffYCenter - upperF($0.xOffset + layout.noteHeadSize.width)) }).sum()
-          let lowerDiff = group.map({ abs(staffYCenter - lowerF(canRenderInSingleColumn($0.element.sortedPitches) ? $0.xOffset : $0.xOffset + layout.noteHeadSize.width)) }).sum()
+          let lowerDiff = group.map({ abs(staffYCenter - lowerF($0.element.sortedPitches.sparse ? $0.xOffset : $0.xOffset + layout.noteHeadSize.width)) }).sum()
 
           let beam = Beam()
           beam.lineWidth = layout.beamLineWidth
@@ -800,9 +820,9 @@ class SingleLineScoreRenderer {
             }
 
             // add beam
-            let x1 = first.xOffset + (canRenderInSingleColumn(first.element.sortedPitches) ? 0 : layout.noteHeadSize.width)
+            let x1 = first.xOffset + (first.element.sortedPitches.sparse ? 0 : layout.noteHeadSize.width)
             let y1 = lowerF(x1)
-            let x2 = last.xOffset + (canRenderInSingleColumn(last.element.sortedPitches) ? 0 : layout.noteHeadSize.width) + layout.stemWidth
+            let x2 = last.xOffset + (last.element.sortedPitches.sparse ? 0 : layout.noteHeadSize.width) + layout.stemWidth
             let y2 = lowerF(x2)
 
             beam.rightDown = y1 < y2

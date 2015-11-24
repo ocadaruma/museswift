@@ -21,6 +21,7 @@ public class SingleLineScoreLayout {
   public let outsideStaffLineXLength: CGFloat
   public let noteHeadSize: CGSize
   public let beamLineWidth: CGFloat
+  public let tupletFontSize: CGFloat
 
   public init(
     staffHeight: CGFloat = 60,
@@ -34,7 +35,8 @@ public class SingleLineScoreLayout {
     outsideStaffLineWidth: CGFloat = 1,
     outsideStaffLineXLength: CGFloat = 28.8,
     noteHeadSize: CGSize = CGSize(width: 18, height: 15),
-    beamLineWidth: CGFloat = 5) {
+    beamLineWidth: CGFloat = 5,
+    tupletFontSize: CGFloat = 20) {
       self.staffHeight = staffHeight
       self.staffLineWidth = staffLineWidth
       self.stemWidth = stemWidth
@@ -47,6 +49,7 @@ public class SingleLineScoreLayout {
       self.outsideStaffLineXLength = outsideStaffLineXLength
       self.noteHeadSize = noteHeadSize
       self.beamLineWidth = beamLineWidth
+      self.tupletFontSize = tupletFontSize
   }
 
   public static let defaultLayout = SingleLineScoreLayout()
