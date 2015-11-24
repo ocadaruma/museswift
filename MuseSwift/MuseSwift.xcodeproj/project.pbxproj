@@ -115,9 +115,9 @@
 		DE15160F1BF5823400871086 = {
 			isa = PBXGroup;
 			children = (
+				DE15161A1BF5823400871086 /* Products */,
 				DE15161B1BF5823400871086 /* Source */,
 				DE1516271BF5823400871086 /* Test */,
-				DE15161A1BF5823400871086 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -134,14 +134,13 @@
 			isa = PBXGroup;
 			children = (
 				DE7FE6D71BF8CEA3004A4D18 /* Animation */,
-				DE9D1D1E1BF5B5210039A4C0 /* Render */,
 				DE1516541BF5864100871086 /* Core */,
 				DE1516661BF58CB800871086 /* Misc */,
-				DE15161C1BF5823400871086 /* MuseSwift.h */,
+				DE9D1D1E1BF5B5210039A4C0 /* Render */,
 				DE15161E1BF5823400871086 /* Info.plist */,
+				DE15161C1BF5823400871086 /* MuseSwift.h */,
 			);
-			name = Source;
-			path = MuseSwift;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		DE1516271BF5823400871086 /* Test */ = {
@@ -151,8 +150,7 @@
 				DE15166B1BF58CDE00871086 /* Misc */,
 				DE15162A1BF5823400871086 /* Info.plist */,
 			);
-			name = Test;
-			path = MuseSwiftTests;
+			path = Test;
 			sourceTree = "<group>";
 		};
 		DE1516541BF5864100871086 /* Core */ = {
@@ -165,7 +163,7 @@
 				DE1516581BF58C5E00871086 /* Parser.swift */,
 				DE15165A1BF58C5E00871086 /* Tune.swift */,
 			);
-			name = Core;
+			path = Core;
 			sourceTree = "<group>";
 		};
 		DE1516611BF58CA200871086 /* Core */ = {
@@ -174,41 +172,41 @@
 				DE1516761BF58E2F00871086 /* ParserTests.swift */,
 				DE1516771BF58E2F00871086 /* song.txt */,
 			);
-			name = Core;
+			path = Core;
 			sourceTree = "<group>";
 		};
 		DE1516661BF58CB800871086 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				DE97BCD11BF964CC000D367D /* Collection.swift */,
+				DE7B68151C0338D500CC356E /* Either.swift */,
+				DEB91E6D1BFAFCCE00CCF00E /* Numeric.swift */,
+				DE8EB3DB1BFDB141005C0A6E /* Option.swift */,
+				DEB91E6F1BFB83A800CCF00E /* Predef.swift */,
 				DE1516681BF58CD800871086 /* String.swift */,
 				DE1516671BF58CD800871086 /* StringScanner.swift */,
-				DE97BCD11BF964CC000D367D /* Collection.swift */,
-				DEB91E6D1BFAFCCE00CCF00E /* Numeric.swift */,
-				DEB91E6F1BFB83A800CCF00E /* Predef.swift */,
-				DE8EB3DB1BFDB141005C0A6E /* Option.swift */,
-				DE7B68151C0338D500CC356E /* Either.swift */,
 			);
-			name = Misc;
+			path = Misc;
 			sourceTree = "<group>";
 		};
 		DE15166B1BF58CDE00871086 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				DE97BCD31BF970DE000D367D /* CollectionTests.swift */,
 				DE1516721BF58E2200871086 /* StringScannerTests.swift */,
 				DE1516731BF58E2200871086 /* StringTests.swift */,
-				DE97BCD31BF970DE000D367D /* CollectionTests.swift */,
 			);
-			name = Misc;
+			path = Misc;
 			sourceTree = "<group>";
 		};
 		DE7B68121C02380100CC356E /* SingleLineScore */ = {
 			isa = PBXGroup;
 			children = (
 				DE9D1D1F1BF5B54F0039A4C0 /* SingleLineScore.swift */,
-				DE7B68101C0236D600CC356E /* SingleLineScoreRenderer.swift */,
 				DE7B68131C02381400CC356E /* SingleLineScoreLayout.swift */,
+				DE7B68101C0236D600CC356E /* SingleLineScoreRenderer.swift */,
 			);
-			name = SingleLineScore;
+			path = SingleLineScore;
 			sourceTree = "<group>";
 		};
 		DE7FE6D71BF8CEA3004A4D18 /* Animation */ = {
@@ -216,17 +214,17 @@
 			children = (
 				DE7FE6D81BF8CF03004A4D18 /* Animator.swift */,
 			);
-			name = Animation;
+			path = Animation;
 			sourceTree = "<group>";
 		};
 		DE9D1D1E1BF5B5210039A4C0 /* Render */ = {
 			isa = PBXGroup;
 			children = (
-				DE7B68121C02380100CC356E /* SingleLineScore */,
 				DE9D1D221BF5E3790039A4C0 /* Element */,
+				DE7B68121C02380100CC356E /* SingleLineScore */,
 				DE8EB3D91BFD4ABC005C0A6E /* Extension.swift */,
 			);
-			name = Render;
+			path = Render;
 			sourceTree = "<group>";
 		};
 		DE9D1D221BF5E3790039A4C0 /* Element */ = {
@@ -237,12 +235,12 @@
 				DE9D1D241BF5E3840039A4C0 /* Note.swift */,
 				DE9D1D231BF5E3840039A4C0 /* Rest.swift */,
 				DE9D1D311BF5E3BA0039A4C0 /* ScoreElement.swift */,
-				DE9D1D281BF5E3840039A4C0 /* Symbol.swift */,
-				DE9D1D261BF5E3840039A4C0 /* UIView.swift */,
 				DEB91E711BFCC05100CCF00E /* Shape.swift */,
+				DE9D1D281BF5E3840039A4C0 /* Symbol.swift */,
 				DEDCCB721C03524400C2902C /* Tuplet.swift */,
+				DE9D1D261BF5E3840039A4C0 /* UIView.swift */,
 			);
-			name = Element;
+			path = Element;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -503,7 +501,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MuseSwift/Info.plist;
+				INFOPLIST_FILE = Source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -522,7 +520,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MuseSwift/Info.plist;
+				INFOPLIST_FILE = Source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -535,7 +533,7 @@
 		DE1516311BF5823400871086 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = MuseSwiftTests/Info.plist;
+				INFOPLIST_FILE = Test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mayreh.MuseSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -545,7 +543,7 @@
 		DE1516321BF5823400871086 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = MuseSwiftTests/Info.plist;
+				INFOPLIST_FILE = Test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mayreh.MuseSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
