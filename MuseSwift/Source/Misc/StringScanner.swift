@@ -7,9 +7,9 @@ public class StringScanner {
     self.string = string
   }
 
-  public var result: String { get { return string } }
+  public var result: String { return string }
 
-  public var eos: Bool { get { return string.characters.count <= 0 } }
+  public var eos: Bool { return string.characters.count <= 0 }
 
   public func scan(pattern: String) -> [MatchResult] {
     let results = string.matchesWithPattern(pattern)

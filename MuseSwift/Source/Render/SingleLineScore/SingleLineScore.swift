@@ -8,20 +8,16 @@ import Foundation
   }
 
   private var staffTop: CGFloat {
-    get {
-      return (bounds.size.height - layout.staffHeight) / 2
-    }
+    return (bounds.size.height - layout.staffHeight) / 2
   }
 
   private var staffInterval: CGFloat {
-    get {
-      return layout.staffHeight / CGFloat(staffNum - 1)
-    }
+    return layout.staffHeight / CGFloat(staffNum - 1)
   }
 
   /// score elemeents will be added to this view.
   private var _canvas: UIView! = nil
-  public var canvas: UIView { get {return _canvas} }
+  public var canvas: UIView { return _canvas }
 
   public func loadVoice(tuneHeader: TuneHeader, voiceHeader: VoiceHeader, voice: Voice) -> Void {
     if let c = _canvas { c.removeFromSuperview() }
@@ -104,7 +100,7 @@ import Foundation
         xOffset += renderer.rendereredWidthForNoteLength(chord.length)
 
       case let tuplet as Tuplet:
-        let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
+        let ratio = CGFloat(tuplet.ratio)
         for v in renderer.createElementsForTuplet(tuplet, xOffset: xOffset) { canvas.addSubview(v) }
         xOffset += tuplet.elements.map({renderer.rendereredWidthForNoteLength($0.length) * ratio}).sum()
 

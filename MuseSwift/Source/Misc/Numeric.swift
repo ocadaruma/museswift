@@ -2,11 +2,11 @@ import Foundation
 
 extension Double {
   public var degree: Double {
-    get { return self / M_PI * 180 }
+    return self / M_PI * 180
   }
 
   public var rad: Double {
-    get { return self * M_PI / 180 }
+    return self * M_PI / 180
   }
 }
 
@@ -24,24 +24,20 @@ public protocol Numeric: Comparable {
 
 extension Numeric {
   public var abs: Self {
-    get {
-      if self < Self.Zero {
-        return self * -Self.One
-      } else {
-        return self
-      }
+    if self < Self.Zero {
+      return self * -Self.One
+    } else {
+      return self
     }
   }
 
   public var sign: Self {
-    get {
-      if self < Self.Zero {
-        return -Self.One
-      } else if self > Self.Zero {
-        return Self.One
-      } else {
-        return Self.Zero
-      }
+    if self < Self.Zero {
+      return -Self.One
+    } else if self > Self.Zero {
+      return Self.One
+    } else {
+      return Self.Zero
     }
   }
 }

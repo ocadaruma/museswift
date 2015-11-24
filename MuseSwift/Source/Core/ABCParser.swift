@@ -291,9 +291,7 @@ public struct TuneParseResult {
   public let errorPosition: Int?
 
   public var errorMessage: String {
-    get {
-      return "parse error at : \(errorPosition)"
-    }
+    return "parse error at : \(errorPosition)"
   }
 
   public init(tune: Tune?, errorPosition: Int?) {

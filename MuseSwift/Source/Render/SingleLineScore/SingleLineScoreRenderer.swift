@@ -2,33 +2,29 @@ import Foundation
 
 private extension Pitch {
   var step: Int {
-    get { return offset * 7 + name.rawValue }
+    return offset * 7 + name.rawValue
   }
 }
 
 private extension BeamMember {
   var maxPitch: Pitch {
-    get {
-      let pitch: Pitch!
-      switch self {
-      case let note as Note: pitch = note.pitch
-      case let chord as Chord: pitch = chord.pitches.maxBy({$0.step})
-      default: pitch = nil
-      }
-      return pitch
+    let pitch: Pitch!
+    switch self {
+    case let note as Note: pitch = note.pitch
+    case let chord as Chord: pitch = chord.pitches.maxBy({$0.step})
+    default: pitch = nil
     }
+    return pitch
   }
 
   var minPitch: Pitch {
-    get {
-      let pitch: Pitch!
-      switch self {
-      case let note as Note: pitch = note.pitch
-      case let chord as Chord: pitch = chord.pitches.minBy({$0.step})!
-      default: pitch = nil
-      }
-      return pitch
+    let pitch: Pitch!
+    switch self {
+    case let note as Note: pitch = note.pitch
+    case let chord as Chord: pitch = chord.pitches.minBy({$0.step})!
+    default: pitch = nil
     }
+    return pitch
   }
 
   var sortedPitches: [Pitch] {
@@ -42,56 +38,44 @@ private extension BeamMember {
 
 private extension CollectionType where Generator.Element == Pitch {
   var sparse: Bool {
-    get {
-      let sortedPitches = self.sortBy({$0.step})
-      var sparse = true
-      var previousPitch: Pitch? = nil
-      for pitch in sortedPitches {
-        if let p = previousPitch {
-          if (pitch.step - p.step).abs < 2 {
-            sparse = false
-            break
-          }
+    let sortedPitches = self.sortBy({$0.step})
+    var sparse = true
+    var previousPitch: Pitch? = nil
+    for pitch in sortedPitches {
+      if let p = previousPitch {
+        if (pitch.step - p.step).abs < 2 {
+          sparse = false
+          break
         }
-        previousPitch = pitch
       }
-
-      return sparse
+      previousPitch = pitch
     }
+
+    return sparse
   }
 }
 
 private extension CollectionType where Generator.Element == CGRect {
   var maxX: CGFloat? {
-    get {
-      return self.map({$0.maxX}).maxElement()
-    }
+    return self.map({$0.maxX}).maxElement()
   }
 
   var maxY: CGFloat? {
-    get {
-      return self.map({$0.maxY}).maxElement()
-    }
+    return self.map({$0.maxY}).maxElement()
   }
 
   var minX: CGFloat? {
-    get {
-      return self.map({$0.minX}).minElement()
-    }
+    return self.map({$0.minX}).minElement()
   }
 
   var minY: CGFloat? {
-    get {
-      return self.map({$0.minY}).minElement()
-    }
+    return self.map({$0.minY}).minElement()
   }
 
   var midX: CGFloat? {
-    get {
-      return maxX.flatMap({ x in
-        return minX.map({(x + $0) / 2})
-      })
-    }
+    return maxX.flatMap({ x in
+      return minX.map({(x + $0) / 2})
+    })
   }
 }
 
@@ -110,25 +94,25 @@ class SingleLineScoreRenderer {
   }
 
   var staffTop: CGFloat {
-    get { return (bounds.height - layout.staffHeight) / 2 }
+    return (bounds.height - layout.staffHeight) / 2
   }
 
   private var BOn3rdStave: Pitch {
-    get { return Pitch(name: .B, accidental: nil, offset: 0) }
+    return Pitch(name: .B, accidental: nil, offset: 0)
   }
 
   private var AAbove1stStave: Pitch {
-    get { return Pitch(name: .A, accidental: nil, offset: 1) }
+    return Pitch(name: .A, accidental: nil, offset: 1)
   }
 
   private var MiddleC: Pitch {
-    get { return Pitch(name: .C, accidental: nil, offset: 0) }
+    return Pitch(name: .C, accidental: nil, offset: 0)
   }
 
   private enum NoteHeadColumn {
     case Left, Right
     var invert: NoteHeadColumn {
-      get { return self == .Left ? .Right : .Left }
+      return self == .Left ? .Right : .Left
     }
   }
 
@@ -561,7 +545,7 @@ class SingleLineScoreRenderer {
         tupletBeam.frame = createTupletBeamFrame(envelope, point: pointAtHighest)
       }
     } else {
-      let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
+      let ratio = CGFloat(tuplet.ratio)
       var offset = xOffset
       var units = [(offset: CGFloat, unit: Either<BeamUnit, RestUnit>)]()
       var elements = [(xOffset: CGFloat, element: BeamMember)]()

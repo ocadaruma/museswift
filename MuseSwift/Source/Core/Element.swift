@@ -83,16 +83,18 @@ public struct Tuplet : MusicalElement {
   public let elements: [TupletMember]
 
   public var time: Int {
-    get {
-      if let t = inTimeOf {
-        return t
-      } else {
-        switch notes {
-        case 2, 4, 8: return 3
-        case 3, 6: return 2
-        default: return self.defaultTime
-        }
+    if let t = inTimeOf {
+      return t
+    } else {
+      switch notes {
+      case 2, 4, 8: return 3
+      case 3, 6: return 2
+      default: return self.defaultTime
       }
     }
+  }
+
+  public var ratio: Float {
+    return Float(time) / Float(notes)
   }
 }

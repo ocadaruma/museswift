@@ -99,9 +99,7 @@ extension CollectionType {
   }
 
   public var nonEmpty: Bool {
-    get {
-      return !isEmpty
-    }
+    return !isEmpty
   }
 }
 

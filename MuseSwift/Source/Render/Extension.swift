@@ -24,19 +24,19 @@ public prefix func -(point: CGPoint) -> CGPoint {
 
 extension CGRect {
   public var x: CGFloat {
-    get { return self.origin.x }
+    return self.origin.x
   }
 
   public var y: CGFloat {
-    get { return self.origin.y }
+    return self.origin.y
   }
 
   public var width: CGFloat {
-    get { return self.size.width }
+    return self.size.width
   }
 
   public var height: CGFloat {
-    get { return self.size.height }
+    return self.size.height
   }
 
   public func withOrigin(origin: CGPoint) -> CGRect {

@@ -58,7 +58,7 @@ public struct NoteLength : Hashable {
   }
 
   public var hashValue: Int {
-    get { return numerator.hashValue ^ denominator.hashValue }
+    return numerator.hashValue ^ denominator.hashValue
   }
 
   public func actualLength(unit: UnitDenominator) -> Float {

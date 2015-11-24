@@ -55,8 +55,6 @@ public class SingleLineScoreLayout {
   public static let defaultLayout = SingleLineScoreLayout()
 
   public var staffInterval: CGFloat {
-    get {
-      return staffHeight / CGFloat(staffNum - 1)
-    }
+    return staffHeight / CGFloat(staffNum - 1)
   }
 }

@@ -9,9 +9,7 @@ public struct ParseResult<T> {
   }
 
   public var isEmpty: Bool {
-    get {
-      return result == nil
-    }
+    return result == nil
   }
 }
 
@@ -24,9 +22,7 @@ public struct ArrayParseResult<T> {
   }
 
   public var isEmpty: Bool {
-    get {
-      return result.isEmpty
-    }
+    return result.isEmpty
   }
 }
 
@@ -39,9 +35,7 @@ public struct EatResult {
   }
 
   public var isEmpty: Bool {
-    get {
-      return result
-    }
+    return result
   }
 }
 

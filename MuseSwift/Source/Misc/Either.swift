@@ -5,26 +5,22 @@ public enum Either<T, U> {
   case Right(right: U)
 
   public var isLeft: Bool {
-    get {
-      switch self {
-      case .Left(_): return true
-      case .Right(_): return false
-      }
+    switch self {
+    case .Left(_): return true
+    case .Right(_): return false
     }
   }
 
   public var isRight: Bool {
-    get {
-      return !isLeft
-    }
+    return !isLeft
   }
 
   public var left: LeftProjection<T, U> {
-    get { return LeftProjection(e: self) }
+    return LeftProjection(e: self)
   }
 
   public var right: RightProjection<T, U> {
-    get { return RightProjection(e: self) }
+    return RightProjection(e: self)
   }
 }
 

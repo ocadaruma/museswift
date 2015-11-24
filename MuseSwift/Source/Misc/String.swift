@@ -7,9 +7,7 @@ public struct MatchResult {
 
 extension String {
   public var range: NSRange {
-    get {
-      return NSMakeRange(0, self.characters.count)
-    }
+    return NSMakeRange(0, self.characters.count)
   }
 
   public func matchesWithPattern(pattern: String) -> [MatchResult] {
