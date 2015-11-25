@@ -12,11 +12,50 @@
 		DE1516451BF585BB00871086 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE1516431BF585BB00871086 /* Main.storyboard */; };
 		DE1516471BF585BB00871086 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE1516461BF585BB00871086 /* Assets.xcassets */; };
 		DE15164A1BF585BB00871086 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE1516481BF585BB00871086 /* LaunchScreen.storyboard */; };
-		DE1516521BF585D200871086 /* MuseSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE1516511BF585D200871086 /* MuseSwift.framework */; };
+		DE7A09CA1C05B94200CE2658 /* MuseSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE7A09C71C05B93800CE2658 /* MuseSwift.framework */; };
+		DE7A09CB1C05B94200CE2658 /* MuseSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DE7A09C71C05B93800CE2658 /* MuseSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B31BF8BFF8000E449D /* sample_tune.txt */; };
 		DEA012B61BF8BFF8000E449D /* sample_tune2.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B41BF8BFF8000E449D /* sample_tune2.txt */; };
 		DEB91E741BFCEA1800CCF00E /* sample_tune3.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEB91E731BFCEA1700CCF00E /* sample_tune3.txt */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DE7A09C61C05B93800CE2658 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE7A09C11C05B93800CE2658 /* MuseSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DE1516191BF5823400871086;
+			remoteInfo = MuseSwift;
+		};
+		DE7A09C81C05B93800CE2658 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE7A09C11C05B93800CE2658 /* MuseSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DE1516231BF5823400871086;
+			remoteInfo = MuseSwiftTests;
+		};
+		DE7A09CC1C05B94200CE2658 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE7A09C11C05B93800CE2658 /* MuseSwift.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DE1516181BF5823400871086;
+			remoteInfo = MuseSwift;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DE7A09CE1C05B94200CE2658 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				DE7A09CB1C05B94200CE2658 /* MuseSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		DE15163C1BF585BB00871086 /* iOSSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -26,7 +65,7 @@
 		DE1516461BF585BB00871086 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DE1516491BF585BB00871086 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DE15164B1BF585BB00871086 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DE1516511BF585D200871086 /* MuseSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MuseSwift.framework; path = "../MuseSwift/build/Debug-iphoneos/MuseSwift.framework"; sourceTree = "<group>"; };
+		DE7A09C11C05B93800CE2658 /* MuseSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MuseSwift.xcodeproj; path = ../MuseSwift/MuseSwift.xcodeproj; sourceTree = "<group>"; };
 		DEA012B31BF8BFF8000E449D /* sample_tune.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune.txt; sourceTree = "<group>"; };
 		DEA012B41BF8BFF8000E449D /* sample_tune2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune2.txt; sourceTree = "<group>"; };
 		DEB91E731BFCEA1700CCF00E /* sample_tune3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune3.txt; sourceTree = "<group>"; };
@@ -37,7 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE1516521BF585D200871086 /* MuseSwift.framework in Frameworks */,
+				DE7A09CA1C05B94200CE2658 /* MuseSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,7 +86,7 @@
 		DE1516331BF585BB00871086 = {
 			isa = PBXGroup;
 			children = (
-				DE1516511BF585D200871086 /* MuseSwift.framework */,
+				DE7A09C11C05B93800CE2658 /* MuseSwift.xcodeproj */,
 				DE15163E1BF585BB00871086 /* iOSSample */,
 				DE15163D1BF585BB00871086 /* Products */,
 			);
@@ -77,6 +116,15 @@
 			path = iOSSample;
 			sourceTree = "<group>";
 		};
+		DE7A09C21C05B93800CE2658 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DE7A09C71C05B93800CE2658 /* MuseSwift.framework */,
+				DE7A09C91C05B93800CE2658 /* MuseSwiftTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -87,10 +135,12 @@
 				DE1516381BF585BB00871086 /* Sources */,
 				DE1516391BF585BB00871086 /* Frameworks */,
 				DE15163A1BF585BB00871086 /* Resources */,
+				DE7A09CE1C05B94200CE2658 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DE7A09CD1C05B94200CE2658 /* PBXTargetDependency */,
 			);
 			name = iOSSample;
 			productName = iOSSample;
@@ -123,12 +173,35 @@
 			mainGroup = DE1516331BF585BB00871086;
 			productRefGroup = DE15163D1BF585BB00871086 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = DE7A09C21C05B93800CE2658 /* Products */;
+					ProjectRef = DE7A09C11C05B93800CE2658 /* MuseSwift.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				DE15163B1BF585BB00871086 /* iOSSample */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		DE7A09C71C05B93800CE2658 /* MuseSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MuseSwift.framework;
+			remoteRef = DE7A09C61C05B93800CE2658 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DE7A09C91C05B93800CE2658 /* MuseSwiftTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MuseSwiftTests.xctest;
+			remoteRef = DE7A09C81C05B93800CE2658 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DE15163A1BF585BB00871086 /* Resources */ = {
@@ -157,6 +230,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DE7A09CD1C05B94200CE2658 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MuseSwift;
+			targetProxy = DE7A09CC1C05B94200CE2658 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		DE1516431BF585BB00871086 /* Main.storyboard */ = {
@@ -265,6 +346,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = iOSSample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -277,6 +359,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = iOSSample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
