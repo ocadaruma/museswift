@@ -11,23 +11,23 @@ public enum Accidental: Int {
 public struct Pitch : Equatable, Comparable {
   public let name: PitchName
   public let accidental: Accidental?
-  public let offset: Int
-  public init(name: PitchName, accidental: Accidental?, offset: Int) {
+  public let octave: Int
+  public init(name: PitchName, accidental: Accidental?, octave: Int) {
     self.name = name
     self.accidental = accidental
-    self.offset = offset
+    self.octave = octave
   }
 }
 
 public func ==(lhs: Pitch, rhs: Pitch) -> Bool {
-  return lhs.offset == rhs.offset &&
+  return lhs.octave == rhs.octave &&
     lhs.accidental == rhs.accidental &&
     lhs.name == rhs.name
 }
 
 public func <(lhs: Pitch, rhs: Pitch) -> Bool {
-  let left = lhs.offset * 7 + lhs.name.rawValue + (lhs.accidental?.rawValue ?? 0)
-  let right = rhs.offset * 7 + rhs.name.rawValue + (rhs.accidental?.rawValue ?? 0)
+  let left = lhs.octave * 7 + lhs.name.rawValue + (lhs.accidental?.rawValue ?? 0)
+  let right = rhs.octave * 7 + rhs.name.rawValue + (rhs.accidental?.rawValue ?? 0)
   return left < right
 }
 

@@ -141,7 +141,7 @@ let parseVoiceId = createParser("^\\[V:\\s*(\\w+)\\]", op: { m -> MusicalElement
 let parsePitch = createParser("(\\^{0,2}|_{0,2}|=?)([a-g]|[A-G])([',]*)", op: { m -> Pitch in
   var accidental: Accidental?
   var pitchName: PitchName
-  var offset: Int = 0
+  var octave: Int = 0
 
   switch m[1].match {
   case "^^": accidental = .DoubleSharp
@@ -154,29 +154,29 @@ let parsePitch = createParser("(\\^{0,2}|_{0,2}|=?)([a-g]|[A-G])([',]*)", op: { 
 
   switch m[2].match {
   case "C": pitchName = .C
-  case "c": pitchName = .C; offset = 1
+  case "c": pitchName = .C; octave = 1
   case "D": pitchName = .D
-  case "d": pitchName = .D; offset = 1
+  case "d": pitchName = .D; octave = 1
   case "E": pitchName = .E
-  case "e": pitchName = .E; offset = 1
+  case "e": pitchName = .E; octave = 1
   case "F": pitchName = .F
-  case "f": pitchName = .F; offset = 1
+  case "f": pitchName = .F; octave = 1
   case "G": pitchName = .G
-  case "g": pitchName = .G; offset = 1
+  case "g": pitchName = .G; octave = 1
   case "A": pitchName = .A
-  case "a": pitchName = .A; offset = 1
+  case "a": pitchName = .A; octave = 1
   case "B": pitchName = .B
-  case "b": pitchName = .B; offset = 1
+  case "b": pitchName = .B; octave = 1
   default: pitchName = .C
   }
 
-  offset += m[3].match.characters.filter({ $0 == "'" }).count
-  offset -= m[3].match.characters.filter({ $0 == "," }).count
+  octave += m[3].match.characters.filter({ $0 == "'" }).count
+  octave -= m[3].match.characters.filter({ $0 == "," }).count
 
   return Pitch(
     name: pitchName,
     accidental: accidental,
-    offset: offset)
+    octave: octave)
 })
 
 let parseNoteLength = createParser("(\\d*)/(\\d+)", op: { m -> NoteLength in

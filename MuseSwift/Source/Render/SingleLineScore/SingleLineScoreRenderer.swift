@@ -19,15 +19,15 @@ class SingleLineScoreRenderer {
   }
 
   private var BOn3rdStave: Pitch {
-    return Pitch(name: .B, accidental: nil, offset: 0)
+    return Pitch(name: .B, accidental: nil, octave: 0)
   }
 
   private var AAbove1stStave: Pitch {
-    return Pitch(name: .A, accidental: nil, offset: 1)
+    return Pitch(name: .A, accidental: nil, octave: 1)
   }
 
   private var MiddleC: Pitch {
-    return Pitch(name: .C, accidental: nil, offset: 0)
+    return Pitch(name: .C, accidental: nil, octave: 0)
   }
 
   private enum NoteHeadColumn {
@@ -41,11 +41,11 @@ class SingleLineScoreRenderer {
     let noteInterval = layout.staffInterval / 2
     let c0 = staffTop + noteInterval * 9
 
-    return c0 - CGFloat(7 * pitch.offset + pitch.name.rawValue) * noteInterval
+    return c0 - CGFloat(7 * pitch.octave + pitch.name.rawValue) * noteInterval
   }
 
   private func createDotFrame(pitch: Pitch, x: CGFloat) -> CGRect {
-    let step = 7 * pitch.offset + pitch.name.rawValue
+    let step = 7 * pitch.octave + pitch.name.rawValue
     let noteInterval = layout.staffInterval / 2
     let y = staffTop + noteInterval * 9 - CGFloat(step + (step + 1) % 2) * noteInterval
 
@@ -73,7 +73,7 @@ class SingleLineScoreRenderer {
   }
 
   private func createDotsForRest(x: CGFloat, length: Float, denominator: Float) -> [Oval] {
-    return createDots(Pitch(name: .C, accidental: nil, offset: 1), x: x, length: length, denominator: denominator)
+    return createDots(Pitch(name: .C, accidental: nil, octave: 1), x: x, length: length, denominator: denominator)
   }
 
   private func createNoteHeadFrame(pitch: Pitch, xOffset: CGFloat) -> CGRect {

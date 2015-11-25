@@ -75,7 +75,7 @@ func -(lhs: CGRect, rhs: CGPoint) -> CGRect {
 
 extension Pitch {
   var step: Int {
-    return offset * 7 + name.rawValue
+    return octave * 7 + name.rawValue
   }
 }
 
