@@ -1,5 +1,7 @@
 import Foundation
 
+typealias Denominator = UnitDenominator
+
 extension CGPoint {
   func withX(x: CGFloat) -> CGPoint {
     return CGPoint(x: x, y: self.y)
@@ -105,6 +107,54 @@ extension BeamMember {
     case let note as Note: return  [note.pitch]
     case let chord as Chord: return chord.pitches.sortBy({$0.step})
     default: return []
+    }
+  }
+}
+
+extension Denominator {
+  var hasStem: Bool {
+    switch self {
+    case .Whole: return false
+    default: return true
+    }
+  }
+
+  var hasFlag: Bool {
+    switch self {
+    case .Whole, .Half, .Quarter: return false
+    default: return true
+    }
+  }
+
+  var constructor: () -> ScoreElement {
+    switch self {
+    case .Whole: return { WholeNoteElement() }
+    case .Half: return { WhiteNoteElement() }
+    default: return { BlackNoteElement() }
+    }
+  }
+
+  var constructorWithFrame: CGRect -> ScoreElement {
+    switch self {
+    case .Whole: return { WholeNoteElement(frame: $0) }
+    case .Half: return { WhiteNoteElement(frame: $0) }
+    default: return { BlackNoteElement(frame: $0) }
+    }
+  }
+
+  var flagConstructor: Bool -> ScoreElement! {
+    switch self {
+    case .Eighth: return { i in tap(FlagEighthElement(), f: { $0.invert = i }) }
+    case .Sixteenth: return { i in tap(FlagSixteenthElement(), f: { $0.invert = i }) }
+    default: return { _ in nil }
+    }
+  }
+
+  var flagConstructorWithFrame: (CGRect, Bool) -> ScoreElement! {
+    switch self {
+    case .Eighth: return { (f, i) in tap(FlagEighthElement(frame: f), f: { $0.invert = i }) }
+    case .Sixteenth: return { (f, i) in tap(FlagSixteenthElement(frame: f), f: { $0.invert = i }) }
+    default: return { _ in nil }
     }
   }
 }

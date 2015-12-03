@@ -2,12 +2,6 @@ import Foundation
 
 let staffNum: Int = 5
 
-let Whole: Float = 1
-let Half: Float = Whole / 2
-let Quarter: Float = Half / 2
-let Eighth: Float = Quarter / 2
-let Sixteenth: Float = Eighth / 2
-
 public class SingleLineScoreLayout {
   public let staffHeight: CGFloat
   public let staffLineWidth: CGFloat
@@ -17,8 +11,8 @@ public class SingleLineScoreLayout {
   public let minStemHeight: CGFloat
   public let maxBeamSlope: CGFloat
   public let dotMarginLeft: CGFloat
-  public let outsideStaffLineWidth: CGFloat
-  public let outsideStaffLineXLength: CGFloat
+  public let fillingStaffLineWidth: CGFloat
+  public let fillingStaffLineXLength: CGFloat
   public let noteHeadSize: CGSize
   public let beamLineWidth: CGFloat
   public let tupletFontSize: CGFloat
@@ -32,8 +26,8 @@ public class SingleLineScoreLayout {
     minStemHeight: CGFloat = 30,
     maxBeamSlope: CGFloat = 0.2,
     dotMarginLeft: CGFloat = 3,
-    outsideStaffLineWidth: CGFloat = 1,
-    outsideStaffLineXLength: CGFloat = 28.8,
+    fillingStaffLineWidth: CGFloat = 1,
+    fillingStaffLineXLength: CGFloat = 28.8,
     noteHeadSize: CGSize = CGSize(width: 18, height: 15),
     beamLineWidth: CGFloat = 5,
     tupletFontSize: CGFloat = 20) {
@@ -45,8 +39,8 @@ public class SingleLineScoreLayout {
       self.minStemHeight = minStemHeight
       self.maxBeamSlope = maxBeamSlope
       self.dotMarginLeft = dotMarginLeft
-      self.outsideStaffLineWidth = outsideStaffLineWidth
-      self.outsideStaffLineXLength = outsideStaffLineXLength
+      self.fillingStaffLineWidth = fillingStaffLineWidth
+      self.fillingStaffLineXLength = fillingStaffLineXLength
       self.noteHeadSize = noteHeadSize
       self.beamLineWidth = beamLineWidth
       self.tupletFontSize = tupletFontSize

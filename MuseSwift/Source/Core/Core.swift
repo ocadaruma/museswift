@@ -47,6 +47,10 @@ public enum UnitDenominator: Int {
   case Sixteenth = 16
   case ThirtySecond = 32
   case SixtyFourth = 64
+
+  public var value: Float {
+    return 1 / Float(self.rawValue)
+  }
 }
 
 public struct NoteLength : Hashable {
@@ -61,7 +65,7 @@ public struct NoteLength : Hashable {
     return numerator.hashValue ^ denominator.hashValue
   }
 
-  public func actualLength(unit: UnitDenominator) -> Float {
+  public func absoluteLength(unit: UnitDenominator) -> Float {
     return Float(numerator) / Float(denominator) / Float(unit.rawValue)
   }
 }

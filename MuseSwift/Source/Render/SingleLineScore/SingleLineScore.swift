@@ -64,45 +64,30 @@ import Foundation
         }
 
       case let note as Note:
-        let length = note.length.actualLength(renderer.unitDenominator)
-        let invert = renderer.shouldInvert(note)
-        let noteUnit = renderer.createNoteUnit(xOffset, note: note, invert: invert)
-
-        if length >= Whole {
-          noteUnit.renderToView(canvas)
-        } else if length >= Quarter {
-          noteUnit.renderToView(canvas)
-          let stem = renderer.createStem(noteUnit)
-          canvas.addSubview(stem)
-        } else {
-          currentPositionIsInBeam = true
+        switch calcDenominator(note.length.absoluteLength(renderer.unitDenominator)) {
+        case .Whole, .Half, .Quarter:
+          renderer.createNoteUnit(xOffset, note: note).renderToView(canvas)
+        default:
           elementsInBeam.append((xOffset: xOffset, element: note))
+          currentPositionIsInBeam = true
         }
 
         xOffset += renderer.rendereredWidthForNoteLength(note.length)
 
       case let chord as Chord:
-        let length = chord.length.actualLength(renderer.unitDenominator)
-        let invert = renderer.shouldInvert(chord)
-        let noteUnit = renderer.createNoteUnit(xOffset, chord: chord, invert: invert)
-
-        if length >= Whole {
-          noteUnit.renderToView(canvas)
-        } else if length >= Quarter {
-          noteUnit.renderToView(canvas)
-          let stem = renderer.createStem(noteUnit)
-          canvas.addSubview(stem)
-        } else {
-          currentPositionIsInBeam = true
+        switch calcDenominator(chord.length.absoluteLength(renderer.unitDenominator)) {
+        case .Whole, .Half, .Quarter:
+          renderer.createNoteUnit(xOffset, chord: chord).renderToView(canvas)
+        default:
           elementsInBeam.append((xOffset: xOffset, element: chord))
+          currentPositionIsInBeam = true
         }
 
         xOffset += renderer.rendereredWidthForNoteLength(chord.length)
 
       case let tuplet as Tuplet:
-        let ratio = CGFloat(tuplet.ratio)
-        for v in renderer.createElementsForTuplet(tuplet, xOffset: xOffset) { canvas.addSubview(v) }
-        xOffset += tuplet.elements.map({renderer.rendereredWidthForNoteLength($0.length) * ratio}).sum()
+        renderer.createTupletUnit(tuplet, xOffset: xOffset).renderToView(canvas)
+        xOffset += tuplet.elements.map({renderer.rendereredWidthForNoteLength($0.length) * CGFloat(tuplet.ratio)}).sum()
 
       case let rest as Rest:
         renderer.createRestUnit(xOffset, rest: rest).renderToView(canvas)
@@ -115,13 +100,13 @@ import Foundation
       }
 
       if !currentPositionIsInBeam {
-        for e in renderer.createBeamUnit(elementsInBeam).flatMap({$0.allElements}) { canvas.addSubview(e) }
+        for beam in renderer.createBeamUnit(elementsInBeam) { beam.renderToView(canvas) }
         elementsInBeam = []
       }
     }
 
     if elementsInBeam.nonEmpty {
-      for e in renderer.createBeamUnit(elementsInBeam).flatMap({$0.allElements}) { canvas.addSubview(e) }
+      for beam in renderer.createBeamUnit(elementsInBeam) { beam.renderToView(canvas) }
     }
   }
 

@@ -6,4 +6,12 @@ extension Optional {
       f(a)
     }
   }
+
+  public func toArray() -> [Wrapped] {
+    if let a = self {
+      return [a]
+    } else {
+      return []
+    }
+  }
 }
