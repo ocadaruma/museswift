@@ -1,6 +1,6 @@
 import Foundation
 
-@IBDesignable public class Block: ScoreElement {
+@IBDesignable public class RectElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let ctx = UIGraphicsGetCurrentContext()
     tintColor.setFill()
@@ -8,7 +8,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class Oval: ScoreElement {
+@IBDesignable public class EllipseElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let ctx = UIGraphicsGetCurrentContext()
     tintColor.setFill()

@@ -39,7 +39,7 @@ import Foundation
         switch simple {
         case .BarLine:
           canvas.addSubview(
-            Block(frame:
+            RectElement(frame:
               CGRect(
                 x: xOffset - layout.barMarginRight,
                 y: staffTop,
@@ -47,7 +47,7 @@ import Foundation
                 height: layout.staffHeight)))
         case .DoubleBarLine:
           canvas.addSubview(
-            DoubleBar(frame:
+            DoubleBarElement(frame:
               CGRect(
                 x: xOffset - layout.barMarginRight,
                 y: staffTop,

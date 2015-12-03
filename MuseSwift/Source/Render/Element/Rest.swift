@@ -1,6 +1,6 @@
 import Foundation
 
-@IBDesignable public class QuarterRest : ScoreElement {
+@IBDesignable public class QuarterRestElement : ScoreElement {
   override public func drawRect(rect: CGRect) {
     let (w, h) = size
 
@@ -27,7 +27,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class EighthRest : ScoreElement {
+@IBDesignable public class EighthRestElement : ScoreElement {
   override public func drawRect(rect: CGRect) {
     let (w, h) = size
 
@@ -52,7 +52,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class SixteenthRest : ScoreElement {
+@IBDesignable public class SixteenthRestElement : ScoreElement {
   override public func drawRect(rect: CGRect) {
     let (w, h) = size
 

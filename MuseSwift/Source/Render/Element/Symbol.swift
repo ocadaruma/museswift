@@ -1,6 +1,6 @@
 import Foundation
 
-@IBDesignable public class SymbolFour: ScoreElement {
+@IBDesignable public class SymbolFourElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (w, h) = size
 
@@ -32,7 +32,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class SymbolTwo: ScoreElement {
+@IBDesignable public class SymbolTwoElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (w, h) = size
 
@@ -65,7 +65,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class SymbolC: ScoreElement {
+@IBDesignable public class SymbolCElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (w, h) = size
 
@@ -95,7 +95,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class DoubleBar: ScoreElement {
+@IBDesignable public class DoubleBarElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (width, height) = size
     let ctx = UIGraphicsGetCurrentContext()

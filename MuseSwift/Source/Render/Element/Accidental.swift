@@ -1,6 +1,6 @@
 import Foundation
 
-@IBDesignable public class Flat: ScoreElement {
+@IBDesignable public class FlatElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (w, h) = size
 
@@ -25,7 +25,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class DoubleFlat: ScoreElement {
+@IBDesignable public class DoubleFlatElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (width, h) = size
     let w = width / 2
@@ -67,7 +67,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class Sharp: ScoreElement {
+@IBDesignable public class SharpElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (w, h) = size
 
@@ -95,7 +95,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class DoubleSharp: ScoreElement {
+@IBDesignable public class DoubleSharpElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let ctx = UIGraphicsGetCurrentContext()
 
@@ -122,7 +122,7 @@ import Foundation
   }
 }
 
-@IBDesignable public class Natural: ScoreElement {
+@IBDesignable public class NaturalElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (w, h) = size
 

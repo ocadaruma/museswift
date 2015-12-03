@@ -53,26 +53,26 @@ class SingleLineScoreRenderer {
     return CGRect(x: x + layout.dotMarginLeft, y: y + noteInterval - d / 2, width: d, height: d)
   }
 
-  private func createDots(pitch: Pitch, x: CGFloat, length: Float, denominator: Float) -> [Oval] {
-    var result = [Oval]()
+  private func createDots(pitch: Pitch, x: CGFloat, length: Float, denominator: Float) -> [EllipseElement] {
+    var result = [EllipseElement]()
     let length1 = length - denominator
     let denom1 = denominator / 2
     if length1 >= denom1 {
-      let dot1 = Oval(frame: createDotFrame(pitch, x: x))
+      let dot1 = EllipseElement(frame: createDotFrame(pitch, x: x))
       result.append(dot1)
 
       let length2 = length1 - denom1
       let denom2 = denom1 / 2
       if length2 >= denom2 {
         result.append(
-          Oval(frame: dot1.frame.withX(dot1.frame.x + dot1.frame.width + layout.staffLineWidth)))
+          EllipseElement(frame: dot1.frame.withX(dot1.frame.x + dot1.frame.width + layout.staffLineWidth)))
       }
     }
 
     return result
   }
 
-  private func createDotsForRest(x: CGFloat, length: Float, denominator: Float) -> [Oval] {
+  private func createDotsForRest(x: CGFloat, length: Float, denominator: Float) -> [EllipseElement] {
     return createDots(Pitch(name: .C, accidental: nil, octave: 1), x: x, length: length, denominator: denominator)
   }
 
@@ -81,23 +81,23 @@ class SingleLineScoreRenderer {
     return CGRect(x: xOffset, y: noteHeadTop(pitch), width: width, height: layout.noteHeadSize.height)
   }
 
-  private func createFillingStaff(xOffset: CGFloat, pitch: Pitch) -> [Block] {
+  private func createFillingStaff(xOffset: CGFloat, pitch: Pitch) -> [RectElement] {
     let step = pitch.step
     let upperBound = AAbove1stStave.step
     let lowerBound = MiddleC.step
     let frame = createNoteHeadFrame(pitch, xOffset: xOffset)
-    var staff = [Block]()
+    var staff = [RectElement]()
 
     let x = frame.x - (layout.outsideStaffLineXLength - frame.width) / 2
     if step >= upperBound {
       for i in 1...(1 + (step - upperBound).abs / 2) {
         let y = staffTop - (CGFloat(i) * layout.staffInterval)
-        staff.append(Block(frame: CGRect(x: x, y: y, width: layout.outsideStaffLineXLength, height: layout.outsideStaffLineWidth)))
+        staff.append(RectElement(frame: CGRect(x: x, y: y, width: layout.outsideStaffLineXLength, height: layout.outsideStaffLineWidth)))
       }
     } else if step <= lowerBound {
       for i in 1...(1 + (step - lowerBound).abs / 2) {
         let y = staffTop + layout.staffHeight - layout.staffLineWidth + (CGFloat(i) * layout.staffInterval)
-        staff.append(Block(frame: CGRect(x: x, y: y, width: layout.outsideStaffLineXLength, height: layout.outsideStaffLineWidth)))
+        staff.append(RectElement(frame: CGRect(x: x, y: y, width: layout.outsideStaffLineXLength, height: layout.outsideStaffLineWidth)))
       }
     }
 
@@ -110,35 +110,35 @@ class SingleLineScoreRenderer {
 
     switch pitch.accidental {
     case .Some(.DoubleFlat):
-      view = DoubleFlat(frame:
+      view = DoubleFlatElement(frame:
         CGRect(
           x: noteHeadFrame.x - layout.staffInterval * 1.5,
           y: noteHeadFrame.y - layout.staffInterval * 1.2,
           width: layout.staffInterval * 1.2,
           height: layout.staffInterval * 1.2 + noteHeadFrame.height))
     case .Some(.Flat):
-      view = Flat(frame:
+      view = FlatElement(frame:
         CGRect(
           x: noteHeadFrame.x - layout.staffInterval,
           y: noteHeadFrame.y - layout.staffInterval * 1.2,
           width: layout.staffInterval * 0.8,
           height: layout.staffInterval * 1.2 + noteHeadFrame.height))
     case .Some(.Natural):
-      view = Natural(frame:
+      view = NaturalElement(frame:
         CGRect(
           x: noteHeadFrame.x - layout.staffInterval,
           y: noteHeadFrame.y - layout.staffInterval * 0.5,
           width: layout.staffInterval * 0.6,
           height: layout.staffInterval * 2))
     case .Some(.Sharp):
-      view = Sharp(frame:
+      view = SharpElement(frame:
         CGRect(
           x: noteHeadFrame.x - layout.staffInterval,
           y: noteHeadFrame.y - layout.staffInterval * 0.5,
           width: layout.staffInterval * 0.8,
           height: layout.staffInterval * 2))
     case .Some(.DoubleSharp):
-      view = DoubleSharp(frame:
+      view = DoubleSharpElement(frame:
         CGRect(
           x: noteHeadFrame.x - layout.staffInterval * 1.2,
           y: noteHeadFrame.y,
@@ -169,11 +169,11 @@ class SingleLineScoreRenderer {
     let length = noteLength.actualLength(unitDenominator)
     var element: ScoreElement! = nil
     if length >= Eighth {
-      let flag = FlagEighth(frame: flagFrame)
+      let flag = FlagEighthElement(frame: flagFrame)
       flag.invert = invert
       element = flag
     } else if length >= Sixteenth {
-      let flag = FlagSixteenth(frame: flagFrame)
+      let flag = FlagSixteenthElement(frame: flagFrame)
       flag.invert = invert
       element = flag
     }
@@ -181,11 +181,11 @@ class SingleLineScoreRenderer {
     return element
   }
 
-  private func createUnits(xOffset: CGFloat, tuplet: Tuplet) -> [(offset: CGFloat, unit: Either<(noteUnit: NoteUnit, stem: Block), RestUnit>)] {
+  private func createUnits(xOffset: CGFloat, tuplet: Tuplet) -> [(offset: CGFloat, unit: Either<(noteUnit: NoteUnit, stem: RectElement), RestUnit>)] {
     let ratio = CGFloat(tuplet.time) / CGFloat(tuplet.notes)
 
     var offset = xOffset
-    var units = [(offset: CGFloat, unit: Either<(noteUnit: NoteUnit, stem: Block), RestUnit>)]()
+    var units = [(offset: CGFloat, unit: Either<(noteUnit: NoteUnit, stem: RectElement), RestUnit>)]()
     for e in tuplet.elements {
       switch e {
       case let note as Note:
@@ -215,7 +215,7 @@ class SingleLineScoreRenderer {
     return units
   }
 
-  private func createTupletBeam(notes: Int, envelope: [CGPoint], point: CGPoint, invert: Bool) -> TupletBeam {
+  private func createBracketElement(notes: Int, envelope: [CGPoint], point: CGPoint, invert: Bool) -> BracketElement {
     let firstPoint = envelope.first!
     let lastPoint = envelope.last!
 
@@ -230,19 +230,19 @@ class SingleLineScoreRenderer {
     let (x2, y2) = (lastPoint.x, f(lastPoint.x))
 
     let height = max(y2 - y1, layout.tupletFontSize)
-    let tupletBeam = TupletBeam(frame: CGRect(
+    let bracket = BracketElement(frame: CGRect(
       x: x1,
       y: invert ? y1 : y1 - height,
       width: x2 - x1,
       height: height)
     )
 
-    tupletBeam.invert = invert
-    tupletBeam.notes = notes
-    tupletBeam.fontSize = layout.tupletFontSize
-    tupletBeam.rightDown = y2 > y1
+    bracket.invert = invert
+    bracket.notes = notes
+    bracket.fontSize = layout.tupletFontSize
+    bracket.rightDown = y2 > y1
 
-    return tupletBeam
+    return bracket
   }
 
   func rendereredWidthForNoteLength(noteLength: NoteLength) -> CGFloat {
@@ -261,10 +261,10 @@ class SingleLineScoreRenderer {
     let length = rest.length.actualLength(unitDenominator)
 
     var restView: ScoreElement! = nil
-    var dots = [Oval]()
+    var dots = [EllipseElement]()
 
     if (length >= Whole) {
-      restView = Block()
+      restView = RectElement()
       let width = layout.staffInterval * 1.5
       restView.frame = CGRect(
         x: xOffset + rendereredWidthForNoteLength(rest.length) / 2 - (width / 2),
@@ -272,7 +272,7 @@ class SingleLineScoreRenderer {
         width: width,
         height: layout.staffInterval * 0.6)
     } else if (length >= Half) {
-      restView = Block()
+      restView = RectElement()
       let width = layout.staffInterval * 1.5
       let height = layout.staffInterval * 0.6
       restView.frame = CGRect(
@@ -282,7 +282,7 @@ class SingleLineScoreRenderer {
         height: height)
       dots += createDotsForRest(restView.frame.maxX, length: length, denominator: Half)
     } else if (length >= Quarter) {
-      restView = QuarterRest()
+      restView = QuarterRestElement()
       restView.frame = CGRect(
         x: xOffset,
         y: staffTop + layout.staffInterval / 2,
@@ -290,7 +290,7 @@ class SingleLineScoreRenderer {
         height: layout.staffInterval * 2.5)
       dots += createDotsForRest(restView.frame.maxX, length: length, denominator: Quarter)
     } else if (length >= Eighth) {
-      restView = EighthRest()
+      restView = EighthRestElement()
       restView.frame = CGRect(
         x: xOffset,
         y: staffTop + layout.staffInterval + layout.staffLineWidth,
@@ -298,7 +298,7 @@ class SingleLineScoreRenderer {
         height: layout.staffInterval * 2)
       dots += createDotsForRest(restView.frame.maxX, length: length, denominator: Eighth)
     } else if (length >= Sixteenth) {
-      restView = SixteenthRest()
+      restView = SixteenthRestElement()
       restView.frame = CGRect(
         x: xOffset,
         y: staffTop + layout.staffInterval + layout.staffLineWidth,
@@ -310,12 +310,12 @@ class SingleLineScoreRenderer {
     return RestUnit(dots: dots, restView: restView, xOffset: xOffset)
   }
 
-  func createStem(noteUnit: NoteUnit) -> Block {
+  func createStem(noteUnit: NoteUnit) -> RectElement {
     let noteHeadFrames = noteUnit.noteHeads.map({$0.frame})
     let bottomFrame = noteHeadFrames.maxBy({$0.y})!
     let topFrame = noteHeadFrames.minBy({$0.y})!
 
-    let stem = Block()
+    let stem = RectElement()
     let stemHeight = layout.staffInterval * 3
     let x = noteUnit.singleColumn && noteUnit.invert ? topFrame.x : noteHeadFrames.map({$0.maxX}).minElement()!
 
@@ -368,10 +368,10 @@ class SingleLineScoreRenderer {
       }
     }
 
-    var dots = [Oval]()
+    var dots = [EllipseElement]()
     var noteHeads = [ScoreElement]()
     var accidentals = [ScoreElement]()
-    var outsideStaff = [Block]()
+    var outsideStaff = [RectElement]()
 
     let length = chord.length.actualLength(unitDenominator)
 
@@ -379,15 +379,15 @@ class SingleLineScoreRenderer {
     for (pitch, frame, column) in noteHeadFrames {
       let noteHead: ScoreElement
       let shouldAddDots = length < Whole && (sparce || column == .Right)
-      var d = [Oval]()
+      var d = [EllipseElement]()
 
       if (length >= Whole) { // whole note
-        noteHead = WholeNote()
+        noteHead = WholeNoteElement()
       } else if (length >= Half) { // half note
-        noteHead = WhiteNote()
+        noteHead = WhiteNoteElement()
         if shouldAddDots { d += createDots(pitch, x: frame.maxX, length: length, denominator: Half) }
       } else {
-        noteHead = BlackNote()
+        noteHead = BlackNoteElement()
         if (length >= Quarter) { // quarter note
           if shouldAddDots { d += createDots(pitch, x: frame.maxX, length: length, denominator: Quarter) }
         } else if (length >= Eighth) { // eighth note
@@ -448,7 +448,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtLowest = envelope.maxBy({$0.y})!
-        result.append(createTupletBeam(tuplet.notes, envelope: envelope, point: pointAtLowest, invert: invert))
+        result.append(createBracketElement(tuplet.notes, envelope: envelope, point: pointAtLowest, invert: invert))
       } else {
         let lowerBound = staffTop
         let envelope = units.map({ pair -> CGPoint in
@@ -463,7 +463,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtHighest = envelope.minBy({$0.y})!
-        result.append(createTupletBeam(tuplet.notes, envelope: envelope, point: pointAtHighest, invert: invert))
+        result.append(createBracketElement(tuplet.notes, envelope: envelope, point: pointAtHighest, invert: invert))
       }
     } else {
       let ratio = CGFloat(tuplet.ratio)
@@ -521,7 +521,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtLowest = envelope.maxBy({$0.y})!
-        result.append(createTupletBeam(tuplet.notes, envelope: envelope, point: pointAtLowest, invert: invert))
+        result.append(createBracketElement(tuplet.notes, envelope: envelope, point: pointAtLowest, invert: invert))
       } else {
         let lowerBound = staffTop
         let envelope = units.flatMap({ (pair) -> [CGPoint] in
@@ -537,7 +537,7 @@ class SingleLineScoreRenderer {
         })
 
         let pointAtHighest = envelope.minBy({$0.y})!
-        result.append(createTupletBeam(tuplet.notes, envelope: envelope, point: pointAtHighest, invert: invert))
+        result.append(createBracketElement(tuplet.notes, envelope: envelope, point: pointAtHighest, invert: invert))
       }
     }
 
@@ -605,14 +605,14 @@ class SingleLineScoreRenderer {
           let upperDiff = group.map({ abs(staffYCenter - upperF($0.xOffset + layout.noteHeadSize.width)) }).sum()
           let lowerDiff = group.map({ abs(staffYCenter - lowerF($0.element.sortedPitches.sparse ? $0.xOffset : $0.xOffset + layout.noteHeadSize.width)) }).sum()
 
-          let beam = Beam()
+          let beam = BeamElement()
           beam.lineWidth = layout.beamLineWidth
 
           if (upperDiff < lowerDiff) {
             let invert = false
             var noteUnits = [NoteUnit]()
-            var stems = [Block]()
-            var beams = [Beam]()
+            var stems = [RectElement]()
+            var beams = [BeamElement]()
 
             for (xOffset, element) in group {
               let noteUnit: NoteUnit!
@@ -627,7 +627,7 @@ class SingleLineScoreRenderer {
               let bottomFrame = noteHeadFrames.maxBy({$0.y})!
 
               // add stem
-              let stem = Block()
+              let stem = RectElement()
               let x = xOffset + layout.noteHeadSize.width - layout.stemWidth
               let y = upperF(x)
               stem.frame = CGRect(
@@ -649,7 +649,7 @@ class SingleLineScoreRenderer {
             beams.append(beam)
 
             if first.element.length.actualLength(unitDenominator) <= Sixteenth {
-              let beam2 = Beam(frame: beam.frame.withY(beam.frame.y + beam.lineWidth * 1.5))
+              let beam2 = BeamElement(frame: beam.frame.withY(beam.frame.y + beam.lineWidth * 1.5))
               beam2.lineWidth = beam.lineWidth
               beam2.rightDown = beam.rightDown
               beams.append(beam2)
@@ -658,8 +658,8 @@ class SingleLineScoreRenderer {
           } else {
             let invert = true
             var noteUnits = [NoteUnit]()
-            var stems = [Block]()
-            var beams = [Beam]()
+            var stems = [RectElement]()
+            var beams = [BeamElement]()
 
             for (xOffset, element) in group {
               let noteUnit: NoteUnit!
@@ -673,7 +673,7 @@ class SingleLineScoreRenderer {
               let topFrame = noteHeadFrames.minBy({$0.y})!
 
               // add stem
-              let stem = Block()
+              let stem = RectElement()
               let x = noteUnit.singleColumn ? xOffset : xOffset + layout.noteHeadSize.width
               let bottomY = lowerF(x)
               let y = topFrame.y + layout.noteHeadSize.height * 0.6
@@ -697,7 +697,7 @@ class SingleLineScoreRenderer {
             beams.append(beam)
 
             if first.element.length.actualLength(unitDenominator) <= Sixteenth {
-              let beam2 = Beam(frame: beam.frame.withY(beam.frame.y - beam.lineWidth * 1.5))
+              let beam2 = BeamElement(frame: beam.frame.withY(beam.frame.y - beam.lineWidth * 1.5))
               beam2.lineWidth = beam.lineWidth
               beam2.rightDown = beam.rightDown
               beams.append(beam2)
@@ -723,7 +723,7 @@ extension RenderUnit {
 }
 
 class NoteUnit: RenderUnit {
-  let dots: [Oval]
+  let dots: [EllipseElement]
   let noteHeads: [ScoreElement]
   let accidentals: [ScoreElement]
   let outsideStaff: [ScoreElement]
@@ -734,7 +734,7 @@ class NoteUnit: RenderUnit {
   let allElements: [ScoreElement]
 
   init(
-    dots: [Oval] = [],
+    dots: [EllipseElement] = [],
     noteHeads: [ScoreElement] = [],
     accidentals: [ScoreElement] = [],
     outsideStaff: [ScoreElement] = [],
@@ -754,14 +754,14 @@ class NoteUnit: RenderUnit {
 }
 
 class RestUnit: RenderUnit {
-  let dots: [Oval]
+  let dots: [EllipseElement]
   let restView: ScoreElement
   let xOffset: CGFloat
 
   let allElements: [ScoreElement]
 
   init(
-    dots: [Oval] = [],
+    dots: [EllipseElement] = [],
     restView: ScoreElement,
     xOffset: CGFloat) {
       self.dots = dots
@@ -774,16 +774,16 @@ class RestUnit: RenderUnit {
 
 class BeamUnit: RenderUnit {
   let noteUnits: [NoteUnit]
-  let stems: [Block]
-  let flagOrBeams: Either<ScoreElement, [Beam]>
+  let stems: [RectElement]
+  let flagOrBeams: Either<ScoreElement, [BeamElement]>
   let invert: Bool
 
   let allElements: [ScoreElement]
 
   init(
     noteUnits: [NoteUnit],
-    stems: [Block],
-    flagOrBeams: Either<ScoreElement, [Beam]>,
+    stems: [RectElement],
+    flagOrBeams: Either<ScoreElement, [BeamElement]>,
     invert: Bool
     ) {
       self.noteUnits = noteUnits
