@@ -144,16 +144,16 @@ extension Denominator {
 
   var flagConstructor: Bool -> ScoreElement! {
     switch self {
-    case .Eighth: return { i in tap(FlagEighthElement(), f: { $0.invert = i }) }
-    case .Sixteenth: return { i in tap(FlagSixteenthElement(), f: { $0.invert = i }) }
+    case .Eighth: return { i in tap(FlagEighthElement())(f: { $0.invert = i }) }
+    case .Sixteenth: return { i in tap(FlagSixteenthElement())(f: { $0.invert = i }) }
     default: return { _ in nil }
     }
   }
 
   var flagConstructorWithFrame: (CGRect, Bool) -> ScoreElement! {
     switch self {
-    case .Eighth: return { (f, i) in tap(FlagEighthElement(frame: f), f: { $0.invert = i }) }
-    case .Sixteenth: return { (f, i) in tap(FlagSixteenthElement(frame: f), f: { $0.invert = i }) }
+    case .Eighth: return { (f, i) in tap(FlagEighthElement(frame: f))(f: { $0.invert = i }) }
+    case .Sixteenth: return { (f, i) in tap(FlagSixteenthElement(frame: f))(f: { $0.invert = i }) }
     default: return { _ in nil }
     }
   }

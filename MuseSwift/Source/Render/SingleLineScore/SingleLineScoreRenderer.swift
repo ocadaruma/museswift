@@ -235,23 +235,28 @@ class SingleLineScoreRenderer {
     let noteHeadFrames = noteHeads.map({$0.frame})
     let bottomFrame = noteHeadFrames.maxBy({$0.y})!
     let topFrame = noteHeadFrames.minBy({$0.y})!
+    let upperBound = staffTop - layout.staffInterval
+    let lowerBound = staffTop + layout.staffHeight + layout.staffInterval
 
     let stem = RectElement()
     let stemHeight = layout.staffInterval * 3
     let x = sparse && invert ? topFrame.x : noteHeadFrames.map({$0.maxX}).minElement()!
 
     if invert {
+      let stemBottom = max(upperBound + stemHeight, bottomFrame.maxY + stemHeight)
+      let y = topFrame.y + topFrame.height * 0.6
       stem.frame = CGRect(
         x: x,
-        y: topFrame.y + topFrame.height * 0.6,
+        y: y,
         width: layout.stemWidth,
-        height: stemHeight + bottomFrame.y - topFrame.y)
+        height: stemBottom - y)
     } else {
+      let y = min(lowerBound - stemHeight, topFrame.y - stemHeight)
       stem.frame = CGRect(
         x: x - layout.stemWidth,
-        y: topFrame.y - stemHeight,
+        y: y,
         width: layout.stemWidth,
-        height: stemHeight + bottomFrame.y - topFrame.y + bottomFrame.height * 0.4)
+        height: topFrame.y - y + bottomFrame.height * 0.4)
     }
 
     return stem
@@ -630,11 +635,11 @@ class SingleLineScoreRenderer {
           let upperF = linearFunction(upperSlope,
             point: Point2D(
               x: highestFrame.maxX,
-              y: highestFrame.y - layout.minStemHeight))
+              y: min(highestFrame.y - layout.minStemHeight, staffTop + layout.staffHeight - layout.minStemHeight)))
           let lowerF = linearFunction(lowerSlope,
             point: Point2D(
               x: lowestElement.sortedPitches.sparse ? lowestFrame.x : lowestFrame.maxX,
-              y: lowestFrame.maxY + layout.minStemHeight))
+              y: max(lowestFrame.maxY + layout.minStemHeight, staffTop - layout.staffInterval + layout.minStemHeight)))
 
           let staffYCenter = staffTop + layout.staffInterval * 2
           let upperDiff = group.map({ abs(staffYCenter - upperF($0.xOffset + layout.noteHeadSize.width)) }).sum()

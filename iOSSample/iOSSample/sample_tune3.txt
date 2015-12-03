@@ -3,4 +3,4 @@ T:Beams
 M:C
 K:C
 L:1/8
-A B c d AB cd|ABcd ABc2|
+A B c d AB cd|ABcd ABc2|A''B'c'd'' A,,B,,c,d,|ABcd ABc2|
