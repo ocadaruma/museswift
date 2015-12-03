@@ -121,7 +121,12 @@ import Foundation
     CGContextSetLineWidth(ctx, lineWidth)
 
     if invert {
-      if rightDown {
+      if h * 0.8 < fontSize {
+        CGContextMoveToPoint(ctx, lineWidth, lineWidth)
+        CGContextAddLineToPoint(ctx, lineWidth, lineWidth + beamHeight)
+        CGContextAddLineToPoint(ctx, w - lineWidth, lineWidth + beamHeight)
+        CGContextAddLineToPoint(ctx, w - lineWidth, lineWidth)
+      } else if rightDown {
         CGContextMoveToPoint(ctx, lineWidth, lineWidth)
         CGContextAddLineToPoint(ctx, lineWidth, lineWidth + beamHeight)
         CGContextAddLineToPoint(ctx, w - lineWidth, h - lineWidth)
@@ -133,7 +138,12 @@ import Foundation
         CGContextAddLineToPoint(ctx, w - lineWidth, lineWidth)
       }
     } else {
-      if rightDown {
+      if h * 0.8 < fontSize {
+        CGContextMoveToPoint(ctx, lineWidth, h)
+        CGContextAddLineToPoint(ctx, lineWidth, h - beamHeight - lineWidth)
+        CGContextAddLineToPoint(ctx, w - lineWidth, h - beamHeight - lineWidth)
+        CGContextAddLineToPoint(ctx, w - lineWidth, h)
+      } else if rightDown {
         CGContextMoveToPoint(ctx, lineWidth, beamHeight + lineWidth)
         CGContextAddLineToPoint(ctx, lineWidth, lineWidth)
         CGContextAddLineToPoint(ctx, w - lineWidth, h - beamHeight - lineWidth)

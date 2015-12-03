@@ -441,7 +441,7 @@ class SingleLineScoreRenderer {
           case .Left(let n):
             let frames = (n.noteUnit.noteHeads + [n.stem]).map({$0.frame})
             return CGPoint(
-              x: frames.midX!,
+              x: n.stem.frame.x,
               y: max(frames.maxY!, upperBound))
           case .Right(let r): return CGPoint(x: r.restView.frame.midX, y: upperBound)
           }
@@ -456,7 +456,7 @@ class SingleLineScoreRenderer {
           case .Left(let n):
             let frames = (n.noteUnit.noteHeads + [n.stem]).map({$0.frame})
             return CGPoint(
-              x: frames.midX!,
+              x: n.stem.frame.x,
               y: min(frames.minY!, lowerBound))
           case .Right(let r): return CGPoint(x: r.restView.frame.midX, y: lowerBound)
           }
@@ -513,8 +513,9 @@ class SingleLineScoreRenderer {
           case .Left(let b):
             return zip(b.noteUnits, b.stems).map({ z -> CGPoint in
               let (noteUnit, stem) = z
+
               let frames = (noteUnit.noteHeads + [stem]).map({$0.frame})
-              return CGPoint(x: frames.midX!, y: max(frames.maxY!, upperBound))
+              return CGPoint(x: stem.frame.x, y: max(frames.maxY!, upperBound))
             })
           case .Right(let r): return [CGPoint(x: r.restView.frame.midX, y: upperBound)]
           }
@@ -530,7 +531,7 @@ class SingleLineScoreRenderer {
             return zip(b.noteUnits, b.stems).map({ z -> CGPoint in
               let (noteUnit, stem) = z
               let frames = (noteUnit.noteHeads + [stem]).map({$0.frame})
-              return CGPoint(x: frames.midX!, y: min(frames.minY!, lowerBound))
+              return CGPoint(x: stem.frame.x, y: min(frames.minY!, lowerBound))
             })
           case .Right(let r): return [CGPoint(x: r.restView.frame.midX, y: lowerBound)]
           }
