@@ -95,6 +95,16 @@ import Foundation
   }
 }
 
+@IBDesignable public class TrebleClefElement: ScoreElement {
+  public static let yRatioAtG: CGFloat = 0.65
+
+  private let image = UIImage(named: "gclef", inBundle: NSBundle(forClass: TrebleClefElement.self), compatibleWithTraitCollection: nil)
+
+  public override func drawRect(rect: CGRect) {
+    image?.drawInRect(rect)
+  }
+}
+
 @IBDesignable public class DoubleBarElement: ScoreElement {
   public override func drawRect(rect: CGRect) {
     let (width, height) = size

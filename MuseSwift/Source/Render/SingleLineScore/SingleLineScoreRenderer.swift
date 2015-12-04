@@ -382,6 +382,96 @@ class SingleLineScoreRenderer {
     return layout.widthPerUnitNoteLength * CGFloat(noteLength.numerator) / CGFloat(noteLength.denominator)
   }
 
+  //TODO: only supports treble clef for current
+  func createClef(xOffset: CGFloat, clef: Clef) -> ScoreElement {
+    var elem: ScoreElement! = nil
+
+    switch clef.clefName {
+    case .Treble:
+      let height = layout.staffHeight * 1.6
+      let y = (staffTop + layout.staffInterval * 3) - TrebleClefElement.yRatioAtG * height
+      let treble = TrebleClefElement(
+        frame: CGRect(x: xOffset, y: y, width: layout.clefWidth, height: height))
+
+      elem = treble
+    default: break
+    }
+
+    return elem
+  }
+
+  //TODO: currently, only supports 4/4 meter
+  func createMeter(xOffset: CGFloat, meter: Meter) -> ScoreElement {
+    var elem: ScoreElement! = nil
+
+//    switch (meter.numerator, meter.denominator) {
+//    case (4, 4):
+//      elem = SymbolCElement(
+//        frame: CGRect(x: xOffset, y: staffTop + layout.staffInterval, width: layout.meterSymbolWidth, height: layout.staffInterval * 2))
+//    default: break
+//    }
+
+    elem = SymbolCElement(
+      frame: CGRect(
+        x: xOffset + 6, // margin
+        y: staffTop + layout.staffInterval,
+        width: layout.meterSymbolWidth,
+        height: layout.staffInterval * 2))
+
+    return elem
+  }
+
+  func createKeySignature(xOffset: CGFloat, key: Key) -> [ScoreElement] {
+    let flats = [
+      Pitch(name: .B, accidental: .Flat, octave: 0),
+      Pitch(name: .E, accidental: .Flat, octave: 1),
+      Pitch(name: .A, accidental: .Flat, octave: 0),
+      Pitch(name: .D, accidental: .Flat, octave: 1),
+      Pitch(name: .G, accidental: .Flat, octave: 0),
+      Pitch(name: .C, accidental: .Flat, octave: 1),
+      Pitch(name: .F, accidental: .Flat, octave: 0)
+    ]
+
+    let sharps = [
+      Pitch(name: .F, accidental: .Sharp, octave: 1),
+      Pitch(name: .C, accidental: .Sharp, octave: 1),
+      Pitch(name: .G, accidental: .Sharp, octave: 1),
+      Pitch(name: .D, accidental: .Sharp, octave: 1),
+      Pitch(name: .A, accidental: .Sharp, octave: 0),
+      Pitch(name: .E, accidental: .Sharp, octave: 1),
+      Pitch(name: .B, accidental: .Sharp, octave: 0)
+    ]
+
+    var result = [ScoreElement]()
+
+    let num: Int
+    switch key.keySignature {
+    case .Flat1, .Sharp1: num = 1
+    case .Flat2, .Sharp2: num = 2
+    case .Flat3, .Sharp3: num = 3
+    case .Flat4, .Sharp4: num = 4
+    case .Flat5, .Sharp5: num = 5
+    case .Flat6, .Sharp6: num = 6
+    case .Flat7, .Sharp7: num = 7
+    case .Zero: num = 0
+    }
+
+    let pitches: [Pitch]
+    if key.keySignature.rawValue < KeySignature.Zero.rawValue {
+      pitches = [Pitch](sharps.prefix(num))
+    } else {
+      pitches = [Pitch](flats.prefix(num))
+    }
+
+    var localX = xOffset + layout.staffInterval + 4 // margin
+    for p in pitches {
+      result.append(createAccidental(p, xOffset: localX)!)
+      localX += layout.staffInterval
+    }
+
+    return result
+  }
+
   func createTie(start: NoteUnit?, end: NoteUnit?) -> SlurElement? {
     switch (start, end) {
     case (.Some(let s), .Some(let e)):

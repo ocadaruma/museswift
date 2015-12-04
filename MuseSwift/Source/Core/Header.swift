@@ -48,7 +48,7 @@ public struct Tempo : Header {
   }
 }
 
-public enum KeySignature {
+public enum KeySignature: Int {
   case Sharp1, Sharp2, Sharp3, Sharp4, Sharp5, Sharp6, Sharp7
   case Zero
   case Flat1, Flat2, Flat3, Flat4, Flat5, Flat6, Flat7

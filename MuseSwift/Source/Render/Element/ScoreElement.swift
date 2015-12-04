@@ -13,12 +13,4 @@ public class ScoreElement: UIView {
     backgroundColor = UIColor.clearColor()
     tintColor = UIColor.blackColor()
   }
-  /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
-
 }

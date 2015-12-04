@@ -10,8 +10,8 @@
 		DE1516401BF585BB00871086 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE15163F1BF585BB00871086 /* AppDelegate.swift */; };
 		DE1516421BF585BB00871086 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1516411BF585BB00871086 /* ViewController.swift */; };
 		DE1516451BF585BB00871086 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE1516431BF585BB00871086 /* Main.storyboard */; };
-		DE1516471BF585BB00871086 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE1516461BF585BB00871086 /* Assets.xcassets */; };
 		DE15164A1BF585BB00871086 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE1516481BF585BB00871086 /* LaunchScreen.storyboard */; };
+		DE2480331C11FCDF00308285 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE2480321C11FCDF00308285 /* Assets.xcassets */; };
 		DE7A09CA1C05B94200CE2658 /* MuseSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE7A09C71C05B93800CE2658 /* MuseSwift.framework */; };
 		DE7A09CB1C05B94200CE2658 /* MuseSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DE7A09C71C05B93800CE2658 /* MuseSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B31BF8BFF8000E449D /* sample_tune.txt */; };
@@ -62,9 +62,9 @@
 		DE15163F1BF585BB00871086 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DE1516411BF585BB00871086 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DE1516441BF585BB00871086 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		DE1516461BF585BB00871086 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DE1516491BF585BB00871086 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DE15164B1BF585BB00871086 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DE2480321C11FCDF00308285 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DE7A09C11C05B93800CE2658 /* MuseSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MuseSwift.xcodeproj; path = ../MuseSwift/MuseSwift.xcodeproj; sourceTree = "<group>"; };
 		DEA012B31BF8BFF8000E449D /* sample_tune.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune.txt; sourceTree = "<group>"; };
 		DEA012B41BF8BFF8000E449D /* sample_tune2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune2.txt; sourceTree = "<group>"; };
@@ -103,10 +103,10 @@
 		DE15163E1BF585BB00871086 /* iOSSample */ = {
 			isa = PBXGroup;
 			children = (
+				DE2480321C11FCDF00308285 /* Assets.xcassets */,
 				DE15163F1BF585BB00871086 /* AppDelegate.swift */,
 				DE1516411BF585BB00871086 /* ViewController.swift */,
 				DE1516431BF585BB00871086 /* Main.storyboard */,
-				DE1516461BF585BB00871086 /* Assets.xcassets */,
 				DE1516481BF585BB00871086 /* LaunchScreen.storyboard */,
 				DE15164B1BF585BB00871086 /* Info.plist */,
 				DEA012B31BF8BFF8000E449D /* sample_tune.txt */,
@@ -210,9 +210,9 @@
 			files = (
 				DEA012B61BF8BFF8000E449D /* sample_tune2.txt in Resources */,
 				DE15164A1BF585BB00871086 /* LaunchScreen.storyboard in Resources */,
-				DE1516471BF585BB00871086 /* Assets.xcassets in Resources */,
 				DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */,
 				DEB91E741BFCEA1800CCF00E /* sample_tune3.txt in Resources */,
+				DE2480331C11FCDF00308285 /* Assets.xcassets in Resources */,
 				DE1516451BF585BB00871086 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

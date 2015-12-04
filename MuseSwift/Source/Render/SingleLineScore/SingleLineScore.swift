@@ -19,7 +19,7 @@ import Foundation
   private var _canvas: UIView! = nil
   public var canvas: UIView { return _canvas }
 
-  public func loadVoice(tuneHeader: TuneHeader, voiceHeader: VoiceHeader, voice: Voice) -> Void {
+  public func loadVoice(tuneHeader: TuneHeader, voiceHeader: VoiceHeader, voice: Voice, initialOffset: CGFloat = 0) -> Void {
     if let c = _canvas { c.removeFromSuperview() }
     _canvas = UIView(frame: bounds)
     addSubview(canvas)
@@ -31,9 +31,25 @@ import Foundation
     var tieLocations = [CGFloat]()
 
     var elementsInBeam: [(xOffset: CGFloat, element: BeamMember)] = []
-    var xOffset: CGFloat = 0
+    var xOffset: CGFloat = initialOffset
     var beamContinue = false
 
+    // render clef
+    let clef = renderer.createClef(xOffset, clef: voiceHeader.clef)
+    canvas.addSubview(clef)
+    xOffset += clef.frame.width
+
+    // render key signature
+    let keySignature = renderer.createKeySignature(xOffset, key: tuneHeader.key)
+    for k in keySignature { canvas.addSubview(k) }
+    xOffset = keySignature.map({$0.frame.maxX}).maxElement()!
+
+    // render meter
+    let meter = renderer.createMeter(xOffset, meter: tuneHeader.meter)
+    canvas.addSubview(meter)
+    xOffset += meter.frame.width
+
+    // render voice
     for element in voice.elements {
       beamContinue = false
 

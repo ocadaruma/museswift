@@ -18,3 +18,5 @@ extension A {
     a
   }
 }
+
+[1,2,3].prefix(2)
