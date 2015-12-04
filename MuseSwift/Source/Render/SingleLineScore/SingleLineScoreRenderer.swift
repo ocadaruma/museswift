@@ -382,6 +382,35 @@ class SingleLineScoreRenderer {
     return layout.widthPerUnitNoteLength * CGFloat(noteLength.numerator) / CGFloat(noteLength.denominator)
   }
 
+  func createTie(start: NoteUnit?, end: NoteUnit?) -> SlurElement? {
+    switch (start, end) {
+    case (.Some(let s), .Some(let e)):
+      let tie = SlurElement()
+
+      let noteHeadFramesAtStart = s.noteHeads.map({$0.frame})
+      let noteHeadFramesAtEnd = e.noteHeads.map({$0.frame})
+
+      let invert = s.invert
+
+      let startX = noteHeadFramesAtStart.maxX! - layout.noteHeadSize.width / 2
+      let startY = invert ? noteHeadFramesAtStart.minY! : noteHeadFramesAtStart.maxY!
+      let endX = noteHeadFramesAtEnd.minX! + layout.noteHeadSize.width / 2
+      let endY = invert ? noteHeadFramesAtEnd.minY! : noteHeadFramesAtEnd.maxY!
+
+      tie.frame = CGRect(
+        x: noteHeadFramesAtStart.minX!,
+        y: 0,
+        width: noteHeadFramesAtEnd.maxX! - noteHeadFramesAtStart.minX!,
+        height: bounds.height)
+      tie.start = CGPoint(x: startX, y: startY)
+      tie.end = CGPoint(x: endX, y: endY)
+      tie.invert = invert
+
+      return tie
+    default: return nil
+    }
+  }
+
   func createRestUnit(xOffset: CGFloat, rest: Rest) -> RestUnit {
     let length = rest.length.absoluteLength(unitDenominator)
 

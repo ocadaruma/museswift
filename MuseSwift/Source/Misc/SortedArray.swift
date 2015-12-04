@@ -1,11 +1,20 @@
 import Foundation
 
-public class SortedArray<T, U: Comparable> {
+public class SortedArray<T, U: Comparable> : SequenceType {
+  public typealias Generator = AnyGenerator<T>
+
   private var array = [T]()
   private let keySelector: T -> U
 
   public init(keySelector: T -> U) {
     self.keySelector = keySelector
+  }
+
+  public func generate() -> SortedArray.Generator {
+    var a = array
+    return anyGenerator {
+      return a.isEmpty ? nil : a.removeFirst()
+    }
   }
 
   // use binary insertion sort.
@@ -39,12 +48,20 @@ public class SortedArray<T, U: Comparable> {
     }
   }
 
+  public func extend(xs: [T]) -> Void {
+    for x in xs { self.insert(x) }
+  }
+
   public func get(index: Int) -> T? {
-    if index < count {
+    if 0 <= index && index < count {
       return self[index]
     } else {
       return nil
     }
+  }
+
+  public func clear() -> Void {
+    self.array = []
   }
 
   public var first: T? {

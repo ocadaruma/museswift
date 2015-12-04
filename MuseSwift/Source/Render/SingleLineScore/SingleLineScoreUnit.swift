@@ -8,6 +8,27 @@ extension RenderUnit {
   func renderToView(view: UIView) {
     for e in self.allElements { view.addSubview(e) }
   }
+
+  func toNoteUnits() -> [NoteUnit] {
+    var result = [NoteUnit]()
+
+    switch self {
+    case let n as NoteUnit: result.append(n)
+    case let b as BeamUnit: result += b.noteUnits
+    case let t as TupletUnit:
+      result += t.units.flatMap({ u -> [NoteUnit] in
+        switch u {
+        case let n as NoteUnit: return [n]
+        case let b as BeamUnit: return b.noteUnits
+        case let t as TupletUnit: return t.toNoteUnits()
+        default: return []
+        }
+      })
+    default: break
+    }
+
+    return result
+  }
 }
 
 class NoteUnit: RenderUnit {

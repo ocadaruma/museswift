@@ -27,13 +27,15 @@ import Foundation
     let renderer = SingleLineScoreRenderer(
       unitDenominator: tuneHeader.unitNoteLength.denominator, layout: layout, bounds: bounds)
 
-    let noteUnitBuffer = SortedArray<NoteUnit, CGFloat>(keySelector: {$0.xOffset})
+    var noteUnitMap = [CGFloat:NoteUnit]()
+    var tieLocations = [CGFloat]()
+
     var elementsInBeam: [(xOffset: CGFloat, element: BeamMember)] = []
     var xOffset: CGFloat = 0
-    var currentPositionIsInBeam: Bool
+    var beamContinue = false
 
     for element in voice.elements {
-      currentPositionIsInBeam = false
+      beamContinue = false
 
       switch element {
       case let simple as Simple:
@@ -58,7 +60,9 @@ import Foundation
         case .LineBreak: break
         case .RepeatEnd: break //TODO
         case .RepeatStart: break //TODO
-        case .Tie: break //TODO
+        case .Tie:
+          tieLocations.append(xOffset)
+
         case .SlurEnd: break //TODO
         case .SlurStart: break //TODO
         case .End: break
@@ -67,13 +71,12 @@ import Foundation
       case let note as Note:
         switch calcDenominator(note.length.absoluteLength(renderer.unitDenominator)) {
         case .Whole, .Half, .Quarter:
-          tap(renderer.createNoteUnit(xOffset, note: note))(f: {
-            $0.renderToView(self.canvas)
-            noteUnitBuffer.insert($0)
-          })
+          let unit = renderer.createNoteUnit(xOffset, note: note)
+          unit.renderToView(canvas)
+          noteUnitMap[unit.xOffset] = unit
         default:
           elementsInBeam.append((xOffset: xOffset, element: note))
-          currentPositionIsInBeam = true
+          beamContinue = true
         }
 
         xOffset += renderer.rendereredWidthForNoteLength(note.length)
@@ -81,19 +84,20 @@ import Foundation
       case let chord as Chord:
         switch calcDenominator(chord.length.absoluteLength(renderer.unitDenominator)) {
         case .Whole, .Half, .Quarter:
-          tap(renderer.createNoteUnit(xOffset, chord: chord))(f: {
-            $0.renderToView(self.canvas)
-            noteUnitBuffer.insert($0)
-          })
+          let unit = renderer.createNoteUnit(xOffset, chord: chord)
+          unit.renderToView(canvas)
+          noteUnitMap[unit.xOffset] = unit
         default:
           elementsInBeam.append((xOffset: xOffset, element: chord))
-          currentPositionIsInBeam = true
+          beamContinue = true
         }
 
         xOffset += renderer.rendereredWidthForNoteLength(chord.length)
 
       case let tuplet as Tuplet:
-        renderer.createTupletUnit(tuplet, xOffset: xOffset).renderToView(canvas)
+        let tupletUnit = renderer.createTupletUnit(tuplet, xOffset: xOffset)
+        tupletUnit.renderToView(canvas)
+        for unit in tupletUnit.toNoteUnits() { noteUnitMap[unit.xOffset] = unit }
         xOffset += tuplet.elements.map({renderer.rendereredWidthForNoteLength($0.length) * CGFloat(tuplet.ratio)}).sum()
 
       case let rest as Rest:
@@ -106,26 +110,30 @@ import Foundation
       default: break
       }
 
-      if !currentPositionIsInBeam && elementsInBeam.nonEmpty {
-        for beam in renderer.createBeamUnit(elementsInBeam) { beam.renderToView(canvas) }
-
-        let unit = renderer.createBeamUnit(elementsInBeam).first!
-
-        let slur = SlurElement()
-        let firstNoteHead = unit.noteUnits.first!.noteHeads.maxBy({$0.frame.y})!
-        let lastNoteHead = unit.noteUnits.last!.noteHeads.maxBy({$0.frame.y})!
-
-        slur.frame = CGRect(x: firstNoteHead.frame.x, y: canvas.frame.y, width: lastNoteHead.frame.x - firstNoteHead.frame.x, height: canvas.frame.height)
-        slur.start = firstNoteHead.frame.origin
-        slur.end = lastNoteHead.frame.origin
-        canvas.addSubview(slur)
-
+      if !beamContinue && elementsInBeam.nonEmpty {
+        for beam in renderer.createBeamUnit(elementsInBeam) {
+          beam.renderToView(canvas)
+          for unit in beam.toNoteUnits() { noteUnitMap[unit.xOffset] = unit }
+        }
         elementsInBeam = []
       }
     }
 
     if elementsInBeam.nonEmpty {
-      for beam in renderer.createBeamUnit(elementsInBeam) { beam.renderToView(canvas) }
+      for beam in renderer.createBeamUnit(elementsInBeam) {
+        beam.renderToView(canvas)
+        for unit in beam.toNoteUnits() { noteUnitMap[unit.xOffset] = unit }
+      }
+    }
+
+    let noteUnitLocations = noteUnitMap.keys.sort()
+    for x in tieLocations {
+      if let i = noteUnitLocations.indexOf(x) {
+        let start = noteUnitLocations.get(i - 1).flatMap({noteUnitMap[$0]})
+        let end = noteUnitMap[x]
+
+        renderer.createTie(start, end: end).foreach({self.canvas.addSubview($0)})
+      }
     }
   }
 
