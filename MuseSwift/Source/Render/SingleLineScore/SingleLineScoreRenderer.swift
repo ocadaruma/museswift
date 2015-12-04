@@ -297,12 +297,12 @@ class SingleLineScoreRenderer {
   {
     let invert = forceInvert ?? shouldInvert(chord)
     let sortedPitches = invert ? chord.pitches.sortBy({$0.step}).reverse() : chord.pitches.sortBy({$0.step})
-    let sparce = sortedPitches.sparse
+    let sparse = sortedPitches.sparse
 
     var noteHeadFrames = [(pitch: Pitch, frame: CGRect, column: NoteHeadColumn)]()
     var previousPitch: Pitch? = nil
 
-    if sparce {
+    if sparse {
       for pitch in sortedPitches {
         noteHeadFrames.append((pitch: pitch, frame: createNoteHeadFrame(pitch, xOffset: xOffset), column: .Left))
       }
@@ -335,7 +335,7 @@ class SingleLineScoreRenderer {
 
     for (pitch, frame, column) in noteHeadFrames {
       let noteHead: ScoreElement
-      let shouldAddDots = denom != .Whole && (sparce || column == .Right)
+      let shouldAddDots = denom != .Whole && (sparse || column == .Right)
       var d = [EllipseElement]()
 
       noteHead = denom.constructor()
@@ -355,7 +355,7 @@ class SingleLineScoreRenderer {
 
     if autoStem {
       if denom.hasStem {
-        let s = createStem(noteHeads, invert: invert, sparse: sparce)
+        let s = createStem(noteHeads, invert: invert, sparse: sparse)
         stem = s
         if denom.hasFlag {
           flag = createFlag(chord.length, stemFrame: s.frame, invert: invert)
@@ -373,7 +373,7 @@ class SingleLineScoreRenderer {
       fillingStaff: fillingStaff,
       stem: stem,
       flag: flag,
-      sparse: sparce,
+      sparse: sparse,
       invert: invert,
       xOffset: xOffset)
   }
@@ -431,7 +431,7 @@ class SingleLineScoreRenderer {
         width: layout.staffInterval * 1.3,
         height: layout.staffInterval * 3)
       dots += createDotsForRest(restView.frame.maxX, length: length, denominator: .Sixteenth)
-    default: ()
+    default: break
     }
 
     return RestUnit(dots: dots, restView: restView, xOffset: xOffset)
@@ -666,7 +666,7 @@ class SingleLineScoreRenderer {
                 let stem = RectElement(frame:
                   CGRect(x: x, y: y, width: layout.stemWidth, height: noteHeadTop(chord.minPitch) - y + layout.noteHeadSize.height * 0.4))
                 noteUnits.append(createNoteUnit(xOffset, chord: chord, forceInvert: invert, autoStem: false, forceStem: stem, forceFlag: nil))
-              default: ()
+              default: break
               }
             }
 
@@ -708,7 +708,7 @@ class SingleLineScoreRenderer {
                 let stem = RectElement(frame:
                   CGRect(x: x, y: y, width: layout.stemWidth, height: bottomY - y))
                 noteUnits.append(createNoteUnit(xOffset, chord: chord, forceInvert: invert, autoStem: false, forceStem: stem, forceFlag: nil))
-              default: ()
+              default: break
               }
             }
 

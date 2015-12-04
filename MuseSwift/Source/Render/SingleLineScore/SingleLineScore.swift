@@ -27,6 +27,7 @@ import Foundation
     let renderer = SingleLineScoreRenderer(
       unitDenominator: tuneHeader.unitNoteLength.denominator, layout: layout, bounds: bounds)
 
+    let noteUnitBuffer = SortedArray<NoteUnit, CGFloat>(keySelector: {$0.xOffset})
     var elementsInBeam: [(xOffset: CGFloat, element: BeamMember)] = []
     var xOffset: CGFloat = 0
     var currentPositionIsInBeam: Bool
@@ -66,7 +67,10 @@ import Foundation
       case let note as Note:
         switch calcDenominator(note.length.absoluteLength(renderer.unitDenominator)) {
         case .Whole, .Half, .Quarter:
-          renderer.createNoteUnit(xOffset, note: note).renderToView(canvas)
+          tap(renderer.createNoteUnit(xOffset, note: note))(f: {
+            $0.renderToView(self.canvas)
+            noteUnitBuffer.insert($0)
+          })
         default:
           elementsInBeam.append((xOffset: xOffset, element: note))
           currentPositionIsInBeam = true
@@ -77,7 +81,10 @@ import Foundation
       case let chord as Chord:
         switch calcDenominator(chord.length.absoluteLength(renderer.unitDenominator)) {
         case .Whole, .Half, .Quarter:
-          renderer.createNoteUnit(xOffset, chord: chord).renderToView(canvas)
+          tap(renderer.createNoteUnit(xOffset, chord: chord))(f: {
+            $0.renderToView(self.canvas)
+            noteUnitBuffer.insert($0)
+          })
         default:
           elementsInBeam.append((xOffset: xOffset, element: chord))
           currentPositionIsInBeam = true
@@ -99,8 +106,20 @@ import Foundation
       default: break
       }
 
-      if !currentPositionIsInBeam {
+      if !currentPositionIsInBeam && elementsInBeam.nonEmpty {
         for beam in renderer.createBeamUnit(elementsInBeam) { beam.renderToView(canvas) }
+
+        let unit = renderer.createBeamUnit(elementsInBeam).first!
+
+        let slur = SlurElement()
+        let firstNoteHead = unit.noteUnits.first!.noteHeads.maxBy({$0.frame.y})!
+        let lastNoteHead = unit.noteUnits.last!.noteHeads.maxBy({$0.frame.y})!
+
+        slur.frame = CGRect(x: firstNoteHead.frame.x, y: canvas.frame.y, width: lastNoteHead.frame.x - firstNoteHead.frame.x, height: canvas.frame.height)
+        slur.start = firstNoteHead.frame.origin
+        slur.end = lastNoteHead.frame.origin
+        canvas.addSubview(slur)
+
         elementsInBeam = []
       }
     }

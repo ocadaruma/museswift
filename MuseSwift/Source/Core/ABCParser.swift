@@ -329,7 +329,7 @@ public class ABCParser {
       case let t as Tempo: tempo = t
       case let k as Key: key = k
       case let v as VoiceHeader: voiceHeaders.append(v)
-      default: ()
+      default: break
       }
     }
 

@@ -17,7 +17,7 @@ class ViewController: UIViewController {
   }
 
   @IBAction func load(sender: AnyObject) {
-    let tunePath = NSBundle.mainBundle().pathForResource("sample_tune3", ofType: "txt")!
+    let tunePath = NSBundle.mainBundle().pathForResource("sample_tune", ofType: "txt")!
     let tuneString = try! String(contentsOfFile: tunePath, encoding: NSUTF8StringEncoding)
     let parser = ABCParser(string: tuneString)
     let tune = parser.parse().tune!
