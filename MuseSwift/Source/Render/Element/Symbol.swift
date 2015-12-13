@@ -101,7 +101,12 @@ import Foundation
   private let image = UIImage(named: "gclef", inBundle: NSBundle(forClass: TrebleClefElement.self), compatibleWithTraitCollection: nil)
 
   public override func drawRect(rect: CGRect) {
-    image?.drawInRect(rect)
+    tintColor.set()
+    let ctx = UIGraphicsGetCurrentContext()
+    CGContextTranslateCTM(ctx, 0, bounds.height);
+    CGContextScaleCTM(ctx, 1.0, -1.0);
+    CGContextClipToMask(ctx, bounds, image?.CGImage)
+    CGContextFillRect(ctx, bounds)
   }
 }
 
