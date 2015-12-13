@@ -134,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				DE15161A1BF5823400871086 /* Products */,
+				DE3E62481C1D5D5B00C04C9A /* Resource */,
 				DE15161B1BF5823400871086 /* Source */,
 				DE1516271BF5823400871086 /* Test */,
 			);
@@ -196,6 +197,7 @@
 		DE1516661BF58CB800871086 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				DE24802B1C11E84D00308285 /* Array.swift */,
 				DE97BCD11BF964CC000D367D /* Collection.swift */,
 				DE7B68151C0338D500CC356E /* Either.swift */,
 				DEB91E6D1BFAFCCE00CCF00E /* Numeric.swift */,
@@ -206,7 +208,6 @@
 				DE1516681BF58CD800871086 /* String.swift */,
 				DE1516671BF58CD800871086 /* StringScanner.swift */,
 				DE7A09D71C10924E00CE2658 /* Tap.swift */,
-				DE24802B1C11E84D00308285 /* Array.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -215,12 +216,20 @@
 			isa = PBXGroup;
 			children = (
 				DE97BCD31BF970DE000D367D /* CollectionTests.swift */,
-				DE7A09DF1C11365E00CE2658 /* StackTests.swift */,
 				DE2480271C115BE400308285 /* SortedArrayTests.swift */,
+				DE7A09DF1C11365E00CE2658 /* StackTests.swift */,
 				DE1516721BF58E2200871086 /* StringScannerTests.swift */,
 				DE1516731BF58E2200871086 /* StringTests.swift */,
 			);
 			path = Misc;
+			sourceTree = "<group>";
+		};
+		DE3E62481C1D5D5B00C04C9A /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				DE24802F1C11FCB800308285 /* Assets.xcassets */,
+			);
+			path = Resource;
 			sourceTree = "<group>";
 		};
 		DE7B68121C02380100CC356E /* SingleLineScore */ = {
@@ -245,7 +254,6 @@
 		DE9D1D1E1BF5B5210039A4C0 /* Render */ = {
 			isa = PBXGroup;
 			children = (
-				DE24802F1C11FCB800308285 /* Assets.xcassets */,
 				DE9D1D221BF5E3790039A4C0 /* Element */,
 				DE7B68121C02380100CC356E /* SingleLineScore */,
 				DE8EB3D91BFD4ABC005C0A6E /* Extension.swift */,
@@ -263,9 +271,9 @@
 				DE9D1D231BF5E3840039A4C0 /* Rest.swift */,
 				DE9D1D311BF5E3BA0039A4C0 /* ScoreElement.swift */,
 				DEB91E711BFCC05100CCF00E /* Shape.swift */,
+				DE7A09D91C10A5E300CE2658 /* Slur.swift */,
 				DE9D1D281BF5E3840039A4C0 /* Symbol.swift */,
 				DE9D1D261BF5E3840039A4C0 /* UIView.swift */,
-				DE7A09D91C10A5E300CE2658 /* Slur.swift */,
 			);
 			path = Element;
 			sourceTree = "<group>";
