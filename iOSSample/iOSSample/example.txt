@@ -1,0 +1,6 @@
+X: 1
+T: Haruki Okada
+M: 4/4
+L: 1/8
+K: C
+z8 || C2 D2 E2 F2 | G8 | CDEF G4 | C/D/E/F/ G2 z4 |

@@ -41,13 +41,17 @@ import Foundation
 
     // render key signature
     let keySignature = renderer.createKeySignature(xOffset, key: tuneHeader.key)
-    for k in keySignature { canvas.addSubview(k) }
-    xOffset = keySignature.map({$0.frame.maxX}).maxElement()!
+    if keySignature.nonEmpty {
+      for k in keySignature { canvas.addSubview(k) }
+      xOffset = keySignature.map({$0.frame.maxX}).maxElement()!
+    }
 
     // render meter
     let meter = renderer.createMeter(xOffset, meter: tuneHeader.meter)
     canvas.addSubview(meter)
     xOffset += meter.frame.width
+
+    print("start offset : \(xOffset)")
 
     // render voice
     for element in voice.elements {
@@ -89,6 +93,17 @@ import Foundation
         case .Whole, .Half, .Quarter:
           let unit = renderer.createNoteUnit(xOffset, note: note)
           unit.renderToView(canvas)
+//          let x1 = unit.allElements.map{$0.frame}.minX!
+//          let y1 = unit.allElements.map{$0.frame}.minY!
+//          let x2 = unit.allElements.map{$0.frame}.maxX!
+//          let y2 = unit.allElements.map{$0.frame}.maxY!
+//          let rect = CGRect(x: x1, y: y1, width: x2 - x1, height: y2 - y1)
+//          let v = UIView(frame: rect)
+//          for e in unit.allElements {
+//            e.frame = v.convertRect(e.frame, fromView: canvas)
+//            v.addSubview(e)
+//          }
+
           noteUnitMap[unit.xOffset] = unit
         default:
           elementsInBeam.append((xOffset: xOffset, element: note))
@@ -151,6 +166,33 @@ import Foundation
         renderer.createTie(start, end: end).foreach({self.canvas.addSubview($0)})
       }
     }
+
+//    let maxX = canvas.subviews.maxBy{$0.frame.x}!.frame.x
+//    canvas.frame = canvas.frame.withWidth(maxX)
+////    canvas.layer.sublayerTransform = CATransform3DMakeAffineTransform(CGAffineTransformMakeScale(3, 3))
+//    let man = NSFileManager.defaultManager()
+//    let image = canvas.toImage()
+//    man.createFileAtPath("/Users/hokada/Desktop/images/sheet.png", contents: UIImagePNGRepresentation(image), attributes: nil)
+
+
+//    var array = [[String:AnyObject]]()
+//    let man = NSFileManager.defaultManager()
+//    for (i, v) in canvas.subviews.enumerate() {
+//      let image = v.toImage()
+//      let filepath = "/Users/hokada/Desktop/images/\(i).png"
+//      man.createFileAtPath(filepath, contents: UIImagePNGRepresentation(image), attributes: nil)
+//      array.append([
+//        "name" : String(i),
+//        "x" : v.frame.x,
+//        "y" : v.frame.y,
+//        "width" : v.frame.width,
+//        "height" : v.frame.height])
+//    }
+//
+//    let data = try! NSJSONSerialization.dataWithJSONObject(array, options: NSJSONWritingOptions(rawValue: 0))
+//    man.createFileAtPath("/Users/hokada/Desktop/images/song.json", contents: data, attributes: nil)
+
+    print(canvas.frame)
   }
 
   private func drawStaff() {

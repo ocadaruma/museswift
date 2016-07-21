@@ -12,11 +12,14 @@
 		DE1516451BF585BB00871086 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE1516431BF585BB00871086 /* Main.storyboard */; };
 		DE15164A1BF585BB00871086 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE1516481BF585BB00871086 /* LaunchScreen.storyboard */; };
 		DE2480331C11FCDF00308285 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE2480321C11FCDF00308285 /* Assets.xcassets */; };
+		DE52C91A1C70315200A84056 /* amnesic_note.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE52C9191C70315200A84056 /* amnesic_note.txt */; };
 		DE7A09CA1C05B94200CE2658 /* MuseSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE7A09C71C05B93800CE2658 /* MuseSwift.framework */; };
 		DE7A09CB1C05B94200CE2658 /* MuseSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DE7A09C71C05B93800CE2658 /* MuseSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B31BF8BFF8000E449D /* sample_tune.txt */; };
 		DEA012B61BF8BFF8000E449D /* sample_tune2.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEA012B41BF8BFF8000E449D /* sample_tune2.txt */; };
 		DEB91E741BFCEA1800CCF00E /* sample_tune3.txt in Resources */ = {isa = PBXBuildFile; fileRef = DEB91E731BFCEA1700CCF00E /* sample_tune3.txt */; };
+		DECED3321D3CCF19008012A6 /* example2.txt in Resources */ = {isa = PBXBuildFile; fileRef = DECED3311D3CCF19008012A6 /* example2.txt */; };
+		DECF596A1D21743700481661 /* example.txt in Resources */ = {isa = PBXBuildFile; fileRef = DECF59691D21743600481661 /* example.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,10 +68,13 @@
 		DE1516491BF585BB00871086 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DE15164B1BF585BB00871086 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DE2480321C11FCDF00308285 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DE52C9191C70315200A84056 /* amnesic_note.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = amnesic_note.txt; sourceTree = "<group>"; };
 		DE7A09C11C05B93800CE2658 /* MuseSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MuseSwift.xcodeproj; path = ../MuseSwift/MuseSwift.xcodeproj; sourceTree = "<group>"; };
 		DEA012B31BF8BFF8000E449D /* sample_tune.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune.txt; sourceTree = "<group>"; };
 		DEA012B41BF8BFF8000E449D /* sample_tune2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune2.txt; sourceTree = "<group>"; };
 		DEB91E731BFCEA1700CCF00E /* sample_tune3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample_tune3.txt; sourceTree = "<group>"; };
+		DECED3311D3CCF19008012A6 /* example2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = example2.txt; sourceTree = "<group>"; };
+		DECF59691D21743600481661 /* example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = example.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +118,9 @@
 				DEA012B31BF8BFF8000E449D /* sample_tune.txt */,
 				DEA012B41BF8BFF8000E449D /* sample_tune2.txt */,
 				DEB91E731BFCEA1700CCF00E /* sample_tune3.txt */,
+				DE52C9191C70315200A84056 /* amnesic_note.txt */,
+				DECF59691D21743600481661 /* example.txt */,
+				DECED3311D3CCF19008012A6 /* example2.txt */,
 			);
 			path = iOSSample;
 			sourceTree = "<group>";
@@ -209,11 +218,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				DEA012B61BF8BFF8000E449D /* sample_tune2.txt in Resources */,
+				DECED3321D3CCF19008012A6 /* example2.txt in Resources */,
 				DE15164A1BF585BB00871086 /* LaunchScreen.storyboard in Resources */,
 				DEA012B51BF8BFF8000E449D /* sample_tune.txt in Resources */,
 				DEB91E741BFCEA1800CCF00E /* sample_tune3.txt in Resources */,
 				DE2480331C11FCDF00308285 /* Assets.xcassets in Resources */,
+				DECF596A1D21743700481661 /* example.txt in Resources */,
 				DE1516451BF585BB00871086 /* Main.storyboard in Resources */,
+				DE52C91A1C70315200A84056 /* amnesic_note.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

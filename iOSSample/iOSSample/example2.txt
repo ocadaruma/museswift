@@ -1,0 +1,19 @@
+X: 1
+T: Haruki Okada
+M: 4/4
+L: 1/8
+K: C
+z8 | z8 | z8 | z8 ||
+C2 D2 E2 F2 | G8 |
+_D2 _E2 F2 _G2 | _A8 |
+D2 E2 ^F2 G2 | A8 |
+_E2 F2 G2 _A2 | _B8 |
+E2 ^F2 ^G2 A2 | B8 |
+F2 G2 A2 _B2 | c8 |
+_G2 _A2 _B2 _c2 | _d8 |
+G2 A2 B2 c2 | d8 |
+_A2 _B2 c2 _d2 | _e8 |
+A2 B2 ^c2 d2 | e8 |
+_B2 c2 d2 _e2 | f8 |
+B2 ^c2 ^d2 e2 | ^f8 |
+c2 d2 e2 f2 | g8 |
