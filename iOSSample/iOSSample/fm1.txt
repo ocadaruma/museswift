@@ -1,0 +1,30 @@
+X: 1
+T: FM1
+M: 4/4
+L: 1/8
+K: Fm
+%
+%interval
+%
+|z8|z8|
+||C3E3F2-|F8|B,3D3E2-|E8|
+|A,3C3D2-|D8|G,3B,3C2-|C8|
+|C3E3F2-|F8|B,3D3E2-|E8|
+|A,3C3D2-|D8|G,3B,3C2-|C8|
+%
+|z8|[AF]3[cA]3[ec]2|[ge]8|[GE]3[BG]3[dB]2|
+|[fd]8|[FD]3[AF]3[cA]2|[ec]8|[EC]3[GE]3[BG]2|
+%
+|C3E3F2|[AF]3[cA]3[ec]2|B,3D3E2|[GE]3[BG]3[dB]2|
+|A,3C3D2|[FD]3[AF]3[cA]2|G,3B,3C2|[EC]3[GE]3[BG]2|
+%
+|cfga- agfg|dfga cfga|Befg- gfef|cefg Befg|
+|Adef- fede|Bdef Acef|Gc=d=e- edcd|Ac=d=e Gcde|
+%
+|cef2e2cB-|BAB2czA2|BGBcB2GE|z8|
+|d'agf- f2dA|GFz2z4|=EC=DE FGAB|c=d=ef gabc'|
+%
+|FfAa cc'ee'|ff'ee' cc'Aa|EeGg Bbdd'|ee'dd' BbGg|
+|DdFf Aacc'|dd'cc' AaFf|Cc=E=e GgBb|cc'Bb Gg=E=e|
+%
+|F8|z8|z8|z8|z8|z8|[FAcf]8|z8|z8|z8||

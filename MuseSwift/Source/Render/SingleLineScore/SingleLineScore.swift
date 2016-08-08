@@ -35,22 +35,23 @@ import Foundation
     var beamContinue = false
 
     // render clef
-    let clef = renderer.createClef(xOffset, clef: voiceHeader.clef)
-    canvas.addSubview(clef)
-    xOffset += clef.frame.width
+//    let clef = renderer.createClef(xOffset, clef: voiceHeader.clef)
+//    canvas.addSubview(clef)
+//    xOffset += clef.frame.width
 
     // render key signature
-    let keySignature = renderer.createKeySignature(xOffset, key: tuneHeader.key)
-    if keySignature.nonEmpty {
-      for k in keySignature { canvas.addSubview(k) }
-      xOffset = keySignature.map({$0.frame.maxX}).maxElement()!
-    }
+//    let keySignature = renderer.createKeySignature(xOffset, key: tuneHeader.key)
+//    if keySignature.nonEmpty {
+//      for k in keySignature { canvas.addSubview(k) }
+//      xOffset = keySignature.map({$0.frame.maxX}).maxElement()!
+//    }
 
     // render meter
-    let meter = renderer.createMeter(xOffset, meter: tuneHeader.meter)
-    canvas.addSubview(meter)
-    xOffset += meter.frame.width
+//    let meter = renderer.createMeter(xOffset, meter: tuneHeader.meter)
+//    canvas.addSubview(meter)
+//    xOffset += meter.frame.width
 
+    let startXOffset = xOffset
     print("start offset : \(xOffset)")
 
     // render voice
@@ -175,22 +176,46 @@ import Foundation
 //    man.createFileAtPath("/Users/hokada/Desktop/images/sheet.png", contents: UIImagePNGRepresentation(image), attributes: nil)
 
 
-//    var array = [[String:AnyObject]]()
-//    let man = NSFileManager.defaultManager()
-//    for (i, v) in canvas.subviews.enumerate() {
-//      let image = v.toImage()
-//      let filepath = "/Users/hokada/Desktop/images/\(i).png"
-//      man.createFileAtPath(filepath, contents: UIImagePNGRepresentation(image), attributes: nil)
-//      array.append([
-//        "name" : String(i),
-//        "x" : v.frame.x,
-//        "y" : v.frame.y,
-//        "width" : v.frame.width,
-//        "height" : v.frame.height])
-//    }
-//
-//    let data = try! NSJSONSerialization.dataWithJSONObject(array, options: NSJSONWritingOptions(rawValue: 0))
-//    man.createFileAtPath("/Users/hokada/Desktop/images/song.json", contents: data, attributes: nil)
+    var array = [[String:AnyObject]]()
+    let man = NSFileManager.defaultManager()
+    var numElements = 0
+    for (i, v) in canvas.subviews.enumerate() {
+      let image = v.toImage()
+      let filepath = "/Users/hokada/Desktop/images/\(i).png"
+      man.createFileAtPath(filepath, contents: UIImagePNGRepresentation(image), attributes: nil)
+
+      let type: String
+      if let e = v as? ScoreElement {
+        switch e.elementType {
+        case .Continuous: type = "D"; numElements += 1
+        case .Discrete: type = "D"; numElements += 1
+        case .None: type = "N"
+        }
+      } else {
+        type = "N"
+      }
+      array.append([
+        "name" : String(i),
+        "x" : v.frame.x,
+        "y" : v.frame.y,
+        "width" : v.frame.width,
+        "height" : v.frame.height,
+        "type" : type])
+    }
+
+    let dat = [
+      "numNotes" : numElements,
+      "startX" : startXOffset,
+      "widthPerUnitNoteLength" : layout.widthPerUnitNoteLength,
+      "beatPerUnitNoteLength" : tuneHeader.unitNoteLength.denominator.value * Float(tuneHeader.meter.denominator),
+      "bpm" : "{{bpm}}",
+      "basisX" : "{{basisX}}",
+      "basisSamples" : "{{basisSamples}}",
+      "images" : array
+    ]
+
+    let data = try! NSJSONSerialization.dataWithJSONObject(dat, options: NSJSONWritingOptions(rawValue: 0))
+    man.createFileAtPath("/Users/hokada/Desktop/images/mapping.json", contents: data, attributes: nil)
 
     print(canvas.frame)
   }

@@ -215,10 +215,12 @@ class SingleLineScoreRenderer {
     let (x1, y1) = (firstPoint.x, f(firstPoint.x))
     let (x2, y2) = (lastPoint.x, f(lastPoint.x))
 
+    let y = invert ? max(y1, y2) : min(y1, y2)
+
     let height = max(y2 - y1, layout.tupletFontSize)
     let bracket = BracketElement(frame: CGRect(
       x: x1,
-      y: invert ? y1 : y1 - height,
+      y: invert ? y : y - height,
       width: x2 - x1,
       height: height)
     )
@@ -256,7 +258,7 @@ class SingleLineScoreRenderer {
         x: x - layout.stemWidth,
         y: y,
         width: layout.stemWidth,
-        height: topFrame.y - y + bottomFrame.height * 0.4)
+        height: bottomFrame.y - y + bottomFrame.height * 0.4)
     }
 
     return stem
@@ -343,6 +345,12 @@ class SingleLineScoreRenderer {
       case .Whole, .Half: ()
       default:
         if shouldAddDots { d += createDots(pitch, x: frame.maxX, length: length, denominator: denom) }
+      }
+
+      // determine element type
+      switch denom {
+      case .Sixteenth, .ThirtySecond, .SixtyFourth: noteHead.elementType = .Continuous
+      default: noteHead.elementType = .Discrete
       }
 
       fillingStaff += createFillingStaff(frame.minX, pitch: pitch)

@@ -17,9 +17,12 @@ class ViewController: UIViewController {
   }
 
   @IBAction func load(sender: AnyObject) {
-    let tunePath = NSBundle.mainBundle().pathForResource("amnesic_note", ofType: "txt")!
+    let tunePath = NSBundle.mainBundle().pathForResource("fm1", ofType: "txt")!
     let tuneString = try! String(contentsOfFile: tunePath, encoding: NSUTF8StringEncoding)
     let parser = ABCParser(string: tuneString)
+//    let i = "".startIndex.advancedBy(467)
+//    let e = tuneString.substringToIndex(tuneString.startIndex.advancedBy(26))
+//    let tuneO = parser.parse()
     let tune = parser.parse().tune!
     let voice = tune.tuneBody.voices.first!
     let header = tune.tuneHeader.voiceHeaders.first!

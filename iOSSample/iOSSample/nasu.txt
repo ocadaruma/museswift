@@ -1,0 +1,31 @@
+X: 1
+T:  NASU
+M: 4/4
+L: 1/16
+K: G
+z16 | z16 |
+z16 | z16 | z16 | z16 |
+z16 | z16 | z16 | z16 ||
+%
+|[DFGBd]8 [EG_Bce]8 | [FGBdf]8 [G_Bceg]8 | [FGBdf]8 [EG_Bce]8 | [FGBdf]8 [G_Bcef]8 |
+|[DFGBd]8 [EG_Bce]8 | [FGBdf]8 [G_Bceg]8 | [FGBdf]8 [EG_Bce]8 | [FGBdf]8 [G_Bcef]8 | [FGBdf]16 | z16 |
+%
+| [Bb]_ef[Bb] z f2[B_b] z f2[=B_b] z f2[=Fe] | [=F_e]^GB[Fe] z G2[_B^g] z d=f[Bg] z e2[_Ee] | [_E_e]F_B[Ee] z ^G2[^Ce] z G2[Ce] z G2[=CB] | [C_B]_EF[CB] z F2[=F_e] z Ac[Fe] z _b2[Bb] |
+| [_B_b]d=f[Ba] z _e2[Ag] z ce[Ag] z c2[Gg] | [Gg]Bd[Gg] z c2[Fe] z Ac[Fe] z A2[Ee] | E^GB[E_e] z A2[_E^c] z FA[Ec] z F2[^Cc] | [^C^c]=F^G[C=c] z ^F2[^CB] z EG[CB] z E2[_B,_B] |
+| [B,B]_EF[B,B] z F2[B,_B] z F2[=B,_B] z f2[=F_e] | [=F_e]^GB[Fe] z G2[_B^g] z d=f[Bg] z e2[_Ee] | [_E_e]F_B[Ee] z ^G2[^Ce] z G2[Ce] z G2[=CB] | [C_B]_EF[CB] z F2[=F_e] z Ac[Fe] z _b2[Bb] |
+| [_B_b]d=f[Ba] z _e2[Ag] z ce[Ag] z c2[=B=b] | [Bb]_ef[B_b] z =e2e [=E^Gcd=g]8 | [A,CEGB]8 [A,C_EFB]8 |
+%
+|[DFGBd]8 [EG_Bce]8 | [FGBdf]8 [G_Bceg]8 | [FGBdf]8 [EG_Bce]8 | [FGBdf]8 [G_Bcef]8 |
+|[DFGBd]8 [EG_Bce]8 | [FGBdf]8 [G_Bceg]8 | [FGBdf]8 [EG_Bce]8 | [FGBdf]8 [G_Bcef]8 | z2 F^G _B=B^c=c BGE^C D=F_BG |
+%solo
+| FB, z2 _B,=B,_EF _B=B-B2 ^c2 (3BdB | _BA^GF =F_EC^C DFGB =B^c_BG |
+| F2_EF (3DE=E =FD _E_B,CD FDE^C | C^C-C2 =C4 ^G2FE =F_ECE | D=F_B,C DFED _E^FAc _e^cd=c |
+| B4 z3 c z B2A ^G2=G2- | G4 ^GB z2 (3=f_e_B _E_B, ^C=B,=C2 | z8 ^CE^GB _B^c=G=F |
+| FB_B^c =BF z2 c_e=e_e z4 | z =F^GB _B=B_BG ^FE=F_E D4 | _E_B,CD E=F^F^G _Bc^cd =f=e_ec |
+| c2c^c =c3_B AcFE =F4 | z2 (3d_e=e =f_ed^c =cBAG ^F=E_E^C | B,^CB,C _EF^G_B =g=fg2- g2f2 |
+| e3E z FGA B2_B2- B2FA- |
+%
+|[DFGBd]8 [EG_Bce]8 | [FGBdf]8 [G_Bceg]8 | [FGBdf]8 [EG_Bce]8 | [FGBdf]8 [G_Bcef]8 |
+|[DFGBd]8 [EG_Bce]8 | [FGBdf]8 [G_Bceg]8 | [FGBdf]8 [EG_Bce]8 | [FGBdf]8 [G_Bcef]8 |
+|[DFGBd]8 [EG_Bce]8 | [FGBdf]8 [G_Bceg]8 | [FGBdf]8 [EG_Bce]8 | [FGBdf]8 [G_Bcef]8 | [FGBdf]16 |
+|z16|z16|z16|

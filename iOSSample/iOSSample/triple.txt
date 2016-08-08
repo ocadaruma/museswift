@@ -1,0 +1,35 @@
+X: 1
+T: TRIPLE
+M: 4/4
+L: 1/8
+K: C
+%
+%interval
+%
+|z8|z8|
+%
+|z8|z8|z8|z8|
+%
+|(3G,D_B (3_B,Fd (3CG_e (3DA^f|(3G,D_B (3_B,Fd (3CG_e (3DA^f|
+|(3G,D_B (3_B,Fd (3CG_e (3DA^f|(3G,D_B (3_B,Fd (3CG_e (3DA^f|
+|z8|z8|
+%
+|(3fdg (3zfz (3dfc (3zdz| _B2 (3GBG (3A^FD z2|_E2 (3CEG (3_BGc (3zdz |_B2 (3FGB (3cBd (3zfz|
+|(3fdg (3zfz (3dfc (3zdz |_B2 (3GBG (3A^FD z2|_E2 (3CEG (3_BGc (3zdz | _B2 (3FGB (3cBd (3zfz|
+|(3^f^F_A (3BA^c (3_e=e_e (3BAF |(3^c^Fc (3_eFe (3=eFe (3=f^F=f |
+|^f2 ^F2 (3_e=e_e B2 | (3_BzF- (3F^F_A =A2 B2|
+|(3^f^F_A (3BA^c (3_e=e_e (3BAF |(3^c^Fc (3_eFe (3=eFe (3=f^F=f |
+|^f2 ^F2 (3_e=e_e B2 | (3_BzF- (3F^F_A F2 E2 |
+%
+|z8|z8|z8|z8|
+|[_E_e]4 [^CEe]4 | [_E_e]4 [Ee]4| [_E_e]4 [^F^f]4 | [^F^f]4 [F_B^c]4 |
+|z8|z8|z8|z8|
+%
+|(3^f_e_a (3zfz (3ef^c (3zez | B2 (3_ABA (3_BG_E z2 |E2 (3^CE_A (3BA^c (3z_ez | B2 (3^F_AB (3^cB_e (3z^fz | (3^f_e_a (3zfz (3ef^c (3zez | B2 (3_ABA (3_BG_E z2 |
+| E2 (3^CE_A (3BA^c (3z_ez | B2 (3^F_AB (3^cB_e (3z^fz |
+| (3^f^F_A (3BA^c (3_e=e_e (3BAF | (3^c^Fc (3_eFe (3=eFe (3=f^F=f |^f2 ^F2 (3_e=e_e B2 |
+| (3_BzF- (3F^F_A =A2 B2 | (3^f^F_A (3BA^c (3_e=e_e (3BAF |(3^c^Fc (3_eFe (3=eFe (3=f^F=f |
+| ^f2 ^F2 (3_e=e_e B2 | (3_BzF- (3F^F_A ^F2 E2 |
+%
+|[_E_e]4 [^CEe]4 | [_E_e]4 [Ee]4| [_E_e]4 [^F^f]4 | [^F^f]4 [F_B^c]4 |
+|[_E_e]4 [^CEe]4 | [_E_e]4 [Ee]4| [_E_e]4 [^F^f]4 | [^F^f]4 [F_B^c]4 |

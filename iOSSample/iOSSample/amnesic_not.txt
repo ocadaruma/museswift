@@ -1,0 +1,29 @@
+X: 1
+T: Amnesic Not
+M: 4/4
+L: 1/16
+K: G
+z16 | z16 |
+z16 | z16 | z16 | z16 |
+z16 | z16 | z16 | z16 ||
+[Bd]8 [ce]8 | [df]8 [eg]8 | [df]8 [ce]8 | [df]8 [ef]8 |
+[Bd]8 [ce]8 | [df]8 [eg]8 | [df]8 [ce]8 | [df]8 [ef]8 |
+[GBdf]16 | z16 |
+B_EFB z[F^G]2_B z[FG]2B z[FG]2E | _E^G,B,E z_B,2^G zD=FG z[FE]2E |
+_EF_B_e z[^GB]2e z[GB]2e zB2B | _B_EFB z_A2_e z=Ace zc2B |
+_BD=FA zF2G zCEG zD2G | GB,DG zD2E zA,CE zB,2E |
+E^GB^d zB2^c zFAc zG2c | _d=F_Ac zA2B zEAB z^F2_B |
+B_EFB z[F^G]2_B z[FG]2B z[FG]2E | _E^G,B,E z_B,2^G zD=FG z[FE]2E |
+_EF_B_e z[^GB]2e z[GB]2e zB2B | _B_EFB z_A2_e z=Ace zc2B |
+_BD=FA zF2G zCEG zD2G | GB,DG zD2E F8 | B8 B8 | [GBdf]16 | z16 ||
+%[Bd]8 [ce]8 | [df]8 [eg]8 | [df]8 [ce]8 | [df]8 [ef]8 |
+%[Bd]8 [ce]8 | [df]8 [eg]8 | [df]8 [ce]8 | [df]8 [ef]8 |
+
+%z8 ^C_E=E=F^FG^G_B |
+%B_EFB z[^FG]2_B z[^FG]2B z[^FG]2_E | E^G,B,E z^A,2^G zDF^G z[F_E]2_E |
+%_E_G_B_e zB2e zB2e zB2B | _B_E_GB z_A2_e z=Ace zc2B |
+%_BDFA zF2G zC_EG zD2G | GB,DG zD2E zA,CE zB,2E |
+%E^GB^d zB2^c z^FAc zG2c | _dF_Ac zA2B zEAB z^F2_B |
+%B_EFB z[^FG]2_B z[^FG]2B z[^FG]2_E | E^G,B,E z^A,2^G zDF^G z[F_E]2_E |
+%_E_G_B_e zB2e zB2e zB2B | _B_E_GB z_A2_e z=Ace zc2B |
+%_BDFA zF2G zC_EG zD2G | GB,DG zD2E F8 | B8 B8 | z16 | z16 |

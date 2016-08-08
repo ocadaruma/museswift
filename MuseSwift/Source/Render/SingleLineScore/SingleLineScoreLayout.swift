@@ -23,7 +23,7 @@ public class SingleLineScoreLayout {
     staffHeight: CGFloat = 60,
     staffLineWidth: CGFloat = 1,
     stemWidth: CGFloat = 2,
-    widthPerUnitNoteLength: CGFloat = 80,
+    widthPerUnitNoteLength: CGFloat = 70,
     barMarginRight: CGFloat = 20,
     minStemHeight: CGFloat = 30,
     maxBeamSlope: CGFloat = 0.2,

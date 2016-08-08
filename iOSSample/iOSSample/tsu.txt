@@ -1,0 +1,36 @@
+X: 1
+T: TSU
+M: 4/4
+L: 1/8
+K: C
+%
+%interval
+%
+|z8|z8|
+%
+||a/c'/a/g/ f/g/f/d/ c/d/c/A/ G/A/G/F/|d/f/d/c/ A/c/A/G/ F/G/F/D/ C/D/F/C/|
+|G4 z3/ C/ D/C/F/C/ |A4 z3/ C/ D/C/F/C/ |G4 z2 C/D/F/G/ |F4 z3/ C/ F/C/G/C/ |
+%
+| A2- A3/ C/ D/C/F/C/ G/C/A/C/ |_B2 z2 G/D/^F/C/ E/_B,/F/C/ |G4- G3/C/ D/C/F/C/ |A2 z2 z4 |
+| c2- c3/ _E/ F/E/_A/E/ _B/E/c/E/ | [F_d]4 _B/F/A/_E/ G/_D/A/E/ | _B4-B3/ _E/ F/E/_A/E/ |c2 z2 z4 |
+| _E8 | =E8 | C4- C3/_B,/ C/_E/C/B,/ | C8 |
+| f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ _E/C/E/F/ A/B/c/e/ |f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ =E/C/E/A/ c/=e/_a/c'/ |
+| d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/g/a/c'/ | d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/d/f/g/ |
+| f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ _E/C/E/F/ A/B/c/e/ |f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ =E/C/E/A/ c/=e/_a/c'/ |
+| d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/g/a/c'/ | d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | z2 _a/=a/_b/_a/ =a/e/g/f/ e/_e/d/^c/ |
+%solo
+| c2 A3/ G/ F2 G3/ A/ |_B2 z/ _E/=E/G/ (3F/^F/=F/ E/D/ ^C/E/G/B/ | A/F/E/D/ G/E/F/D/ z4 |
+| z D/F/ _A/B/d/f/ e/_e/d/c/ =c/=A/_B/G/ | A2 z/ _A/=A/c/ (3_B/c/B/ A/G/ ^F/D/E/F/ | G/D/ z ^F/D/ z =F/_E/=E/G/ _B/^c/=c/B/ |
+| A/C/-C D2 F2 G3/c/ | z/ c/-c- c2 z c/^c/ d/_B/AG | B/c/-c F/G/A/c/ d_B Ge/c/- | c2 z2 ^c/E/G/_B/ A/_E/-E |
+| D/^C/D/F/ E/_E/=E/G/ F/E/F/A/ GA/F/- | F2 z2 d/B/_A/F/ B/F/^c/F/ | c2 fc/A/ _Bc/d/ ed/c/ | _B/D/G/B/ A/G/^F/D/ =F/_E/=E/C/ D/E/G/^F/ |
+| F/C/A,/C/ F/C/G/_A/ =A/F/C/F/ A/F/_B/=B/ | c2 z2 E/C/E/_A/ c/A/c/e/ |
+%
+| d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/g/a/c'/ | d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/d/f/g/ |
+| f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ _E/C/E/F/ A/B/c/e/ |f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ =E/C/E/A/ c/=e/_a/c'/ |
+| d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/g/a/c'/ | d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/d/f/g/ |
+| f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ _E/C/E/F/ A/B/c/e/ |f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ =E/C/E/A/ c/=e/_a/c'/ |
+| f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ _E/C/E/F/ A/B/c/e/ |f/_e/f/_a/ f/e/c/_B/ e/c/e/f/ e/c/B/_A/ | c/_B/c/_e/ c/B/_A/F/ =E/C/E/A/ c/=e/_a/c'/ |
+| d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/g/a/c'/ | d/c/d/f/ d/c/A/G/ c/A/c/d/ c/A/G/F/ | a/g/a/c'/ a/g/f/d/ c/A/c/d/ f/d/f/g/ |
+%outro
+||a/c'/a/g/ f/g/f/d/ c/d/c/A/ G/A/G/F/|d/f/d/c/ A/c/A/G/ F/G/F/D/ C/D/F/C/|
+|G4 z3/ C/ D/C/F/C/ |A4 z3/ C/ D/C/F/C/ |G4 z2 C/D/F/G/ |F8|z8|z8|

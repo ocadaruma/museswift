@@ -1,0 +1,37 @@
+X: 1
+T: PATH
+M: 4/4
+L: 1/8
+K: C
+%
+%interval
+%
+|z8|z8|
+||[B^d]^FF[Bd] [^ce]FF[^ce]|[df]^FF[df] [^d^f]FF[df]|
+||[B^d]^FF[Bd] [^ce]FF[^ce]|[df]^FF[df] [^d^f]FF[df]|
+|[GB]zz[GB] [Ac]zz[Ac]|[^A^c]zz[Ac] [Bd]zz[Bd]|
+|[GB]zz[GB] [Ac]zz[Ac]|[^A^c]zz[Ac] [Bd]zz[Bd]|
+%
+|c2zGA2zE|G2zDE2zC|E2zEG2zG|A2zAc2zc|
+|B2zE^G2zB|e2z^GB2^E|^G2zGB2zB|E2zE^G2zG|
+|A2zCF2zA|C2zFA2zC|^F2zFA2zA|c2zc^f2zf|
+|[Aa]2z[Cc][Ff]2zA|[Cc]2zFA2zC|[Bb]2z[Dd][Gg]2zB|[Dd]2zGB2zD|
+|EEzC AAzE|cczA eezc|AAzE cczA|EEzC AAzE|
+%
+|e^gad- d^fgc-|cefB- B^de2|A^cdA GB=c_G|F^ABF E^G=A2|
+|cEFc d^FGd|e^GAe f^ABf|gBdg fAcf|eGBe dFAd|
+%
+|zG-G6|z8|aegd ecdA|cGAE GDEC|
+|zG-G6|cGAE GDEC|zG-G2 GDEC|z8|
+%
+|CGeG C^F_eF|DAfA EBgB|EBgB _E_B^fB|DAfA ^C_AfA|
+|EBgB _E_B^fB|DAfA ^C_AfA|D_AfA dABA|E_BA_E D_AG^C|
+|CGeG C^F_eF|DAfA EBgB | EBgB _E_B^fB | DAfA ^C_AfA |
+|EBgB _E_B^fB|DAfA ^C_AfA|CGeG DAfA|CGeG B,FdF|
+%
+|e^gad- d^fgc-|cefB- B^de2|A^cdA GB=c_G|F^ABF E^G=A2|
+|cEFc d^FGd|e^GAe f^ABf|gBdg fAcf|eGBe dFAd|
+%
+|_dF_Gc _eG_Ae|fA_Bf _g=Bcf|_ac_ea _g_B_df|f_Acf _e_G_Be|
+|z_A-A6|z8|_bf_a_e f_de_B|_d_A_BF A_EF_D|
+|z_A-A6|_d_A_BF A_EF_D|z_A-A2 A_EF_D|_d8|z8|z8||

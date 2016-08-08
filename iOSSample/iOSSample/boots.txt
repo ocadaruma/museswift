@@ -1,0 +1,32 @@
+X: 1
+T: BOOTS
+M: 4/4
+L: 1/8
+K: C
+%
+%interval
+%
+|z8|z8|
+%
+||z8|z8|z8|z8|
+%
+|D3/F/ z/ GA/- A3/G/ z/ FD/-|D3/F/ z/ GA/- A3/G/ z/ FD/-|D3/F/ z/ GA/- A3/G/ z/ FD/-|D3/F/ z/ GA/- A3/G/ z/ FD/|
+|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|
+|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|
+%
+|D8|z8|z8|z8|
+%
+|[DFAc]4 [CDFA]4|[C_E^FA]4 [A,CEF]4|[_B,DEG]4 [DEG_B]4|[^CEG_B]4 [_B,DEG]4|
+|[DFAc]4 [CDFA]4|[C_E^FA]4 [A,CEF]4|[_B,DEG]4 [DEG_B]4|[^CEG_B]4 [_B,DEG]4|
+%
+|C3/c z2 z (3a/c'/a/ g/f/d/c/|^f2 z (3c/^c/d/ _e/=c/A/F/ e/c/A/F/|GD/G/ _B/dg/ _b2 z2|c/d/c z3/ c'/ z2 z f/g/|
+|a3/f/ g/f/d c/A/c/d/ c/A/F |^FD/F/ A/cd/ (3_e/d/^c/ =c/A/ F/D/=E/F/|
+|G/A/_B B/c/d DG/A/ B/d^c/|c^c/d/ e/f/g/a/ _b/_a/=a/=c'/- c'2|c/d/A/c/ z/ d/ z f/g/d/f/ z/ g/ z|
+_bg/b/ a/g/e/f/ ^f/d/ (3_e/f/e/ d/^c/=c/=B/ |_B/D/G/B/ d/G/B/d/ g/B/d/g/ _b/d/g/b/|c'/c/c'/c/ z3/ c'/z4|
+%
+|D3/F/ z/ GA/- A3/G/ z/ FD/-|D3/F/ z/ GA/- A3/G/ z/ FD/-|D3/F/ z/ GA/- A3/G/ z/ FD/-|D3/F/ z/ GA/- A3/G/ z/ FD/|
+|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|
+|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|
+|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|[DFAc]4 [CDFA]4|[CEG]4 [DE]4|
+%
+|z8|z8|

@@ -1,0 +1,28 @@
+X: 1
+T: LIV
+M: 4/4
+L: 1/8
+K: C
+%
+%interval
+%
+|z8|
+%
+||[^CF=c]4 [^C_E_B]4|[^CF=c]4 [^C_E_B]4|[^CF=c]4 [^C_E_B]4|[^CF=c]4 [^C_E_B]4|
+%
+|[_A,_B,^CF_A]/[B,CFA_B][A,B,CFA]/ [B,CFAB]/[CFAB^c][B,CFAB]/ [CFABc]/[_E^F=A=c_e][^C=F_AB^c]/ [E^F=A=ce]/[=F_AB^c=f][E^F=A=ce]/|[_A_B^cf_a]8|
+|[_A,_B,^CF_A]/[B,CFA_B][A,B,CFA]/ [B,CFAB]/[CFAB^c][B,CFAB]/ [CFABc]/[_E^F=A=c_e][^C=F_AB^c]/ [E^F=A=ce]/[=F_AB^c=f][E^F=A=ce]/|[_A_B^cf_a]8|
+|[_B^c_e^f_b]/[=cefa=c'][B^cefb]/ [^FBcef]/[Bcefb][FBcef]/ [=F_A=Bd=f]/[^F_Bce^f][=FA=Bd=f]/ [_E^F_Bce]/[=FA=Bd=f][E^F_Bce]/|z8|
+|[_ABdf_a]4 [Bdfab]2 [_B^c_e^f_b]2|[_E^FAc_e]4 [_Ace^f_a]4|
+%
+|[^CF=c]4 [^C_E_B]4|[^CF=c]4 [^C_E_B]4|[^CF=c]4 [^C_E_B]4|[^CF=c]4 [^C_E_B]4|
+%
+|[_d_d']2 [_A_a]2 [Ff]2 [_Dd]2|[_E_e]2 z2 [Gg]2 [_B_b]2|[_A_a]2 z2 [_d_d']2 [Bb]2 |[_B_b]4 [Aa]2 z2|[_A_a]4 [Gg]2 z2|[_G_g]4 [_B_b]4|[_A_a]2 z2 [_E_e]4|[_D_d]2 z2 [_A_a]2 z2|
+| _AF_DF DBFA | _G_EF_B =G_dGB|_A2 z2 =A4|_B4 A4|_A2 (3^CFA =A_E D2|_B2 (3z^F_E c2 z [_A_a] | [_D_d]8 |z8|
+%
+|[_A,_B,^CF_A]/[B,CFA_B][A,B,CFA]/ [B,CFAB]/[CFAB^c][B,CFAB]/ [CFABc]/[_E^F=A=c_e][^C=F_AB^c]/ [E^F=A=ce]/[=F_AB^c=f][E^F=A=ce]/|[_A_B^cf_a]8|
+|[_A,_B,^CF_A]/[B,CFA_B][A,B,CFA]/ [B,CFAB]/[CFAB^c][B,CFAB]/ [CFABc]/[_E^F=A=c_e][^C=F_AB^c]/ [E^F=A=ce]/[=F_AB^c=f][E^F=A=ce]/|[_A_B^cf_a]8|
+|[_B^c_e^f_b]/[=cefa=c'][B^cefb]/ [^FBcef]/[Bcefb][FBcef]/ [=F_A=Bd=f]/[^F_Bce^f][=FA=Bd=f]/ [_E^F_Bce]/[=FA=Bd=f][E^F_Bce]/|z8|
+|[_ABdf_a]4 [Bdfab]2 [_B^c_e^f_b]2|[_E^FAc_e]4 [_Ace^f_a]4|
+%
+|[_A_df_a]8|z8|
