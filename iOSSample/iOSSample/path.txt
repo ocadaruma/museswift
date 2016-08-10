@@ -13,7 +13,7 @@ K: C
 |[GB]zz[GB] [Ac]zz[Ac]|[^A^c]zz[Ac] [Bd]zz[Bd]|
 %
 |c2zGA2zE|G2zDE2zC|E2zEG2zG|A2zAc2zc|
-|B2zE^G2zB|e2z^GB2^E|^G2zGB2zB|E2zE^G2zG|
+|B2zE^G2zB|e2z^GB2z^E|^G2zGB2zB|E2zE^G2zG|
 |A2zCF2zA|C2zFA2zC|^F2zFA2zA|c2zc^f2zf|
 |[Aa]2z[Cc][Ff]2zA|[Cc]2zFA2zC|[Bb]2z[Dd][Gg]2zB|[Dd]2zGB2zD|
 |EEzC AAzE|cczA eezc|AAzE cczA|EEzC AAzE|

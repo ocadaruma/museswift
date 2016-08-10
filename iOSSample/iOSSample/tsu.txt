@@ -21,7 +21,7 @@ K: C
 %solo
 | c2 A3/ G/ F2 G3/ A/ |_B2 z/ _E/=E/G/ (3F/^F/=F/ E/D/ ^C/E/G/B/ | A/F/E/D/ G/E/F/D/ z4 |
 | z D/F/ _A/B/d/f/ e/_e/d/c/ =c/=A/_B/G/ | A2 z/ _A/=A/c/ (3_B/c/B/ A/G/ ^F/D/E/F/ | G/D/ z ^F/D/ z =F/_E/=E/G/ _B/^c/=c/B/ |
-| A/C/-C D2 F2 G3/c/ | z/ c/-c- c2 z c/^c/ d/_B/AG | B/c/-c F/G/A/c/ d_B Ge/c/- | c2 z2 ^c/E/G/_B/ A/_E/-E |
+| A/C/-C D2 F2 G3/c/ | z/ c/-c- c2 z c/^c/ d/_B/A/G/ | B/c/-c F/G/A/c/ d_B Ge/c/- | c2 z2 ^c/E/G/_B/ A/_E/-E |
 | D/^C/D/F/ E/_E/=E/G/ F/E/F/A/ GA/F/- | F2 z2 d/B/_A/F/ B/F/^c/F/ | c2 fc/A/ _Bc/d/ ed/c/ | _B/D/G/B/ A/G/^F/D/ =F/_E/=E/C/ D/E/G/^F/ |
 | F/C/A,/C/ F/C/G/_A/ =A/F/C/F/ A/F/_B/=B/ | c2 z2 E/C/E/_A/ c/A/c/e/ |
 %
